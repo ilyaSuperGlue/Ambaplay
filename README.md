@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://ambaplay.dev"><img src="docs/readme/banner-v5.png" alt="Ambaplay: Windows games, in your Mac's Steam" width="100%"></a>
+  <a href="https://ambaplay.dev"><img src="docs/readme/banner-ambaplay.png" alt="Ambaplay: Windows games, in your Mac's Steam" width="100%"></a>
 </p>
 
 <p align="center">
@@ -20,7 +20,7 @@
 <br>
 
 <p align="center">
-  <img src="docs/readme/bento-v5.png" alt="What Ambaplay does: plays inside Mac Steam, experimental frame generation, DLSS answered by MetalFX, DirectX 12 on Metal, any controller, full Retina one switch away, guided install" width="100%">
+  <img src="docs/readme/bento-ambaplay.png" alt="What Ambaplay does: plays inside Mac Steam, experimental frame generation, DLSS answered by MetalFX, DirectX 12 on Metal, any controller, full Retina one switch away, guided install" width="100%">
 </p>
 
 ## What it does
@@ -78,13 +78,13 @@ Updates install themselves: Ambaplay, its patch in Steam and the engine. **Refre
 The installer includes Apple's Game Porting Toolkit redistributables under Apple's license, which allows non-commercial distribution only. Ambaplay is free and non-commercial.
 
 <p align="center">
-  <img src="docs/readme/install-v5.png" alt="The Setup Assistant working through Your Mac, Rosetta, Graphics, Steam and Set Up" width="100%">
+  <img src="docs/readme/install-ambaplay.png" alt="The Setup Assistant working through Your Mac, Rosetta, Graphics, Steam and Set Up" width="100%">
 </p>
 
 ## Requirements
 
 <p align="center">
-  <a href="https://ambaplay.dev/#specs"><img src="docs/readme/specs-v5.png" alt="Check your Mac in one click on ambaplay.dev, next to the minimum requirements" width="100%"></a>
+  <a href="https://ambaplay.dev/#specs"><img src="docs/readme/specs-ambaplay.png" alt="Check your Mac in one click on ambaplay.dev, next to the minimum requirements" width="100%"></a>
 </p>
 
 | | |
@@ -103,7 +103,7 @@ Ambaplay runs inside the native macOS Steam client and registers itself as a Ste
 - **Extras:** NVAPI/NGX routing for DLSS on Apple's MetalFX, in-process frame generation on `CAMetalLayer`, per-game Game Mode, Retina back buffers and a controller layer for HID pads.
 
 <p align="center">
-  <img src="docs/readme/architecture-v5.png" alt="How a Windows game reaches the Mac's GPU: Steam, Ambaplay, the WineCX and Wine engines, D3DMetal, DXMT, DXVK and MoltenVK, then Metal, with the open-source project behind each piece" width="100%">
+  <img src="docs/readme/architecture-ambaplay.png" alt="How a Windows game reaches the Mac's GPU: Steam, Ambaplay, the WineCX and Wine engines, D3DMetal, DXMT, DXVK and MoltenVK, then Metal, with the open-source project behind each piece" width="100%">
 </p>
 
 Building from source: see [docs/DEVELOPING.md](docs/DEVELOPING.md), [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and [docs/BUILD-LOCAL.md](docs/BUILD-LOCAL.md). The installer lives in [`installer/`](installer/) and is packaged by `scripts/package-installer.sh`.
