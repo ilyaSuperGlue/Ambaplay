@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Write compat/reported.json: Steam games that AppleGamingWiki players report as Perfect or
-Playable under CrossOver (WineCX + D3DMetal, the engine Bridgeplay uses).
+Playable under CrossOver (WineCX + D3DMetal, the engine Ambaplay uses).
 
-These are not Bridgeplay test results. The site shows them as "Should work" for games
+These are not Ambaplay test results. The site shows them as "Should work" for games
 games.json has not tested yet. Data is CC BY-NC-SA 3.0 from AppleGamingWiki; keep the
 attribution in the output and on the page.
 
@@ -18,7 +18,7 @@ import urllib.parse
 import urllib.request
 
 API = "https://www.applegamingwiki.com/w/api.php"
-UA = "Bridgeplay compat list (https://github.com/raymondchins/Bridgeplay)"
+UA = "Ambaplay compat list (https://github.com/raymondchins/Ambaplay)"
 GOOD = {"perfect", "playable"}
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "compat", "reported.json")

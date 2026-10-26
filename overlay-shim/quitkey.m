@@ -5,7 +5,7 @@
 // process's own NSApplication sendEvent: (Wine's subclass handles keys there, before
 // AppKit's local monitors) catches Command-Q and ends the process. The run script sees
 // the game exit and tears the Wine prefix down as it does after any exit, so nothing is
-// left running. BRIDGEPLAY_COMMAND_Q=0 turns it off.
+// left running. AMBAPLAY_COMMAND_Q=0 turns it off.
 //
 // The shim never links AppKit (loading it early breaks AppKit's CALayer categories, see
 // interpose()), so this goes through the runtime and starts only once the game has
@@ -64,7 +64,7 @@ static void quit_install(void)
 
 static void quitkey_init(void)
 {
-	const char *off = getenv("BRIDGEPLAY_COMMAND_Q");
+	const char *off = getenv("AMBAPLAY_COMMAND_Q");
 	if (off != NULL && strcmp(off, "0") == 0)
 		return;
 	dispatch_async(dispatch_get_main_queue(), ^{ quit_install(); });

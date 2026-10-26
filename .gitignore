@@ -5,7 +5,7 @@ out/
 *.a
 *.dylib
 # The x86_64 SDL2 FreeEngineWinecx installs for winebus.so (docs/WINECX.md).
-!app/Sources/BridgeplayApp/Resources/libSDL2-2.0.0.dylib
+!app/Sources/AmbaplayApp/Resources/libSDL2-2.0.0.dylib
 .DS_Store
 
 vendor/dobby/
@@ -23,9 +23,9 @@ xcuserdata/
 *.xcuserstate
 DerivedData/
 
-app/Sources/BridgeplayApp/Resources/payload/
+app/Sources/AmbaplayApp/Resources/payload/
 __pycache__/
-installer/Bridgeplay.app/
+installer/Ambaplay.app/
 installer/gptk/
 installer/cache/
 installer/steam.dmg

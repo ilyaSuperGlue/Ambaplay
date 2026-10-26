@@ -7,7 +7,7 @@ Edits userdata/<id>/config/localconfig.vdf in place. Run it only while Steam
 is fully closed (Steam rewrites the file on exit). A token already present is
 left alone; an app with no launch options gets "<TOKEN> %command%".
 
-A token is written with the public 3.0.0 spelling (BRIDGEPLAY_*, ~/.bridgeplay/...)
+A token is written with the public 3.0.0 spelling (AMBAPLAY_*, ~/.ambaplay/...)
 even when given as NOTPROTON_* or ~/.notproton/...; either spelling already in the
 launch options counts as present.
 """
@@ -16,11 +16,11 @@ import sys
 
 
 def public(t):
-    return re.sub(r"\bNOTPROTON_", "BRIDGEPLAY_", t.replace("/.notproton/", "/.bridgeplay/"))
+    return re.sub(r"\bNOTPROTON_", "AMBAPLAY_", t.replace("/.notproton/", "/.ambaplay/"))
 
 
 def legacy(t):
-    return re.sub(r"\bBRIDGEPLAY_", "NOTPROTON_", t.replace("/.bridgeplay/", "/.notproton/"))
+    return re.sub(r"\bAMBAPLAY_", "NOTPROTON_", t.replace("/.ambaplay/", "/.notproton/"))
 
 
 path, token = sys.argv[1], public(sys.argv[2])

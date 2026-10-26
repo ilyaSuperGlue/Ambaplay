@@ -1,17 +1,17 @@
 #!/bin/sh
-# One-time setup for whoever publishes Bridgeplay releases: create the self-signed
-# "Bridgeplay Release" code-signing identity in the login keychain and write a .p12
+# One-time setup for whoever publishes Ambaplay releases: create the self-signed
+# "Ambaplay Release" code-signing identity in the login keychain and write a .p12
 # backup of it. Releases signed with the same identity keep the same designated
 # requirement, so macOS permissions such as App Management survive updates.
 # Losing the identity means every user grants those permissions once more.
 #
 # Usage: scripts/make-release-cert.sh [backup.p12]
-# Env:   BRIDGEPLAY_SIGN_IDENTITY  identity name (default "Bridgeplay Release")
+# Env:   AMBAPLAY_SIGN_IDENTITY  identity name (default "Ambaplay Release")
 #        KEYCHAIN                  keychain to import into (default: login keychain)
 #        BP_P12_PASS               backup password; asked for when unset
 set -eu
 
-name=${BRIDGEPLAY_SIGN_IDENTITY:-Bridgeplay Release}
+name=${AMBAPLAY_SIGN_IDENTITY:-Ambaplay Release}
 out=${1:-"$HOME/Desktop/$(printf '%s' "$name" | tr ' ' '-').p12"}
 keychain=${KEYCHAIN:-"$HOME/Library/Keychains/login.keychain-db"}
 

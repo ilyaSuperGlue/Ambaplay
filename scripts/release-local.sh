@@ -1,6 +1,6 @@
 #!/bin/sh
-# Build Bridgeplay from this checkout and publish it as the latest GitHub release of
-# raymondchins/Bridgeplay, which is what the app's updater (Sparkle, SUFeedURL in
+# Build Ambaplay from this checkout and publish it as the latest GitHub release of
+# raymondchins/Ambaplay, which is what the app's updater (Sparkle, SUFeedURL in
 # app/Info.plist) reads. See docs/RELEASING.md.
 #
 #   scripts/release-local.sh [--dry-run] [--legacy-feed] ["release notes"]
@@ -14,10 +14,10 @@
 #
 # The update is signed with the EdDSA key in this Mac's login keychain, created once with
 # app/.build/artifacts/sparkle/Sparkle/bin/generate_keys; app/Info.plist's SUPublicEDKey
-# must be its public half. The app is code signed with BRIDGEPLAY_SIGN_IDENTITY (default
-# "Bridgeplay Release", a self-signed identity in the login keychain). The version comes
+# must be its public half. The app is code signed with AMBAPLAY_SIGN_IDENTITY (default
+# "Ambaplay Release", a self-signed identity in the login keychain). The version comes
 # from dylib/version.h (scripts/bump-version.sh) and must not have been released yet.
-# HEAD must already be pushed to the Bridgeplay repository's main.
+# HEAD must already be pushed to the Ambaplay repository's main.
 
 set -eu
 
@@ -42,9 +42,9 @@ for arg in "$@"; do
 	esac
 done
 
-slug=raymondchins/Bridgeplay
+slug=raymondchins/Ambaplay
 legacy_slug=raymondchins/NotProton-WineHQ
-# Bridgeplay needs macOS 26 (SetupChecks.minimumMacOS); older Macs are not offered updates.
+# Ambaplay needs macOS 26 (SetupChecks.minimumMacOS); older Macs are not offered updates.
 min_macos=26.0
 
 die() { echo "==> $*" >&2; exit 1; }
@@ -66,16 +66,16 @@ for r in $(git remote); do
 		*github.com[:/]"$slug"|*github.com[:/]"$slug".git) remote=$r ;;
 	esac
 done
-[ -n "$remote" ] || die "no git remote points at github.com/$slug; git remote add bridgeplay https://github.com/$slug.git"
+[ -n "$remote" ] || die "no git remote points at github.com/$slug; git remote add ambaplay https://github.com/$slug.git"
 
 [ -z "$(git status --porcelain --untracked-files=no)" ] || check "the tree has uncommitted changes"
 git fetch -q "$remote"
 [ "$(git rev-parse HEAD)" = "$(git rev-parse "$remote/main")" ] || check "HEAD is not $remote/main; push first"
 
-version=$(sed -n 's/^#define BRIDGEPLAY_VERSION "\(.*\)"$/\1/p' dylib/version.h)
-build=$(sed -n 's/^#define BRIDGEPLAY_BUILD \([0-9][0-9]*\)$/\1/p' dylib/version.h)
+version=$(sed -n 's/^#define AMBAPLAY_VERSION "\(.*\)"$/\1/p' dylib/version.h)
+build=$(sed -n 's/^#define AMBAPLAY_BUILD \([0-9][0-9]*\)$/\1/p' dylib/version.h)
 upstream=$(sed -n 's/^#define NOTPROTON_VERSION "\(.*\)"$/\1/p' dylib/version.h)
-[ -n "$version" ] && [ -n "$build" ] || die "dylib/version.h has no BRIDGEPLAY_VERSION/BRIDGEPLAY_BUILD"
+[ -n "$version" ] && [ -n "$build" ] || die "dylib/version.h has no AMBAPLAY_VERSION/AMBAPLAY_BUILD"
 tag="v$version"
 if gh release view "$tag" -R "$slug" >/dev/null 2>&1; then
 	check "$tag is already released; run scripts/bump-version.sh patch|minor|major"
@@ -105,14 +105,14 @@ if [ -z "$previous" ] || ! git rev-parse -q --verify "refs/tags/$previous" >/dev
 	git fetch -q --tags "$remote" 2>/dev/null || true
 fi
 if [ -z "$previous" ] || ! git rev-parse -q --verify "refs/tags/$previous" >/dev/null; then
-	# Before the first Bridgeplay release: the last release of the old scheme.
+	# Before the first Ambaplay release: the last release of the old scheme.
 	previous=$(git tag --list 'v*-ray.*' --sort=-v:refname | head -n 1)
 fi
 if [ -z "$notes" ]; then
 	if [ -n "$previous" ]; then
 		notes=$(git log --no-merges --format='- %s' "$previous..HEAD")
 	fi
-	[ -n "$notes" ] || notes="Bridgeplay $version"
+	[ -n "$notes" ] || notes="Ambaplay $version"
 fi
 
 sparkle=app/.build/artifacts/sparkle/Sparkle/bin
@@ -122,13 +122,13 @@ sparkle=app/.build/artifacts/sparkle/Sparkle/bin
 # The app is signed with a stable self-signed identity, so its designated requirement (and
 # the macOS permissions keyed to it, such as App Management) stays the same across updates.
 # An ad hoc signature is the cdhash, new with every build. See docs/RELEASING.md (Signing).
-sign_identity=${BRIDGEPLAY_SIGN_IDENTITY:-Bridgeplay Release}
-[ "$sign_identity" != "-" ] || check "BRIDGEPLAY_SIGN_IDENTITY is ad hoc (-); a release needs the stable identity"
+sign_identity=${AMBAPLAY_SIGN_IDENTITY:-Ambaplay Release}
+[ "$sign_identity" != "-" ] || check "AMBAPLAY_SIGN_IDENTITY is ad hoc (-); a release needs the stable identity"
 if [ "$dry_run" -eq 0 ] && ! security find-identity -p codesigning | grep -Fq "\"$sign_identity\""; then
 	die "no code signing identity \"$sign_identity\" in the keychain; create it once (docs/RELEASING.md, Signing)"
 fi
-BRIDGEPLAY_SIGN_IDENTITY=$sign_identity
-export BRIDGEPLAY_SIGN_IDENTITY
+AMBAPLAY_SIGN_IDENTITY=$sign_identity
+export AMBAPLAY_SIGN_IDENTITY
 
 if [ "$dry_run" -eq 1 ]; then
 	out=out/release
@@ -149,7 +149,7 @@ if [ "$dry_run" -eq 1 ]; then
 	CFFIXED_USER_HOME=$repo/$out/home
 	export CFFIXED_USER_HOME
 	app=""
-	for candidate in build/Bridgeplay.app out/Bridgeplay.app; do
+	for candidate in build/Ambaplay.app out/Ambaplay.app; do
 		[ -d "$candidate" ] && { app=$candidate; break; }
 	done
 	[ -n "$app" ] || die "--dry-run needs a built app: make app (or scripts/build-local.sh)"
@@ -160,15 +160,15 @@ else
 	key_args=""
 
 	if [ -z "${CX_ROOT:-}" ]; then
-		# The support folder moved to bridgeplay in 3.0.0; a Mac the app has not migrated yet
+		# The support folder moved to ambaplay in 3.0.0; a Mac the app has not migrated yet
 		# still has it under notproton.
-		CX_ROOT="$HOME/Library/Application Support/bridgeplay/runners/crossover-winehq-11.15/CrossOver"
+		CX_ROOT="$HOME/Library/Application Support/ambaplay/runners/crossover-winehq-11.15/CrossOver"
 		legacy_cx="$HOME/Library/Application Support/notproton/runners/crossover-winehq-11.15/CrossOver"
 		[ -d "$CX_ROOT" ] || [ ! -d "$legacy_cx" ] || CX_ROOT=$legacy_cx
 		export CX_ROOT
 	fi
 	scripts/build-local.sh --checks
-	app=build/Bridgeplay.app
+	app=build/Ambaplay.app
 	out=$(mktemp -d)
 	trap 'rm -rf "$out"' EXIT
 fi
@@ -182,13 +182,13 @@ codesign --verify --strict --deep "$app" || die "$app is not validly signed; Spa
 requirement=$(codesign -d -r- "$app" 2>&1 | sed -n 's/^#* *designated => //p')
 echo "==> designated requirement: $requirement"
 case "$requirement" in
-	'identifier "com.bridgeplay.Bridgeplay" and certificate '*' = H"'*'"') ;;
+	'identifier "com.ambaplay.Ambaplay" and certificate '*' = H"'*'"') ;;
 	*) check "$app is not signed with a certificate (ad hoc?), so macOS would forget its permissions on update" ;;
 esac
 codesign -dvv "$app" 2>&1 | grep -Fqx "Authority=$sign_identity" \
 	|| check "$app is not signed by \"$sign_identity\""
 # The helpers in the payload (Makefile PAYLOAD_SIGN_IDS) carry the same identity.
-payload=$app/Contents/Resources/BridgeplayApp_BridgeplayApp.bundle/Contents/Resources/payload
+payload=$app/Contents/Resources/AmbaplayApp_AmbaplayApp.bundle/Contents/Resources/payload
 machos=$(mktemp)
 find "$payload" -type f -exec sh -c 'file -b "$1" | grep -q "^Mach-O" && printf "%s\n" "$1"' sh {} \; >"$machos"
 [ -s "$machos" ] || check "no Mach-O helpers in $payload"
@@ -214,7 +214,7 @@ feed() {
 		--download-url-prefix "https://github.com/$4/releases/download/$tag/" "$1"
 	rm -f "$1/${2%.zip}.txt"
 	# generate_appcast takes the minimum from LSMinimumSystemVersion; the feed asks for the
-	# macOS Bridgeplay supports. The feed is not signed (only the archive is), so this edit
+	# macOS Ambaplay supports. The feed is not signed (only the archive is), so this edit
 	# keeps every signature valid.
 	sed -i '' "s#<sparkle:minimumSystemVersion>[^<]*</sparkle:minimumSystemVersion>#<sparkle:minimumSystemVersion>$min_macos</sparkle:minimumSystemVersion>#" "$1/appcast.xml"
 	grep -q "<sparkle:minimumSystemVersion>$min_macos<" "$1/appcast.xml" || die "$1/appcast.xml has no minimumSystemVersion"
@@ -232,7 +232,7 @@ feed() {
 	fi
 }
 
-feed "$out/bridgeplay" Bridgeplay.zip Bridgeplay.app "$slug"
+feed "$out/ambaplay" Ambaplay.zip Ambaplay.app "$slug"
 # NotProton builds look for NotProton.app or com.notproton.NotProton in the archive
 # (Sparkle's SUInstaller), so the legacy feed ships the same app under that name. It
 # installs over /Applications/NotProton.app; later updates match by bundle identifier.
@@ -240,28 +240,28 @@ feed "$out/bridgeplay" Bridgeplay.zip Bridgeplay.app "$slug"
 
 # Add the bootstrap after appcast generation so Sparkle only indexes the product archive.
 if [ "$dry_run" -eq 1 ]; then
-    BRIDGEPLAY_SIGN_IDENTITY=- scripts/package-native-installer.sh
+    AMBAPLAY_SIGN_IDENTITY=- scripts/package-native-installer.sh
 else
     scripts/package-native-installer.sh
 fi
-cp out/Bridgeplay-Setup.zip "$out/bridgeplay/Bridgeplay-Setup.zip"
+cp out/Ambaplay-Setup.zip "$out/ambaplay/Ambaplay-Setup.zip"
 
-title="Bridgeplay $version"
+title="Ambaplay $version"
 body=$(printf '%s\n\nBuild %s, based on NotProton %s.\n' "$notes" "$build" "$upstream")
 echo "==> $title (build $build), notes since ${previous:-the beginning}:"
 printf '%s\n' "$notes" | sed 's/^/    /'
-run gh release create "$tag" "$out/bridgeplay/Bridgeplay.zip" "$out/bridgeplay/appcast.xml" \
-    "$out/bridgeplay/Bridgeplay-Setup.zip" \
+run gh release create "$tag" "$out/ambaplay/Ambaplay.zip" "$out/ambaplay/appcast.xml" \
+    "$out/ambaplay/Ambaplay-Setup.zip" \
 	-R "$slug" --target "$(git rev-parse HEAD)" --title "$title" --notes "$body" --latest
 if [ "$legacy" -eq 1 ]; then
 	# Only a carrier for the feed: the tag goes on that repository's default branch, since
 	# this commit need not exist there. --latest is what moves its feed.
 	run gh release create "$tag" "$out/legacy/NotProton.zip" "$out/legacy/appcast.xml" -R "$legacy_slug" \
-		--title "$title" --notes "NotProton is now Bridgeplay. $body" --latest
+		--title "$title" --notes "NotProton is now Ambaplay. $body" --latest
 fi
 
-# bridgeplay.dev's Download (vercel.json /download) points at the fixed "installer"
-# release. The installer carries no app (Install.command downloads the Bridgeplay.zip of
+# ambaplay.dev's Download (vercel.json /download) points at the fixed "installer"
+# release. The installer carries no app (Install.command downloads the Ambaplay.zip of
 # the Latest release, published just above), so it is uploaded only when its fingerprint,
 # every file it ships, differs from the one on that release.
 installer_tag=installer
@@ -292,28 +292,28 @@ if [ -n "$installer_fp" ] && [ "$installer_fp" = "$published_fp" ]; then
 	echo "==> installer unchanged ($installer_fp), not uploaded"
 else
 	scripts/package-installer.sh
-	mv out/Bridgeplay-Installer.zip "$out/bridgeplay/Bridgeplay-Installer.zip"
-	# Bridgeplay Installer.app downloads this zip for GPTK, the engine and the configs and
+	mv out/Ambaplay-Installer.zip "$out/ambaplay/Ambaplay-Installer.zip"
+	# Ambaplay Installer.app downloads this zip for GPTK, the engine and the configs and
 	# checks it against "<EdDSA signature> <length>" in the .sig beside it (InstallerComponents).
 	# A dry run doesn't read the keychain, so it writes no signature.
 	if [ "$dry_run" -eq 0 ]; then
-		installer_signed=$("$sparkle/sign_update" "$out/bridgeplay/Bridgeplay-Installer.zip") \
+		installer_signed=$("$sparkle/sign_update" "$out/ambaplay/Ambaplay-Installer.zip") \
 			|| die "could not sign the installer zip"
 		installer_sig=$(printf '%s\n' "$installer_signed" | sed -nE 's/.*edSignature="([^"]+)".*length="([0-9]+)".*/\1 \2/p')
 		[ -n "$installer_sig" ] || die "sign_update printed no signature for the installer zip"
-		printf '%s\n' "$installer_sig" >"$out/bridgeplay/Bridgeplay-Installer.zip.sig"
+		printf '%s\n' "$installer_sig" >"$out/ambaplay/Ambaplay-Installer.zip.sig"
 	fi
-	installer_body=$(printf 'The one-click installer behind bridgeplay.dev/download. It downloads the latest Bridgeplay when it runs.\n\nFingerprint: %s\n' "$installer_fp")
+	installer_body=$(printf 'The one-click installer behind ambaplay.dev/download. It downloads the latest Ambaplay when it runs.\n\nFingerprint: %s\n' "$installer_fp")
 	if gh release view "$installer_tag" -R "$slug" >/dev/null 2>&1; then
 		# The zip first, then its .sig: an installer that reads the new .sig before the new
 		# zip is in place fails its check and retries (InstallerComponents).
-		swap_asset "$installer_tag" "$out/bridgeplay/Bridgeplay-Installer.zip"
-		swap_asset "$installer_tag" "$out/bridgeplay/Bridgeplay-Installer.zip.sig"
+		swap_asset "$installer_tag" "$out/ambaplay/Ambaplay-Installer.zip"
+		swap_asset "$installer_tag" "$out/ambaplay/Ambaplay-Installer.zip.sig"
 		run gh release edit "$installer_tag" -R "$slug" --notes "$installer_body"
 	else
-		run gh release create "$installer_tag" "$out/bridgeplay/Bridgeplay-Installer.zip" \
-			"$out/bridgeplay/Bridgeplay-Installer.zip.sig" -R "$slug" \
-			--target "$(git rev-parse HEAD)" --title "Bridgeplay Installer" --notes "$installer_body" \
+		run gh release create "$installer_tag" "$out/ambaplay/Ambaplay-Installer.zip" \
+			"$out/ambaplay/Ambaplay-Installer.zip.sig" -R "$slug" \
+			--target "$(git rev-parse HEAD)" --title "Ambaplay Installer" --notes "$installer_body" \
 			--prerelease --latest=false
 	fi
 fi
@@ -324,5 +324,5 @@ if [ "$dry_run" -eq 1 ]; then
 fi
 echo "==> released $tag: https://github.com/$slug/releases/tag/$tag"
 # The release is the zip; the built app copies would only show up in Spotlight next to
-# /Applications/Bridgeplay.app.
-rm -rf build/Bridgeplay.app out/Bridgeplay.app
+# /Applications/Ambaplay.app.
+rm -rf build/Ambaplay.app out/Ambaplay.app

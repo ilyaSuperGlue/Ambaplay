@@ -1,5 +1,5 @@
 #!/bin/sh
-# bridgeplay CrossOver compatibility tool shim
+# ambaplay CrossOver compatibility tool shim
 set -e
 
 verb="$1"
@@ -10,14 +10,14 @@ shift || true
 # and anything after %command% is a launch argument passed to the game.
 launch_args="$*"
 
-# Steam launch options and gamefix confs spell the settings BRIDGEPLAY_<X>; everything below
+# Steam launch options and gamefix confs spell the settings AMBAPLAY_<X>; everything below
 # reads NOTPROTON_<X>, the name upstream NotProton uses. NOTPROTON_<X> stays honored and wins
-# when both are set, so launch options written before Bridgeplay 3.0 keep working.
-for np_name in $(env | LC_ALL=C sed -n 's/^BRIDGEPLAY_\([A-Z0-9_]*\)=.*/\1/p'); do
-  eval "np_new=\${BRIDGEPLAY_$np_name+x} np_old=\${NOTPROTON_$np_name+x}"
+# when both are set, so launch options written before Ambaplay 3.0 keep working.
+for np_name in $(env | LC_ALL=C sed -n 's/^AMBAPLAY_\([A-Z0-9_]*\)=.*/\1/p'); do
+  eval "np_new=\${AMBAPLAY_$np_name+x} np_old=\${NOTPROTON_$np_name+x}"
   # shellcheck disable=SC2154 # eval assigns np_new and np_old on the line above
   if [ -n "$np_new" ] && [ -z "$np_old" ]; then
-    eval "export NOTPROTON_$np_name=\"\$BRIDGEPLAY_$np_name\""
+    eval "export NOTPROTON_$np_name=\"\$AMBAPLAY_$np_name\""
   fi
 done
 
@@ -28,7 +28,7 @@ case "$verb" in
     ;;
 esac
 
-np_support="$HOME/Library/Application Support/bridgeplay"
+np_support="$HOME/Library/Application Support/ambaplay"
 # Before the app moves the support folder over, a game still runs from the old one.
 if [ ! -d "$np_support" ] && [ -d "$HOME/Library/Application Support/notproton" ]; then
   np_support="$HOME/Library/Application Support/notproton"
@@ -116,13 +116,13 @@ resolve_icon() {
   fi
   icon_cache="$icon_root/game.icns"
   icon_status=1
-  if [ -n "$art" ] && [ -s "$icon_cache" ] &&   [ "$(cat "$icon_root/bridgeplay-icon.source" 2>/dev/null)" =   "$icon_source" ]; then
+  if [ -n "$art" ] && [ -s "$icon_cache" ] &&   [ "$(cat "$icon_root/ambaplay-icon.source" 2>/dev/null)" =   "$icon_source" ]; then
     icon_status=0
     echo "icon reused from $art" >> "$log" 2>&1 || true
   elif [ -n "$art" ] && [ -x "$iconmaker" ]; then
     if "$iconmaker" "$art" "$icon_cache" >> "$log" 2>&1; then
       icon_status=0
-      printf '%s\n' "$icon_source" > "$icon_root/bridgeplay-icon.source"
+      printf '%s\n' "$icon_source" > "$icon_root/ambaplay-icon.source"
       echo "icon built from $art" >> "$log" 2>&1 || true
     elif [ "$art" = "$ico" ]; then
       # A cached .ico that iconmaker rejects is corrupt and passes the size
@@ -222,14 +222,14 @@ export WINEDLLPATH="$CX_ROOT/lib/wine/x86_64-windows:$wine_unix${WINEDLLPATH:+:$
 export PATH="$CX_ROOT/bin:$PATH"
 
 if [ -n "$STEAM_COMPAT_DATA_PATH" ]; then
-  log="$STEAM_COMPAT_DATA_PATH/bridgeplay-run.log"
+  log="$STEAM_COMPAT_DATA_PATH/ambaplay-run.log"
 else
   log=/dev/null
 fi
 [ "$(stat -f %z "$log" 2>/dev/null || echo 0)" -gt 262144 ] \
   && : > "$log" || true
 {
-  echo "=== bridgeplay run $(date) ==="
+  echo "=== ambaplay run $(date) ==="
   echo "verb=$verb"
   echo "args:"; for a in "$@"; do printf '  [%s]\n' "$a"; done
   echo "cwd=$(pwd)"
@@ -305,7 +305,7 @@ echo "app_id=$app_id (STEAM_COMPAT_APP_ID=$STEAM_COMPAT_APP_ID)" >> "$log" 2>&1 
 # winebus through the environment; its registry "map" loader crashes in this Wine.
 # macOS Steam has no virtual gamepad Wine could read, so a pad Steam Input claims (and
 # lists in SDL_GAMECONTROLLER_IGNORE_DEVICES) would reach the game as nothing. Games read
-# pads directly unless the launch options set BRIDGEPLAY_RAW_CONTROLLERS=0.
+# pads directly unless the launch options set AMBAPLAY_RAW_CONTROLLERS=0.
 if [ "${NOTPROTON_RAW_CONTROLLERS:-1}" = "1" ]; then
   NOTPROTON_RAW_CONTROLLERS=1
   SDL_GAMECONTROLLER_IGNORE_DEVICES=
@@ -455,10 +455,10 @@ gamefix_read() {
       gamefix_log "$2 conf line $lineno rejected: not KEY=VALUE"
       continue
     fi
-    # The keys that set a BRIDGEPLAY_ variable also take its full name: BRIDGEPLAY_RETINA=1 is RETINA=1.
+    # The keys that set a AMBAPLAY_ variable also take its full name: AMBAPLAY_RETINA=1 is RETINA=1.
     case "$key" in
-      BRIDGEPLAY_STDOUT_NULL|BRIDGEPLAY_VSYNC|BRIDGEPLAY_RETINA|BRIDGEPLAY_FRAMEGEN|BRIDGEPLAY_FRAMEGEN_?*)
-        key=${key#BRIDGEPLAY_} ;;
+      AMBAPLAY_STDOUT_NULL|AMBAPLAY_VSYNC|AMBAPLAY_RETINA|AMBAPLAY_FRAMEGEN|AMBAPLAY_FRAMEGEN_?*)
+        key=${key#AMBAPLAY_} ;;
     esac
     value=${line#*=}
     reason=$(gamefix_reason "$key" "$value")
@@ -681,7 +681,7 @@ imports_d3d12() {
   return 1
 }
 
-# BRIDGEPLAY_BACKEND > CX_GRAPHICS_BACKEND > gamefix BACKEND > auto-detect > dxmt, then down
+# AMBAPLAY_BACKEND > CX_GRAPHICS_BACKEND > gamefix BACKEND > auto-detect > dxmt, then down
 # to what the engine has.
 select_backend() {
   wanted=""
@@ -698,8 +698,8 @@ select_backend() {
     '') ;;
     dxmt|dxvk|wined3d|d3dmetal)
       wanted=$NOTPROTON_BACKEND
-      backend_from="BRIDGEPLAY_BACKEND in the launch options" ;;
-    *) graphics_log "BRIDGEPLAY_BACKEND is not dxmt, dxvk, wined3d or d3dmetal, ignored" ;;
+      backend_from="AMBAPLAY_BACKEND in the launch options" ;;
+    *) graphics_log "AMBAPLAY_BACKEND is not dxmt, dxvk, wined3d or d3dmetal, ignored" ;;
   esac
   # The Steam panel's Graphics menu writes CX_GRAPHICS_BACKEND.
   if [ -z "$wanted" ] && [ -n "${CX_GRAPHICS_BACKEND:-}" ]; then
@@ -1015,7 +1015,7 @@ APPLESCRIPT
 # bundle (games from before the marker existed have the cache, so they stay quiet).
 first_launch_notice() {
   [ "$verb" = waitforexitandrun ] && [ "$app_id" != 0 ] || return 0
-  marker="$STEAM_COMPAT_DATA_PATH/bridgeplay-first-launch"
+  marker="$STEAM_COMPAT_DATA_PATH/ambaplay-first-launch"
   [ -e "$marker" ] && return 0
   : > "$marker" 2>/dev/null || true
   if [ -f "$STEAM_COMPAT_DATA_PATH/pfx/system.reg" ]; then
@@ -1059,13 +1059,13 @@ low_power_notice() {
   ) >/dev/null 2>&1 &
 }
 
-# Posted by the Bridgeplay app, so it carries Bridgeplay's name and icon; osascript (shown
+# Posted by the Ambaplay app, so it carries Ambaplay's name and icon; osascript (shown
 # as Script Editor) only when the app cannot be found. Never holds up the launch.
 notify_user() {
   (
     exec 8>&- 9>&-
-    title="Bridgeplay" subtitle=$(alert_safe "$1") body=$(alert_safe "$2")
-    open -n -g -b com.bridgeplay.Bridgeplay --args --notify "$title" "$subtitle" "$body" ||
+    title="Ambaplay" subtitle=$(alert_safe "$1") body=$(alert_safe "$2")
+    open -n -g -b com.ambaplay.Ambaplay --args --notify "$title" "$subtitle" "$body" ||
       osascript -e "display notification \"$body\" with title \"$title\" subtitle \"$subtitle\""
   ) >/dev/null 2>&1 &
 }
@@ -1082,7 +1082,7 @@ show_rebuild_failure() {
   exec 8>&- 9>&-
   answer=$(osascript - "$log" <<'APPLESCRIPT'
 on run argv
-  set answer to display alert "Prefix rebuild failed!" message ("Check bridgeplay-run.log at " & (item 1 of argv) & ".") as critical buttons {"Open Log", "OK"} default button "OK"
+  set answer to display alert "Prefix rebuild failed!" message ("Check ambaplay-run.log at " & (item 1 of argv) & ".") as critical buttons {"Open Log", "OK"} default button "OK"
   return button returned of answer
 end run
 APPLESCRIPT
@@ -1133,7 +1133,7 @@ rebuild_prefix() {
   exec 8>&- 9>&-
   # AppleScript run from a shell has no icon of its own, so caution comes badged with a folder.
   icon=$(cat "$np_support/app-executable" 2>/dev/null) || icon=""
-  icon="${icon%/Contents/MacOS/*}/Contents/Resources/Bridgeplay.icns"
+  icon="${icon%/Contents/MacOS/*}/Contents/Resources/Ambaplay.icns"
   [ -f "$icon" ] || icon=""
   choice=$(osascript - "$1" "$2" "${3:-Cancel}" "$icon" <<'APPLESCRIPT'
 on run argv
@@ -1158,7 +1158,7 @@ APPLESCRIPT
   esac
   executable=$(cat "$np_support/app-executable" 2>/dev/null) || executable=""
   if [ ! -x "$executable" ]; then
-    show_alert "Couldn't find the Bridgeplay app" "The prefix wasn't rebuilt and the game wasn't launched, because the Bridgeplay app was moved or deleted since it was installed, or was installed from a disk image or Downloads. Move Bridgeplay to Applications, open it and click Install again, then launch the game."
+    show_alert "Couldn't find the Ambaplay app" "The prefix wasn't rebuilt and the game wasn't launched, because the Ambaplay app was moved or deleted since it was installed, or was installed from a disk image or Downloads. Move Ambaplay to Applications, open it and click Install again, then launch the game."
     exit 1
   fi
   if ! run_rebuild "$executable" "$backup"; then
@@ -1188,7 +1188,7 @@ refuse_foreign_prefix() {
   esac
   have=$(prefix_machine) || return 0
   [ "$have" = "$want" ] && return 0
-  echo "=== prefix ntdll is $have and this compatibility tool wants $want, rebuild the prefix in Bridgeplay ===" >> "$log" 2>&1 || true
+  echo "=== prefix ntdll is $have and this compatibility tool wants $want, rebuild the prefix in Ambaplay ===" >> "$log" 2>&1 || true
   had_tool=$(tool_name "$have")
   want_tool=$(tool_name "$want")
   explanation="$had_tool prefixes cannot be used with versions of CrossOver that run through $want_tool unless they are rebuilt."
@@ -1436,10 +1436,10 @@ refuse_broken_prefix() {
   # Wine reports a full disk only as error=112 on each file it could not copy.
   free_kb=$(df -Pk "$STEAM_COMPAT_DATA_PATH" 2>/dev/null | awk 'NR == 2 { print $4 }')
   if [ -n "$free_kb" ] && [ "$free_kb" -lt 2097152 ]; then
-    show_alert "The disk is too full for the game's prefix" "Wine needs about 2 GB free to set up the game. Free some space on the drive that holds this Steam library, then rebuild the prefix in Bridgeplay."
+    show_alert "The disk is too full for the game's prefix" "Wine needs about 2 GB free to set up the game. Free some space on the drive that holds this Steam library, then rebuild the prefix in Ambaplay."
     exit 1
   fi
-  show_alert "The game's prefix could not be set up" "Wine did not finish building it. Rebuild the prefix in Bridgeplay, then launch again. bridgeplay-run.log has the details."
+  show_alert "The game's prefix could not be set up" "Wine did not finish building it. Rebuild the prefix in Ambaplay, then launch again. ambaplay-run.log has the details."
   exit 1
 }
 
@@ -1700,7 +1700,7 @@ $controllers_wanted"
 }
 
 # Sets Wine's DisableHidraw for games with "Disable hidraw" checked. When it's
-# unchecked, the value is removed only if Bridgeplay set it.
+# unchecked, the value is removed only if Ambaplay set it.
 plan_disable_hidraw() {
   hidraw_file="$STEAM_COMPAT_DATA_PATH/notproton-disable-hidraw"
   hidraw_value=""
@@ -1819,7 +1819,7 @@ import_prefix_settings() {
     without_lock_fds "$WINESERVER" -w >> "$log" 2>&1 || true
   fi
   if [ "$import_status" -eq 0 ] && [ "$hidraw_planned" -eq 1 ] && [ "$NOTPROTON_DISABLE_HIDRAW" = "1" ]; then
-    echo "controllers: hidraw disabled (BRIDGEPLAY_DISABLE_HIDRAW=1)" >> "$log" 2>&1 || true
+    echo "controllers: hidraw disabled (AMBAPLAY_DISABLE_HIDRAW=1)" >> "$log" 2>&1 || true
   fi
   if [ "$import_status" -eq 0 ] && [ -n "$dpi_value" ]; then
     echo "video: LogPixels=$new_dpi" >> "$log" 2>&1 || true
@@ -1827,7 +1827,7 @@ import_prefix_settings() {
   if [ "$import_status" -eq 0 ] && [ "$controllers_planned" -eq 1 ]; then
     write_owned_controllers "$controllers_wanted" 2>/dev/null || true
     if [ "$NOTPROTON_RAW_CONTROLLERS" = "1" ]; then
-      echo "controllers: games read them directly (BRIDGEPLAY_RAW_CONTROLLERS=1)" >> "$log" 2>&1 || true
+      echo "controllers: games read them directly (AMBAPLAY_RAW_CONTROLLERS=1)" >> "$log" 2>&1 || true
     elif [ -n "$controllers_wanted" ]; then
       echo "controllers: $(printf '%s\n' "$controllers_wanted" | grep -c .) kept off hidraw" \
         >> "$log" 2>&1 || true
@@ -1839,8 +1839,8 @@ import_prefix_settings() {
 
 stage_step="runner check"
 if [ -z "$np_build" ] || [ ! -d "$CX_ROOT/lib/wine" ]; then
-  echo "=== build ${np_build:-(none recorded)} behind this compatibility tool is not set up, set it up in Bridgeplay ===" >> "$log" 2>&1 || true
-  show_alert "CrossOver is not set up" "The CrossOver build behind $(alert_safe "$np_display") is not set up. Set it up in Bridgeplay, or pick another compatibility tool for this game."
+  echo "=== build ${np_build:-(none recorded)} behind this compatibility tool is not set up, set it up in Ambaplay ===" >> "$log" 2>&1 || true
+  show_alert "CrossOver is not set up" "The CrossOver build behind $(alert_safe "$np_display") is not set up. Set it up in Ambaplay, or pick another compatibility tool for this game."
   exit 1
 fi
 echo "runner: build $np_build ($np_display) at $CX_ROOT" >> "$log" 2>&1 || true
@@ -2147,7 +2147,7 @@ prepare_prefix_directory() {
   for interrupted in "$STEAM_COMPAT_DATA_PATH"/pfx.replaced.*; do
     [ -e "$interrupted" ] || [ -L "$interrupted" ] || continue
     echo "=== interrupted prefix replacement needs recovery: $interrupted ===" >> "$log" 2>&1 || true
-    show_alert "Prefix recovery required" "An interrupted prefix replacement may hold saved games. Do not delete this prefix. Check its bridgeplay-run.log for the recovery folder."
+    show_alert "Prefix recovery required" "An interrupted prefix replacement may hold saved games. Do not delete this prefix. Check its ambaplay-run.log for the recovery folder."
     exit 1
   done
   mkdir -p "$WINEPREFIX"
@@ -2298,7 +2298,7 @@ if [ -n "$STEAM_COMPAT_DATA_PATH" ]; then
   seed_prefix_from_template
   stage_step="profile layout"
   if ! lay_out_proton_profile; then
-    show_alert "Saved-game folders need attention" "Bridgeplay left the conflicting files in place. Open this prefix's bridgeplay-run.log for details before trying again."
+    show_alert "Saved-game folders need attention" "Ambaplay left the conflicting files in place. Open this prefix's ambaplay-run.log for details before trying again."
     exit 1
   fi
   [ "$verb" != waitforexitandrun ] || echo "video: RetinaMode=${NOTPROTON_RETINA:-0}" >> "$log" 2>&1 || true
@@ -2338,7 +2338,7 @@ bridge_src="$np_support/bridge"
 prefix_steam="$WINEPREFIX/drive_c/Program Files (x86)/Steam"
 verify_runner() {
   if [ ! -d "$bridge_src/wine/$np_build" ]; then
-    echo "=== no patched ntdll for build $np_build in the bridge, set it up in Bridgeplay ===" >> "$log" 2>&1 || true
+    echo "=== no patched ntdll for build $np_build in the bridge, set it up in Ambaplay ===" >> "$log" 2>&1 || true
     return
   fi
   for arch in x86_64-windows i386-windows aarch64-windows; do
@@ -2346,9 +2346,9 @@ verify_runner() {
     live="$CX_ROOT/lib/wine/$arch/ntdll.dll"
     [ -f "$staged" ] || continue
     if [ ! -f "$live" ]; then
-      echo "=== runner has no $arch ntdll, set up the runner in Bridgeplay ===" >> "$log" 2>&1 || true
+      echo "=== runner has no $arch ntdll, set up the runner in Ambaplay ===" >> "$log" 2>&1 || true
     elif ! cmp -s "$staged" "$live"; then
-      echo "=== runner $arch ntdll is not the patched copy, set up the runner in Bridgeplay ===" >> "$log" 2>&1 || true
+      echo "=== runner $arch ntdll is not the patched copy, set up the runner in Ambaplay ===" >> "$log" 2>&1 || true
     fi
   done
   for arch in i386-windows x86_64-windows "${wine_unix##*/}"; do
@@ -2357,7 +2357,7 @@ verify_runner() {
       *) name="lsteamclient.dll" ;;
     esac
     [ -f "$CX_ROOT/lib/wine/$arch/$name" ] && continue
-    echo "=== runner is missing $arch/$name, set up the runner in Bridgeplay ===" >> "$log" 2>&1 || true
+    echo "=== runner is missing $arch/$name, set up the runner in Ambaplay ===" >> "$log" 2>&1 || true
   done
 }
 install_lsteamclient_trigger() {
@@ -2505,7 +2505,7 @@ if [ -d "$bridge_src" ] && [ -n "$WINEPREFIX" ]; then
       fi
     done
     if [ "$unstaged" -eq 1 ]; then
-      show_alert "Steam files could not be copied" "Bridgeplay could not copy a file into this game's prefix. Open this prefix's bridgeplay-run.log for details."
+      show_alert "Steam files could not be copied" "Ambaplay could not copy a file into this game's prefix. Open this prefix's ambaplay-run.log for details."
       exit 1
     fi
   fi
@@ -2518,7 +2518,7 @@ if [ -d "$bridge_src" ] && [ -n "$WINEPREFIX" ]; then
   done
   verify_runner
   if ! install_lsteamclient_trigger; then
-    show_alert "Steam files could not be copied" "Bridgeplay could not copy a file into this game's prefix. Open this prefix's bridgeplay-run.log for details."
+    show_alert "Steam files could not be copied" "Ambaplay could not copy a file into this game's prefix. Open this prefix's ambaplay-run.log for details."
     exit 1
   fi
   install_legacy_steam_dll
@@ -2611,7 +2611,7 @@ fi
 uielement_arg=""
 if [ "${NOTPROTON_HIDE_LAUNCHER_TILE:-0}" = "1" ]; then
   uielement_arg="  <key>LSUIElement</key><true/>"
-  echo "launcher tile hidden by BRIDGEPLAY_HIDE_LAUNCHER_TILE" >> "$log" 2>&1 || true
+  echo "launcher tile hidden by AMBAPLAY_HIDE_LAUNCHER_TILE" >> "$log" 2>&1 || true
 fi
 cat > "$loader_contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
@@ -2665,7 +2665,7 @@ fi
 cat > "$loader_macos/launcher" <<LAUNCHER
 #!/bin/sh
 export WINELOADER="$WINELOADER"
-wine_log="$loader_root/bridgeplay-wine.log"
+wine_log="$loader_root/ambaplay-wine.log"
 exec > "\$wine_log" 2>&1
 shim="$np_support/overlay-shim.dylib"
 if [ -n "\$STEAM_DYLD_INSERT_LIBRARIES" ]; then
@@ -2802,7 +2802,7 @@ for name in $np_env_passed; do
   case "$name" in
     (DYLD_* | PATH | HOME | CX_ROOT | CX_HOME | STEAM_COMPAT_* | STEAM_DYLD_INSERT_LIBRARIES | \
      WINEPREFIX | WINELOADER | WINESERVER | WINEDLLPATH | WINEDLLOVERRIDES | WINEMSYNC | NOTPROTON_* | \
-     BRIDGEPLAY_*)
+     AMBAPLAY_*)
       echo "=== NOTPROTON_ENV_$name would replace a setting this launch sets itself, ignored ===" \
         >> "$log" 2>&1 || true
       continue ;;
@@ -2872,8 +2872,8 @@ np_ran=$(($(date +%s) - np_started))
 echo "=== game exited status=$status, killing wine prefix ===" >> "$log" 2>&1 || true
 kill_wine_prefix
 [ -z "$STEAM_COMPAT_DATA_PATH" ] \
-  || record_session "$loader_root/bridgeplay-wine.log" "$(($(date +%s) - np_started))" "$np_terminated"
+  || record_session "$loader_root/ambaplay-wine.log" "$(($(date +%s) - np_started))" "$np_terminated"
 # After the teardown, so reading a long Wine log never holds the prefix up.
-exit_summary "$status" "$np_ran" "$np_terminated" "$loader_root/bridgeplay-wine.log" >> "$log" 2>&1 || true
+exit_summary "$status" "$np_ran" "$np_terminated" "$loader_root/ambaplay-wine.log" >> "$log" 2>&1 || true
 echo "=== wine prefix killed, session ending ===" >> "$log" 2>&1 || true
 exit $status

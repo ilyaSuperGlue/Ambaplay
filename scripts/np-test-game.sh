@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# np-test-game.sh - launch one Steam game through Bridgeplay, observe it, collect logs.
+# np-test-game.sh - launch one Steam game through Ambaplay, observe it, collect logs.
 #
 #   scripts/np-test-game.sh <appid> [--seconds N] [--backend dxmt|dxvk|wined3d|d3dmetal] [--stop]
 #
@@ -39,9 +39,9 @@ command -v jq >/dev/null || { echo "jq required" >&2; exit 64; }
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SUP="$HOME/Library/Application Support"
 STEAMAPPS="$SUP/Steam/steamapps"
-# The support folder and log names moved to bridgeplay in 3.0.0; fall back to the old
+# The support folder and log names moved to ambaplay in 3.0.0; fall back to the old
 # ones on a Mac the app has not migrated yet.
-NP="$SUP/bridgeplay"
+NP="$SUP/ambaplay"
 [ -d "$NP" ] || [ ! -d "$SUP/notproton" ] || NP="$SUP/notproton"
 MANIFEST="$STEAMAPPS/appmanifest_${APPID}.acf"
 [ -f "$MANIFEST" ] || { echo "app $APPID is not installed (no $MANIFEST)" >&2; exit 64; }
@@ -51,9 +51,9 @@ NAME="$(acf name)"
 INSTALLDIR="$STEAMAPPS/common/$(acf installdir)"
 PFX="$STEAMAPPS/compatdata/$APPID/pfx"
 # Each log is read under both names (see legacy_of below).
-RUNLOG="$STEAMAPPS/compatdata/$APPID/bridgeplay-run.log"
-WINELOG="$NP/launchers/$APPID/bridgeplay-wine.log"
-NPLOG="$NP/bridgeplay.log"
+RUNLOG="$STEAMAPPS/compatdata/$APPID/ambaplay-run.log"
+WINELOG="$NP/launchers/$APPID/ambaplay-wine.log"
+NPLOG="$NP/ambaplay.log"
 FIXDIR="$NP/gamefixes"
 FIX="$FIXDIR/$APPID.conf"
 
@@ -124,7 +124,7 @@ since() { # $1 file, $2 offset -> bytes after offset
 }
 # Before 3.0.0 the logs were notproton-*.log. Reading both names keeps runs against a
 # build or prefix from before the rename working; the old file just stops growing.
-legacy_of() { echo "${1%/*}/notproton${1##*/bridgeplay}"; }
+legacy_of() { echo "${1%/*}/notproton${1##*/ambaplay}"; }
 latest_of() { if [ -f "$1" ]; then echo "$1"; else legacy_of "$1"; fi; }
 size2() { echo "$(size_of "$1") $(size_of "$(legacy_of "$1")")"; }
 since2() { # $1 file, $2 "offset legacy_offset" -> new bytes of both names
@@ -169,10 +169,10 @@ done
 # ---- collect ----
 ps -axww -o pid=,etime=,command= > "$OUT/ps-end.txt" 2>/dev/null
 [ -n "$(ps_game)" ] && ALIVE=true || ALIVE=false
-since2 "$RUNLOG" "$OFF_RUN" > "$OUT/bridgeplay-run.log"
-since2 "$WINELOG" "$OFF_WINE" | tail -n 2000 > "$OUT/bridgeplay-wine.log"
-since2 "$NPLOG" "$OFF_NP" > "$OUT/bridgeplay.log"
-[ -f "$(latest_of "$RUNLOG")" ] && tail -n 200 "$(latest_of "$RUNLOG")" > "$OUT/bridgeplay-run.tail.log"
+since2 "$RUNLOG" "$OFF_RUN" > "$OUT/ambaplay-run.log"
+since2 "$WINELOG" "$OFF_WINE" | tail -n 2000 > "$OUT/ambaplay-wine.log"
+since2 "$NPLOG" "$OFF_NP" > "$OUT/ambaplay.log"
+[ -f "$(latest_of "$RUNLOG")" ] && tail -n 200 "$(latest_of "$RUNLOG")" > "$OUT/ambaplay-run.tail.log"
 
 # engine
 ENGINE="$(grep -h 'state crossOver' "$NP/app.log" 2>/dev/null | tail -1 | sed -n 's/.*state crossOver \(.*\) version=.*/\1/p')"
@@ -181,7 +181,7 @@ ENGINE="$(grep -h 'state crossOver' "$NP/app.log" 2>/dev/null | tail -1 | sed -n
 
 # error signatures
 SIG='err:module|err:seh|err:virtual|err:d3d|err:ntdll|DXGI_ERROR|DXMT.*(error|fail)|vkd3d.*(error|fail)|Unhandled exception|wine: could not load|wine: cannot find|No such file|Bad CPU type|Assertion failed|Segmentation fault|page fault|fixme:.*not implemented|cannot open|failed to'
-cat "$OUT/bridgeplay-run.log" "$OUT/bridgeplay-wine.log" "$OUT/bridgeplay.log" 2>/dev/null \
+cat "$OUT/ambaplay-run.log" "$OUT/ambaplay-wine.log" "$OUT/ambaplay.log" 2>/dev/null \
   | grep -Ei "$SIG" \
   | sed -E 's/^[0-9]{4}-[0-9]{2}-[0-9]{2}[ T][0-9:]+Z? //; s/^[0-9a-f]{4}:(err|fixme)/\1/; s/0x[0-9a-fA-F]+/0xN/g' \
   | cut -c1-200 | sort | uniq -c | sort -rn | head -10 \

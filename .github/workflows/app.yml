@@ -176,13 +176,13 @@ jobs:
       - name: Package the app bundle
         run: |
           mkdir -p out/artifact
-          ditto -c -k --keepParent out/Bridgeplay.app out/artifact/Bridgeplay.zip
-          cp out/Bridgeplay-Setup.zip out/artifact/
+          ditto -c -k --keepParent out/Ambaplay.app out/artifact/Ambaplay.zip
+          cp out/Ambaplay-Setup.zip out/artifact/
 
       - name: Upload the app bundle
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: Bridgeplay
+          name: Ambaplay
           path: out/artifact
 
   checks:

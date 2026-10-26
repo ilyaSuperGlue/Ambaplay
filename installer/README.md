@@ -1,12 +1,12 @@
 # Installer
 
-`Install.command` downloads the latest `Bridgeplay.zip` from the GitHub releases (checking its
+`Install.command` downloads the latest `Ambaplay.zip` from the GitHub releases (checking its
 signature), installs Apple's Game Porting Toolkit, the DXMT and DXVK archives and the default
 configs from the folder it sits in, downloads Steam from Valve's CDN when
 `/Applications/Steam.app` is missing, then opens the app's Setup Assistant. The Setup
 Assistant downloads the WineCX engine (dappermint/winecx-gptk's runtime) itself: the zip does
 not carry it, because it bundles GPL libraries whose source neither project publishes (see
-`NOTICE`). `Bridgeplay Installer.app` runs the same script without the app step
+`NOTICE`). `Ambaplay Installer.app` runs the same script without the app step
 ([docs/NATIVE-INSTALLER.md](../docs/NATIVE-INSTALLER.md)).
 
 Before copying Steam, `Install.command` verifies its strict code signature against Apple's
@@ -14,9 +14,9 @@ trust chain, Valve's Team ID, and the `com.valvesoftware.steam` bundle identifie
 
 Build the zip with:
 
-    scripts/package-installer.sh      # writes out/Bridgeplay-Installer.zip
+    scripts/package-installer.sh      # writes out/Ambaplay-Installer.zip
 
-The script stages `out/installer/Bridgeplay/` and fails if a piece is missing, an archive does
+The script stages `out/installer/Ambaplay/` and fails if a piece is missing, an archive does
 not match its pin in `FreeEngine.swift`, or anything from Valve or the WineCX runtime ended up
 in the stage:
 
@@ -26,12 +26,12 @@ in the stage:
 | `config/gamefixes-default/` | `gamefixes/*.conf` at the repository root, the same files the app ships |
 | `LICENSE`, `LICENSE.*`, `NOTICE` | repository root (includes `LICENSE.jsoncpp`, `LICENSE.cjson`, `LICENSE.wine`) |
 | `LICENSE.dxmt`, `LICENSE.dxmt-old`, `COPYING.LIB.dxmt`, `LICENSE.dxvk` | `licenses/`: DXMT at 3Shain/dxmt `e94c312f5c054263acf261cfa109edf13e757587`, DXVK-macOS at Gcenx/DXVK-macOS `8f1e28deed3ad30802f7e1bdff428ec14e6e7817` (tag `v1.10.3-20230507-repack`) |
-| `gptk/` | `~/Library/Application Support/bridgeplay/gptk` (`redist/lib` of Apple's Game Porting Toolkit DMG), without Bridgeplay's own `SOURCE.txt` note |
+| `gptk/` | `~/Library/Application Support/ambaplay/gptk` (`redist/lib` of Apple's Game Porting Toolkit DMG), without Ambaplay's own `SOURCE.txt` note |
 | `GPTK-License.rtf` | `gptk/License.rtf` from the same DMG |
-| `cache/engines/` | the pinned DXMT and DXVK archives from `~/Library/Caches/bridgeplay/engines` |
+| `cache/engines/` | the pinned DXMT and DXVK archives from `~/Library/Caches/ambaplay/engines` |
 
 On a Mac the app has not migrated to 3.0.0 yet, the script falls back to the old
-`notproton` folders. `Install.command` installs into the `bridgeplay` folders. When only the
+`notproton` folders. `Install.command` installs into the `ambaplay` folders. When only the
 old `notproton` folders exist, it writes into those instead and leaves the move to the app,
 which migrates them on first launch.
 
@@ -47,7 +47,7 @@ and the new file lands next to it as `default.conf.new`.
 Never shipped: Valve's Steam client and the Steam packages in `valve-packages/` (the app
 downloads those from Valve's CDN) and the WineCX runtime (the app downloads it from
 dappermint/winecx-gptk). GPTK is never committed. GPTK's `/redist` files are
-Apple software that Apple allows to be redistributed for non-commercial use only; Bridgeplay
+Apple software that Apple allows to be redistributed for non-commercial use only; Ambaplay
 is free and non-commercial.
 
 `BACA DULU.txt` (Indonesian) and `README.txt` (English) are the user guides in the zip. macOS

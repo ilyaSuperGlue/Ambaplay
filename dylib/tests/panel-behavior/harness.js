@@ -28,7 +28,7 @@ const FORMS = {
 // stand-in global falls through to the real one, so a test's globalThis.MSCXFx still reaches the panel.
 function panel(emit, form, globals = Object.assign(Object.create(globalThis),
                                                    { document: { documentElement: { lang: 'en' } } }),
-               { fallback = 'bridgeplay-proton', fexTools = [], names = ['R0', 'B0'] } = {}) {
+               { fallback = 'ambaplay-proton', fexTools = [], names = ['R0', 'B0'] } = {}) {
   const raw = execFileSync(emit, [form, fallback, ...fexTools], { encoding: 'utf8' }).trim();
   const f = FORMS[form];
   const body = expand(raw, { [f.react]: names[0], [f.barrel]: names[1] });
@@ -59,7 +59,7 @@ function details(launchOptions, over) {
   return Object.assign({
     unAppID: 287700,
     vecPlatforms: ['windows'],
-    strCompatToolName: 'bridgeplay-proton',
+    strCompatToolName: 'ambaplay-proton',
     strLaunchOptions: launchOptions,
   }, over || {});
 }

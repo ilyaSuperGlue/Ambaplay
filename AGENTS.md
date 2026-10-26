@@ -1,6 +1,6 @@
-# Bridgeplay
+# Ambaplay
 
-Bridgeplay runs Windows-only Steam games on Apple Silicon Macs inside the native macOS Steam
+Ambaplay runs Windows-only Steam games on Apple Silicon Macs inside the native macOS Steam
 client. It turns on Steam Play in Mac Steam and runs games through CodeWeavers' WineCX with
 Apple's Game Porting Toolkit (D3DMetal), DXMT or DXVK. It is a GPL-3.0 fork of
 [NotProton](https://github.com/NotProtonNot/NotProton). The user-facing overview is in
@@ -15,8 +15,8 @@ steps from it.
 | `dylib/` | `notproton.dylib`: hooks, Steam web UI patches, compat tool registration, and the game `run` script (`dylib/feats/compat_run.sh`). See [dylib/AGENTS.md](dylib/AGENTS.md) | Steam client and Steam Helper |
 | `signatures/macos.arm64/` | Byte signatures the dylib resolves per Steam build | Read by the dylib |
 | `lsteamclient/`, `steam-shim/`, `bridge/` | Proton's steamclient bridge and `steam.exe`, built against the Wine tree that `bridge/` sets up | Wine |
-| `ntdll-patch/` | Detours patched into the engine's `ntdll.dll`; the prebuilt `detour*.bin` live in `app/Sources/BridgeplayApp/Resources/` | Wine |
-| `*-patch/` (win32u, winemac, winebus, winecoreaudio, wined3d, ws2_32, ngx-signer) | Patches for single WineCX/WineHQ files. The rebuilt binaries are committed in `app/Sources/BridgeplayApp/Resources/` | Wine |
+| `ntdll-patch/` | Detours patched into the engine's `ntdll.dll`; the prebuilt `detour*.bin` live in `app/Sources/AmbaplayApp/Resources/` | Wine |
+| `*-patch/` (win32u, winemac, winebus, winecoreaudio, wined3d, ws2_32, ngx-signer) | Patches for single WineCX/WineHQ files. The rebuilt binaries are committed in `app/Sources/AmbaplayApp/Resources/` | Wine |
 | `nvapi-shim/` | Windows `nvapi64.dll` that lets games use DLSS (answered by MetalFX) | Wine |
 | `overlay-shim/` | HDR, Metal 4 and frame generation | Game process |
 | `native-launch/`, `native-shim/` | Launch wrapper and gamepad shim for native Mac games | Native game process |
@@ -49,7 +49,7 @@ make dobby
 make all overlay-shim iconmaker appinfo
 make bridge                                     # Wine tree, lsteamclient, steam.exe (slow on first run)
 make fonts                                      # needs fontforge, gpatch, afdko, fonttools
-make app-payload app                            # out/Bridgeplay.app
+make app-payload app                            # out/Ambaplay.app
 ```
 
 The checks the workflows run (`make -s <target>`):
@@ -67,8 +67,8 @@ The checks the workflows run (`make -s <target>`):
 
 To try a change against your own Steam, run `make deploy` after `make fonts`. It copies
 the dylib into `Steam.app` and installs the signatures, fonts and helpers into
-`~/Library/Application Support/bridgeplay/`; restart Steam afterwards. Logs go to
-`~/Library/Application Support/bridgeplay/bridgeplay.log`.
+`~/Library/Application Support/ambaplay/`; restart Steam afterwards. Logs go to
+`~/Library/Application Support/ambaplay/ambaplay.log`.
 
 ## Rules
 
@@ -94,13 +94,13 @@ the dylib into `Steam.app` and installs the signatures, fonts and helpers into
 - **Wine patches:** a patch change is not finished until the binary it produces is
   rebuilt with the recipe in [docs/WINECX.md](docs/WINECX.md) or the patch folder's
   README. Then update its sha256 pins (in `docs/WINECX.md` and
-  `app/Sources/BridgeplayApp/Model/FreeEngineWinecx.swift`) and its entry in
+  `app/Sources/AmbaplayApp/Model/FreeEngineWinecx.swift`) and its entry in
   [NOTICE](NOTICE). Don't commit a binary without its patch.
 - **Legacy names stay:** existing installs depend on `notproton.dylib`, the `NOTPROTON_*`
   variables, `com.notproton.*` identifiers and the fallback to the old `notproton` support
-  folders. Don't rename them. User-facing names are Bridgeplay's (`BRIDGEPLAY_*`).
+  folders. Don't rename them. User-facing names are Ambaplay's (`AMBAPLAY_*`).
 - **Localization:** user-facing app strings are localized (en, it, zh-Hans) in
-  `app/Sources/BridgeplayApp/Resources/Localization/Localizable.xcstrings`. `make l10ncheck`
+  `app/Sources/AmbaplayApp/Resources/Localization/Localizable.xcstrings`. `make l10ncheck`
   checks them.
 - **Versions:** version bumps are separate `chore(release)` commits made with
   `scripts/bump-version.sh`; see [docs/RELEASING.md](docs/RELEASING.md).

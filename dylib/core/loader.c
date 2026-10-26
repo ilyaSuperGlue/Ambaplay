@@ -274,8 +274,8 @@ static void np_init(void) {
 
     clear_relaunch_markers();
 
-    NP_LOG("np_init: loaded into %s (pid %d) Bridgeplay %s (%d), NotProton %s",
-           pn, getpid(), BRIDGEPLAY_VERSION, BRIDGEPLAY_BUILD, NOTPROTON_VERSION);
+    NP_LOG("np_init: loaded into %s (pid %d) Ambaplay %s (%d), NotProton %s",
+           pn, getpid(), AMBAPLAY_VERSION, AMBAPLAY_BUILD, NOTPROTON_VERSION);
 
     np_log_platform_overrides();
     np_compat_export_tools_path();

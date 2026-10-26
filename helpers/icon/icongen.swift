@@ -1,9 +1,9 @@
-// Builds the Bridgeplay app icon as an Icon Composer document (.icon) that
+// Builds the Ambaplay app icon as an Icon Composer document (.icon) that
 // actool compiles into Assets.car and <name>.icns.
 //
-//   icongen <bridgeplay-mark.svg> <output.icon>
+//   icongen <ambaplay-mark.svg> <output.icon>
 //
-// The artwork is the brand mark from bridgeplay-mark.svg (the bridgeplay.dev
+// The artwork is the brand mark from ambaplay-mark.svg (the ambaplay.dev
 // favicon): a suspension bridge drawn with strokes. Its background <rect> is
 // dropped, the icon fill below supplies the dark squircle. Paths at full
 // opacity become the "Bridge" layer, the faded ones the "Reflection" layer.
@@ -205,7 +205,7 @@ func write(_ image: CGImage, to url: URL) {
     guard CGImageDestinationFinalize(destination) else { fail("cannot write \(url.path)") }
 }
 
-// #f5f5f7, the mark's colour on bridgeplay.dev.
+// #f5f5f7, the mark's colour on ambaplay.dev.
 let glyphFill = "srgb:0.96078,0.96078,0.96863,1.00000"
 
 func group(name: String, file: String, opacity: Double) -> [String: Any] {

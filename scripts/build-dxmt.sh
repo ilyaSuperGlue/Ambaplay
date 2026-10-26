@@ -13,7 +13,7 @@
 # The toolchain follows DXMT's CI (.github/workflows/ci.yml, the gcc-release jobs that
 # feed its package step): LLVM 15.0.7 built for x86_64-apple-darwin, Homebrew mingw-w64,
 # meson 1.10.0. CI links against 3Shain's prebuilt Wine 8.16; this links against the
-# Wine Bridgeplay actually runs instead: winebuild and the PE import libraries come from
+# Wine Ambaplay actually runs instead: winebuild and the PE import libraries come from
 # a wine-11.15 source tree, and winemac.so/ntdll.so are the binaries out of the pinned
 # Gcenx 11.15 archive FreeEngine downloads.
 #
@@ -69,7 +69,7 @@ export DEVELOPER_DIR
 
 # The upstream release targets macOS 15 (LC_BUILD_VERSION minos 15.0). Left to the
 # Xcode 27 default, winemetal.so would be minos 27.0 and its embedded metallib AIR v29,
-# neither of which loads on the macOS 26 Bridgeplay supports. clang, cmake and the metal
+# neither of which loads on the macOS 26 Ambaplay supports. clang, cmake and the metal
 # compiler all take this variable.
 export MACOSX_DEPLOYMENT_TARGET="${MACOSX_DEPLOYMENT_TARGET:-15.0}"
 

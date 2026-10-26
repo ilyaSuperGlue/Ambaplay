@@ -49,7 +49,7 @@ const app = (id, o, over) => Object.assign(
     ['WINEDEBUG="a b" -x "two words"', 'WINEDEBUG="a b" %command% -x "two words"'],
     ['  MTL_HUD_ENABLED=1   -a  ', 'MTL_HUD_ENABLED=1 %command% -a'],
     ['NOTPROTON_RETINA=1 -x', 'NOTPROTON_RETINA=1 %command% -x'],
-    ['BRIDGEPLAY_RETINA=1 -x', 'BRIDGEPLAY_RETINA=1 %command% -x'],
+    ['AMBAPLAY_RETINA=1 -x', 'AMBAPLAY_RETINA=1 %command% -x'],
   ];
   const kept = ['-novid', '', 'MTL_HUD_ENABLED=1 %command%', 'mtl_hud_enabled=1 %COMMAND%',
                 'MTL_HUD_ENABLED=1 "unclosed', 'FOO=1 -x', '"WINEDEBUG=x" -y'];
@@ -81,7 +81,7 @@ const app = (id, o, over) => Object.assign(
   t.ok(other.written.length === 1, 'another account gets its own pass');
 
   const native = steam([app(1, 'MTL_HUD_ENABLED=1', { vecPlatforms: ['windows', 'osx'] }),
-                        app(2, 'MTL_HUD_ENABLED=1', { vecPlatforms: ['osx'], strCompatToolName: 'bridgeplay-proton' }),
+                        app(2, 'MTL_HUD_ENABLED=1', { vecPlatforms: ['osx'], strCompatToolName: 'ambaplay-proton' }),
                         app(2147483650, 'MTL_HUD_ENABLED=1', { vecPlatforms: ['osx'] })]);
   await native.go();
   t.ok(native.written.map(x => x.appid).join() === '2,2147483650',

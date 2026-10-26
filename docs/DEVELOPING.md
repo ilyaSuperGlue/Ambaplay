@@ -1,6 +1,6 @@
-# Developing Bridgeplay
+# Developing Ambaplay
 
-How to build Bridgeplay, try a change inside Steam, and run the checks. For what each folder
+How to build Ambaplay, try a change inside Steam, and run the checks. For what each folder
 is and where new code goes, read [ARCHITECTURE.md](ARCHITECTURE.md). The inherited upstream
 README (NotProton, NotProton-WineHQ) is kept in [UPSTREAM.md](UPSTREAM.md).
 
@@ -40,20 +40,20 @@ print the whole shell environment, secrets included, when they fail to launch.
 
 1. Quit Steam.
 2. `make deploy` installs the dylib, the signature database, fonts and helpers into
-   `~/Library/Application Support/bridgeplay/`. For app changes, run the built
-   `build/Bridgeplay.app` and press Install on its Status page.
+   `~/Library/Application Support/ambaplay/`. For app changes, run the built
+   `build/Ambaplay.app` and press Install on its Status page.
 3. Start Steam and launch a game.
 
 Logs:
 
 | Log | Where |
 |---|---|
-| Steam side (dylib) | `~/Library/Application Support/bridgeplay/bridgeplay.log` |
-| One game's launch and Wine output | `bridgeplay-run.log`, `bridgeplay-wine.log`; Prefixes page › a game › Open Log |
+| Steam side (dylib) | `~/Library/Application Support/ambaplay/ambaplay.log` |
+| One game's launch and Wine output | `ambaplay-run.log`, `ambaplay-wine.log`; Prefixes page › a game › Open Log |
 | The app | Setup › Reveal Log in Finder |
 
 To try the Setup Assistant without changing anything:
-`app/.build/debug/BridgeplayApp --setup-preview [--fresh] [--step N]` (debug builds only).
+`app/.build/debug/AmbaplayApp --setup-preview [--fresh] [--step N]` (debug builds only).
 If it stops with `Library not loaded: @rpath/Sparkle.framework`, start it with
 `DYLD_FRAMEWORK_PATH=app/.build/out/Products/Debug`.
 
@@ -73,7 +73,7 @@ the PR.
 
 | Script | Use |
 |---|---|
-| `scripts/np-test-game.sh`, `np-test-batch.sh` | Launch a game (or a list) with Bridgeplay and record the result under `compat/runs/` |
+| `scripts/np-test-game.sh`, `np-test-batch.sh` | Launch a game (or a list) with Ambaplay and record the result under `compat/runs/` |
 | `scripts/np-inventory.py`, `np-seed-games.py`, `np_lookup.py`, `compat-table.py` | Build and query `compat/games.json` and the compatibility table |
 | `scripts/steam-launch-options.py` | Read or set a game's Steam launch options |
 | `scripts/sync-upstream.sh` | Merge NotProton upstream and bump the minor version |
@@ -83,7 +83,7 @@ the PR.
 
 - Commits follow Conventional Commits: `feat(scope):`, `fix(scope):`, `docs:`, `chore(release):`.
 - Comments explain why, where the code is not obvious. Match the style of the file you edit.
-- Shipped binaries in `app/Sources/BridgeplayApp/Resources/` are built from the recipe in
+- Shipped binaries in `app/Sources/AmbaplayApp/Resources/` are built from the recipe in
   their patch folder's README; a PR that changes one says how it was rebuilt.
 - Runtime names (`notproton.dylib`, `NOTPROTON_*`, `com.notproton.*`) stay as they are:
-  renaming them would need another migration. Paths and logs use `bridgeplay`.
+  renaming them would need another migration. Paths and logs use `ambaplay`.

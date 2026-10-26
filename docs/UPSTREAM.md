@@ -20,7 +20,7 @@ The current developer guide is [DEVELOPING.md](DEVELOPING.md).
 > This fork is not affiliated with or endorsed by the NotProton developers, the Wine project
 > (WineHQ), CodeWeavers or Valve. "Wine" and "CrossOver" are trademarks of their respective
 > owners and are only used here to describe what the software works with. Please report problems
-> with this fork [here](https://github.com/raymondchins/Bridgeplay/issues), not upstream.
+> with this fork [here](https://github.com/raymondchins/Ambaplay/issues), not upstream.
 >
 > Modified by Leon Seemann, 2026. Like upstream, this fork is licensed under the GPLv3; see
 > [NOTICE](NOTICE) for details.
@@ -50,13 +50,13 @@ I further recommend going into Steam Settings - Compatibility and selecting the 
 
 If a game has a native macOS version as well as a Windows one, Steam will download the macOS version. To override this behavior, right click on the game, select Properties, select Compatibility. Enable 'Force the use of a specific Steam Play compatibility tool'. Select whichever version of CrossOver you want to do use. That will make Steam download the Windows version. Unchecking the 'Force the use...' box or selecting 'No Compatibility Tool' in the drop down list will revert to the macOS version of the game, with the specifics there varying based on your Steam version.
 
-**Valve Anti-Cheat is not supported.** Proton itself does not support VAC in Valve titles; Valve ships native Linux ports instead. Bridgeplay does not promise that VAC titles work. 
+**Valve Anti-Cheat is not supported.** Proton itself does not support VAC in Valve titles; Valve ships native Linux ports instead. Ambaplay does not promise that VAC titles work.
 
 ## Free Wine engine (no CrossOver needed)
 
-Bridgeplay can also run entirely on free software. Under Compatibility Tool, **Download & Set Up**
+Ambaplay can also run entirely on free software. Under Compatibility Tool, **Download & Set Up**
 fetches the WineHQ 11.15 macOS build from [Gcenx/macOS_Wine_builds](https://github.com/Gcenx/macOS_Wine_builds)
-(hash pinned), unpacks it into `~/Library/Application Support/bridgeplay/engines/` and sets the
+(hash pinned), unpacks it into `~/Library/Application Support/ambaplay/engines/` and sets the
 compatibility tool up from it exactly like a CrossOver copy. No CrossOver license is involved; the
 license check is skipped only for loaders whose hash pins the free build.
 
@@ -69,7 +69,7 @@ against. Differences from CrossOver to be aware of:
   Wine's own wined3d cannot reach feature level 11 on macOS OpenGL. D3DMetal is Apple's and needs
   CrossOver's Wine changes, so this engine does not use it; the WineCX engine can, with a Game
   Porting Toolkit you supply (`docs/WINECX.md`).
-- DXMT needs macdrv functions upstream Wine hides; Bridgeplay ships a rebuilt `winemac.so`
+- DXMT needs macdrv functions upstream Wine hides; Ambaplay ships a rebuilt `winemac.so`
   that exports them (see `winemac-patch/`).
 - D3D 12 has no fast path; vkd3d over the bundled MoltenVK is limited.
 - WineHQ has no msync/esync, so CPU-heavy games can run slower than under CrossOver or Sikarugir.
@@ -100,5 +100,5 @@ Developer Notes:
 As far as the source structure goes, the macOS app itself is located in the ```app``` folder. The core logic is in ```dylib```.
 ```lsteamclient``` is a macOS port of Valve's lsteamclient. ```steam-shim```is a port of Valve's
 steam-helper from Proton 9.0. ntdll-patch patches the copy of CrossOver that the app
-makes/places in the ```~/Library/Application Support/bridgeplay/runners/``` folder so that
+makes/places in the ```~/Library/Application Support/ambaplay/runners/``` folder so that
 lsteamclient is loaded.

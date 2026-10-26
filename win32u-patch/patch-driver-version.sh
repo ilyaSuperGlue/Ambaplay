@@ -1,5 +1,5 @@
 #!/bin/sh
-# Rebuilds app/Sources/BridgeplayApp/Resources/win32u-winecx-11.17.so from runtime 4.7.3's
+# Rebuilds app/Sources/AmbaplayApp/Resources/win32u-winecx-11.17.so from runtime 4.7.3's
 # win32u.so (winecx e0aa380). Its driver_vendor_to_version() reports NVIDIA as
 # "35.0.15.6094" (560.94) in the display class key's DriverVersion; games that read it
 # (Source 2 / Deadlock) call that out of date and hide DLSS behind the NVIDIA identity
@@ -8,7 +8,7 @@
 # DriverVersion (35.0.15.8180), then the file is signed ad hoc with its original identifier.
 set -eu
 src=${1:?usage: patch-driver-version.sh <runtime lib/wine/x86_64-unix/win32u.so>}
-out="$(cd "$(dirname "$0")/.." && pwd)/app/Sources/BridgeplayApp/Resources/win32u-winecx-11.17.so"
+out="$(cd "$(dirname "$0")/.." && pwd)/app/Sources/AmbaplayApp/Resources/win32u-winecx-11.17.so"
 want=5ea985227c89b57e5f48d7422059db933d32a213e172577d68e4415d6f7c2a71
 [ "$(shasum -a 256 "$src" | cut -d' ' -f1)" = "$want" ] || { echo "not runtime 4.7.3's win32u.so" >&2; exit 1; }
 ident=$(codesign -dv "$src" 2>&1 | sed -n 's/^Identifier=//p')

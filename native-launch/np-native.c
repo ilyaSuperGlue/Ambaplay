@@ -13,19 +13,19 @@
  *
  * Environment sources, highest precedence first:
  *   1. VAR=VALUE launch-option arguments
- *   2. ~/Library/Application Support/bridgeplay/gamefixes/native/<appid>.conf
- *   3. ~/Library/Application Support/bridgeplay/gamefixes/native-default.conf
+ *   2. ~/Library/Application Support/ambaplay/gamefixes/native/<appid>.conf
+ *   3. ~/Library/Application Support/ambaplay/gamefixes/native-default.conf
  *   4. the environment Steam passed in
  * Until the app moves them over, ~/Library/Application Support/notproton and
- * ~/.notproton are used when the bridgeplay ones do not exist.
+ * ~/.notproton are used when the ambaplay ones do not exist.
  *
- * Settings are spelled BRIDGEPLAY_<X>; the shims read NOTPROTON_<X>, the upstream
- * name, so each BRIDGEPLAY_<X> is also set as NOTPROTON_<X>. A NOTPROTON_<X> given
- * in the same source wins, so options written before Bridgeplay 3.0 still apply.
+ * Settings are spelled AMBAPLAY_<X>; the shims read NOTPROTON_<X>, the upstream
+ * name, so each AMBAPLAY_<X> is also set as NOTPROTON_<X>. A NOTPROTON_<X> given
+ * in the same source wins, so options written before Ambaplay 3.0 still apply.
  *
  * DYLD_INSERT_LIBRARIES is composed, never replaced:
- *   gamepad shim (~/.bridgeplay/libnp_gamepad.dylib, unless NP_PAD_MODE=off)
- *   overlay shim (only when BRIDGEPLAY_FRAMEGEN is set and not 0/off)
+ *   gamepad shim (~/.ambaplay/libnp_gamepad.dylib, unless NP_PAD_MODE=off)
+ *   overlay shim (only when AMBAPLAY_FRAMEGEN is set and not 0/off)
  *   DYLD_INSERT_LIBRARIES given through the sources above
  *   DYLD_INSERT_LIBRARIES and STEAM_DYLD_INSERT_LIBRARIES received from Steam
  * de-duplicated, ours first. STEAM_DYLD_INSERT_LIBRARIES is set to the same
@@ -55,13 +55,13 @@
 extern char **environ;
 
 #define FAIL_EXIT 127
-#define PAD_SHIM_REL "/.bridgeplay/libnp_gamepad.dylib"
+#define PAD_SHIM_REL "/.ambaplay/libnp_gamepad.dylib"
 #define LEGACY_PAD_SHIM_REL "/.notproton/libnp_gamepad.dylib"
-#define SUPPORT_REL "/Library/Application Support/bridgeplay"
+#define SUPPORT_REL "/Library/Application Support/ambaplay"
 #define LEGACY_SUPPORT_REL "/Library/Application Support/notproton"
 #define OVERLAY_SHIM_REL "/overlay-shim.dylib"
 #define CONF_DIR_REL "/gamefixes"
-#define PUBLIC_PREFIX "BRIDGEPLAY_"
+#define PUBLIC_PREFIX "AMBAPLAY_"
 #define LEGACY_PREFIX "NOTPROTON_"
 #define MAX_LIBS 64
 
@@ -283,7 +283,7 @@ static char *current_or_legacy(const char *home, const char *rel, const char *le
 	return cur;
 }
 
-/* NOTPROTON_<X> for a BRIDGEPLAY_<X> name, NULL for any other. */
+/* NOTPROTON_<X> for a AMBAPLAY_<X> name, NULL for any other. */
 static char *legacy_name(const char *name)
 {
 	size_t n = strlen(PUBLIC_PREFIX);
@@ -292,7 +292,7 @@ static char *legacy_name(const char *name)
 	return join3(LEGACY_PREFIX, name + n, "");
 }
 
-/* The environment Steam passed in: BRIDGEPLAY_<X> becomes NOTPROTON_<X> unless that is set. */
+/* The environment Steam passed in: AMBAPLAY_<X> becomes NOTPROTON_<X> unless that is set. */
 static void map_public_env(void)
 {
 	size_t count = 0;
@@ -475,7 +475,7 @@ int main(int argc, char **argv)
 	char *user_dyld_c = user_dyld ? xstrdup(user_dyld) : NULL;
 
 	/* apply lowest precedence first so higher layers win; within a layer a
-	 * NOTPROTON_<X> wins over the BRIDGEPLAY_<X> it would be set from */
+	 * NOTPROTON_<X> wins over the AMBAPLAY_<X> it would be set from */
 	struct layer *order[] = {&def_l, &app_l, &args_l};
 	for (int k = 0; k < 3; k++)
 		for (int j = 0; j < order[k]->n; j++) {

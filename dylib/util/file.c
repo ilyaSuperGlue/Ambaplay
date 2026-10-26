@@ -56,7 +56,7 @@ const char *np_home_dir(void) {
     return NULL;
 }
 
-// Bridgeplay 3.0 moved the support folder from .../notproton. Until the app has moved it, a
+// Ambaplay 3.0 moved the support folder from .../notproton. Until the app has moved it, a
 // home that has only the old folder keeps using it, and nothing creates the new one beside it.
 static int is_dir(const char *home, const char *rel) {
     char path[1024];
@@ -66,7 +66,7 @@ static int is_dir(const char *home, const char *rel) {
 }
 
 void np_support_path(char *buf, size_t bufsz, const char *home, const char *rel) {
-    static const char current[] = "/Library/Application Support/bridgeplay";
+    static const char current[] = "/Library/Application Support/ambaplay";
     static const char legacy[]  = "/Library/Application Support/notproton";
     const char *base = !is_dir(home, current) && is_dir(home, legacy) ? legacy : current;
     if (rel && rel[0])

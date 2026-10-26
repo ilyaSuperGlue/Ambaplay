@@ -88,7 +88,7 @@ DEPS := $(OBJS:.o=.d)
         compatsvc-check prefixstate-check shortcutcheck scriptcheck envcheck buildcheck settingscheck routecheck bridgecheck envpasscheck prefixnotecheck powernotecheck exitcheck gamedrivecheck \
         gamefixescheck launchercheck padcheck launch-shell activatecheck stamp-check versioncheck cicheck compat-reported-check FORCE
 
-APP_PAYLOAD := app/Sources/BridgeplayApp/Resources/payload
+APP_PAYLOAD := app/Sources/AmbaplayApp/Resources/payload
 
 all: $(TARGET) $(APP_PAYLOAD)
 
@@ -204,9 +204,9 @@ mincheck:
 l10ncheck:
 	@bin=$$(cd app/.build/release 2>/dev/null && pwd -P) || \
 		bin=$$(swift build --package-path app -c release --show-bin-path); \
-	for target in BridgeplayApp BridgeplayInstaller; do \
+	for target in AmbaplayApp AmbaplayInstaller; do \
 		python3 dylib/tests/l10ncheck.py "app/Sources/$$target/Resources/Localization/Localizable.xcstrings" \
-			"$$bin/../../Intermediates.noindex/BridgeplayApp.build/$$(basename "$$bin")" zh-Hans it || exit $$?; \
+			"$$bin/../../Intermediates.noindex/AmbaplayApp.build/$$(basename "$$bin")" zh-Hans it || exit $$?; \
 	done
 
 # runcheck owns compat_run.sh, whose warnings wait for a change that can move
@@ -509,7 +509,7 @@ $(RUN_SCRIPT_H): dylib/feats/compat_run.sh dylib/embed_script.py
 
 $(OUT_DIR)/dylib/feats/compat.o: $(RUN_SCRIPT_H)
 
-SUPPORT_DIR        := $(HOME)/Library/Application Support/bridgeplay
+SUPPORT_DIR        := $(HOME)/Library/Application Support/ambaplay
 OVERLAY_SHIM_SRC   := overlay-shim/overlay_shim.m
 OVERLAY_SHIM_ARM   := $(OUT_DIR)/overlay-shim.arm64.dylib
 OVERLAY_SHIM_X86   := $(OUT_DIR)/overlay-shim.x86_64.dylib
@@ -614,7 +614,7 @@ dobby:
 		-G "Unix Makefiles"
 	$(MAKE) -C $(DOBBY_DIR) -j$(shell sysctl -n hw.ncpu)
 
-STEAM_APP    ?= $$(p=$$(defaults read com.bridgeplay.Bridgeplay steamAppPath 2>/dev/null); printf '%s' "$${p:-/Applications/Steam.app}")
+STEAM_APP    ?= $$(p=$$(defaults read com.ambaplay.Ambaplay steamAppPath 2>/dev/null); printf '%s' "$${p:-/Applications/Steam.app}")
 DEPLOY_DST    = $(STEAM_APP)/Contents/MacOS/notproton.dylib
 INSTALL_DST  := $(SUPPORT_DIR)/notproton.dylib
 
@@ -627,7 +627,7 @@ sigdb-install:
 	cp -f signatures/macos.arm64/*.json "$(SUPPORT_DIR)/signatures/macos.arm64/"
 	@echo "==> Installed: $(SUPPORT_DIR)/signatures/macos.arm64"
 
-LAUNCHABLE_BUNDLES := $(HOME)/Desktop/Bridgeplay.app /Applications/Bridgeplay.app
+LAUNCHABLE_BUNDLES := $(HOME)/Desktop/Ambaplay.app /Applications/Ambaplay.app
 
 FONT_FILES := --include='*/' --include='*.ttf' --include='*.ttc' --exclude='*'
 
@@ -700,36 +700,36 @@ app-payload: $(TARGET) $(OVERLAY_SHIM) $(ICONMAKER) $(APPINFO)
 	echo "$$stamp" > "$(APP_PAYLOAD)/build-time"
 	@echo "==> Staged app payload in $(APP_PAYLOAD)"
 
-APP_BUNDLE  := $(OUT_DIR)/Bridgeplay.app
-APP_BUNDLE_PAYLOAD := $(APP_BUNDLE)/Contents/Resources/BridgeplayApp_BridgeplayApp.bundle/Contents/Resources/payload
-APP_ZIP     := $(OUT_DIR)/Bridgeplay.zip
-# dylib/version.h: Bridgeplay semver for CFBundleShortVersionString, the release counter
+APP_BUNDLE  := $(OUT_DIR)/Ambaplay.app
+APP_BUNDLE_PAYLOAD := $(APP_BUNDLE)/Contents/Resources/AmbaplayApp_AmbaplayApp.bundle/Contents/Resources/payload
+APP_ZIP     := $(OUT_DIR)/Ambaplay.zip
+# dylib/version.h: Ambaplay semver for CFBundleShortVersionString, the release counter
 # for CFBundleVersion (Sparkle orders updates by it; 32 is newer than the old 1.1.9.31),
 # and the NotProton release it is based on. See docs/RELEASING.md.
-APP_VERSION  := $(shell sed -n 's/^\#define BRIDGEPLAY_VERSION "\(.*\)"/\1/p' dylib/version.h)
-APP_BUILD    := $(shell sed -n 's/^\#define BRIDGEPLAY_BUILD \([0-9][0-9]*\)$$/\1/p' dylib/version.h)
+APP_VERSION  := $(shell sed -n 's/^\#define AMBAPLAY_VERSION "\(.*\)"/\1/p' dylib/version.h)
+APP_BUILD    := $(shell sed -n 's/^\#define AMBAPLAY_BUILD \([0-9][0-9]*\)$$/\1/p' dylib/version.h)
 APP_UPSTREAM := $(shell sed -n 's/^\#define NOTPROTON_VERSION "\(.*\)"/\1/p' dylib/version.h)
 
 # The app's code signing identity. Ad hoc (-) by default, so any checkout builds; a release
-# uses a stable self-signed identity (BRIDGEPLAY_SIGN_IDENTITY, see docs/RELEASING.md) so the
+# uses a stable self-signed identity (AMBAPLAY_SIGN_IDENTITY, see docs/RELEASING.md) so the
 # designated requirement, and the macOS permissions keyed to it, survive updates.
-APP_SIGN_ID ?= $(or $(BRIDGEPLAY_SIGN_IDENTITY),-)
+APP_SIGN_ID ?= $(or $(AMBAPLAY_SIGN_IDENTITY),-)
 
 # Every Mach-O file in the bundled payload, path:identifier. `make app` signs them with
 # APP_SIGN_ID under these identifiers before the app's own signature, so a release gives
 # each one a certificate-based designated requirement as well. The build rules above keep
 # signing ad hoc for tests and `make deploy`. Existing com.notproton.* identifiers stay.
 PAYLOAD_SIGN_IDS := \
-	notproton.dylib:com.bridgeplay.notproton \
-	overlay-shim.dylib:com.bridgeplay.overlay-shim \
-	iconmaker:com.bridgeplay.iconmaker \
-	appinfo:com.bridgeplay.appinfo \
-	bridge/x86_64-unix-lsteamclient.so:com.bridgeplay.lsteamclient \
-	bridge/aarch64-unix-lsteamclient.so:com.bridgeplay.lsteamclient
+	notproton.dylib:com.ambaplay.notproton \
+	overlay-shim.dylib:com.ambaplay.overlay-shim \
+	iconmaker:com.ambaplay.iconmaker \
+	appinfo:com.ambaplay.appinfo \
+	bridge/x86_64-unix-lsteamclient.so:com.ambaplay.lsteamclient \
+	bridge/aarch64-unix-lsteamclient.so:com.ambaplay.lsteamclient
 
 # The icon name must match CFBundleIconFile/CFBundleIconName in app/Info.plist.
-ICON_NAME := Bridgeplay
-ICON_MARK := helpers/icon/bridgeplay-mark.svg
+ICON_NAME := Ambaplay
+ICON_MARK := helpers/icon/ambaplay-mark.svg
 ICONGEN   := $(OUT_DIR)/icongen
 ICON_DOC  := $(OUT_DIR)/$(ICON_NAME).icon
 ICON_DIR  := $(OUT_DIR)/icon
@@ -742,10 +742,10 @@ APP_LICENSES := LICENSE $(sort $(wildcard LICENSE.*)) NOTICE
 # Records an app bundle that is already built. Building it here would make every deploy
 # build the whole app.
 prefix-command-install:
-	@if [ ! -x "$(APP_BUNDLE)/Contents/MacOS/BridgeplayApp" ]; then \
+	@if [ ! -x "$(APP_BUNDLE)/Contents/MacOS/AmbaplayApp" ]; then \
 		echo "==> no $(APP_BUNDLE) yet, run make app for rebuilds from Steam"; exit 0; fi; \
 	mkdir -p "$(SUPPORT_DIR)" && \
-	printf '%s' "$(CURDIR)/$(APP_BUNDLE)/Contents/MacOS/BridgeplayApp" > "$(SUPPORT_DIR)/app-executable.new" && \
+	printf '%s' "$(CURDIR)/$(APP_BUNDLE)/Contents/MacOS/AmbaplayApp" > "$(SUPPORT_DIR)/app-executable.new" && \
 	mv -f "$(SUPPORT_DIR)/app-executable.new" "$(SUPPORT_DIR)/app-executable"
 
 icon: $(ICON_CAR)
@@ -774,7 +774,7 @@ app: stamp-check app-payload $(ICON_CAR)
 	rm -rf "$(APP_BUNDLE)"
 	@mkdir -p "$(APP_BUNDLE)/Contents/MacOS" "$(APP_BUNDLE)/Contents/Resources"
 	@if [ -z "$(APP_VERSION)" ] || [ -z "$(APP_BUILD)" ] || [ -z "$(APP_UPSTREAM)" ]; then \
-		echo "dylib/version.h needs BRIDGEPLAY_VERSION, BRIDGEPLAY_BUILD and NOTPROTON_VERSION" >&2; exit 1; fi
+		echo "dylib/version.h needs AMBAPLAY_VERSION, AMBAPLAY_BUILD and NOTPROTON_VERSION" >&2; exit 1; fi
 	cp app/Info.plist "$(APP_BUNDLE)/Contents/Info.plist"
 	/usr/libexec/PlistBuddy -c \
 		"Set :CFBundleShortVersionString $(APP_VERSION)" -c \
@@ -782,21 +782,21 @@ app: stamp-check app-payload $(ICON_CAR)
 		"Set :NotProtonVersion $(APP_UPSTREAM)" \
 		"$(APP_BUNDLE)/Contents/Info.plist"
 	@sh scripts/stamp-beta.sh apply "$(APP_BUNDLE)/Contents/Info.plist"
-	cp "$$(swift build --package-path app -c release --show-bin-path)/BridgeplayApp" \
-		"$(APP_BUNDLE)/Contents/MacOS/BridgeplayApp"
+	cp "$$(swift build --package-path app -c release --show-bin-path)/AmbaplayApp" \
+		"$(APP_BUNDLE)/Contents/MacOS/AmbaplayApp"
 	@mkdir -p "$(APP_BUNDLE)/Contents/Frameworks"
 	ditto "$$(swift build --package-path app -c release --show-bin-path)/Sparkle.framework" \
 		"$(APP_BUNDLE)/Contents/Frameworks/Sparkle.framework"
 	install_name_tool -add_rpath @executable_path/../Frameworks \
-		"$(APP_BUNDLE)/Contents/MacOS/BridgeplayApp"
+		"$(APP_BUNDLE)/Contents/MacOS/AmbaplayApp"
 	xcrun vtool -set-build-version macos $(MIN_VER) "$$(xcrun --sdk macosx --show-sdk-version)" \
-		-replace -output "$(APP_BUNDLE)/Contents/MacOS/BridgeplayApp" \
-		"$(APP_BUNDLE)/Contents/MacOS/BridgeplayApp"
-	cp -R "$$(swift build --package-path app -c release --show-bin-path)/BridgeplayApp_BridgeplayApp.bundle" \
+		-replace -output "$(APP_BUNDLE)/Contents/MacOS/AmbaplayApp" \
+		"$(APP_BUNDLE)/Contents/MacOS/AmbaplayApp"
+	cp -R "$$(swift build --package-path app -c release --show-bin-path)/AmbaplayApp_AmbaplayApp.bundle" \
 		"$(APP_BUNDLE)/Contents/Resources/"
-	cp -R "$$(swift build --package-path app -c release --show-bin-path)/BridgeplayApp_BridgeplayUI.bundle" \
+	cp -R "$$(swift build --package-path app -c release --show-bin-path)/AmbaplayApp_AmbaplayUI.bundle" \
 		"$(APP_BUNDLE)/Contents/Resources/"
-	cp -R "$(APP_BUNDLE)/Contents/Resources/BridgeplayApp_BridgeplayApp.bundle/Contents/Resources/"*.lproj \
+	cp -R "$(APP_BUNDLE)/Contents/Resources/AmbaplayApp_AmbaplayApp.bundle/Contents/Resources/"*.lproj \
 		"$(APP_BUNDLE)/Contents/Resources/"
 	cp "$(ICON_DIR)/Assets.car" "$(ICON_DIR)/$(ICON_NAME).icns" \
 		"$(APP_BUNDLE)/Contents/Resources/"
@@ -855,7 +855,7 @@ FORCE:
 
 # np-native: Steam launch-option wrapper for native macOS games (arm64
 # preferred, Steam's DYLD_INSERT_LIBRARIES kept). Installed later to
-# ~/.bridgeplay/np-native.
+# ~/.ambaplay/np-native.
 NP_NATIVE     := $(OUT_DIR)/np-native/np-native
 NP_NATIVE_SRC := native-launch/np-native.c
 

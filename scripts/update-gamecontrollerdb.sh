@@ -19,7 +19,7 @@ set -eu
 # To move it: gh api repos/mdqinc/SDL_GameControllerDB/commits/master -q .sha
 db_commit=ff333823a85ae896e73f4c53670932cf0f728adb
 db_url=https://raw.githubusercontent.com/mdqinc/SDL_GameControllerDB/$db_commit/gamecontrollerdb.txt
-own="$HOME/Library/Application Support/bridgeplay/gamecontrollerdb.txt"
+own="$HOME/Library/Application Support/ambaplay/gamecontrollerdb.txt"
 # Before the app's 3.0.0 migration the file is still in the old support folder.
 legacy_own="$HOME/Library/Application Support/notproton/gamecontrollerdb.txt"
 [ -f "$own" ] || [ ! -f "$legacy_own" ] || own=$legacy_own
@@ -88,7 +88,7 @@ cat "$work/mac.txt" "$work/own.txt" | awk '
 kept=$(wc -l < "$work/merged.txt" | tr -d ' ')
 
 {
-	echo "# SDL controller mappings for Bridgeplay, built by scripts/update-gamecontrollerdb.sh"
+	echo "# SDL controller mappings for Ambaplay, built by scripts/update-gamecontrollerdb.sh"
 	echo "# on $(date -u +%Y-%m-%dT%H:%M:%SZ): $community Mac lines from $db, then $owned from $own;"
 	echo "# $kept after keeping the last line per GUID. Regenerate it rather than editing it."
 	cat "$work/merged.txt"

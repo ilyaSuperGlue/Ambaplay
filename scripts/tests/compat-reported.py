@@ -9,7 +9,7 @@ from unittest.mock import patch
 
 
 SCRIPT = Path(__file__).resolve().parents[1] / "compat-reported.py"
-spec = importlib.util.spec_from_file_location("bridgeplay_compat_reported", SCRIPT)
+spec = importlib.util.spec_from_file_location("ambaplay_compat_reported", SCRIPT)
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
 

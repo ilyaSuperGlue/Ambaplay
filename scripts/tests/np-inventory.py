@@ -9,7 +9,7 @@ from unittest.mock import patch
 
 
 SCRIPT = Path(__file__).resolve().parents[1] / "np-inventory.py"
-spec = importlib.util.spec_from_file_location("bridgeplay_np_inventory", SCRIPT)
+spec = importlib.util.spec_from_file_location("ambaplay_np_inventory", SCRIPT)
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
 

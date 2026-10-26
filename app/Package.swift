@@ -1,8 +1,8 @@
 // swift-tools-version: 6.2
 import Foundation
 import PackageDescription
-let testsPath = "Tests/BridgeplayAppTests"
-let payloadPath = "Sources/BridgeplayApp/Resources/payload"
+let testsPath = "Tests/AmbaplayAppTests"
+let payloadPath = "Sources/AmbaplayApp/Resources/payload"
 let packageRoot = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
 let hasTests = FileManager.default.fileExists(
     atPath: packageRoot.appendingPathComponent(testsPath).path)
@@ -13,7 +13,7 @@ let hasTests = FileManager.default.fileExists(
 let hasPayload = FileManager.default.fileExists(
     atPath: packageRoot.appendingPathComponent(payloadPath).path)
 let package = Package(
-    name: "BridgeplayApp",
+    name: "AmbaplayApp",
     defaultLocalization: "en",
     platforms: [.macOS("15.0")],
     dependencies: [
@@ -21,9 +21,9 @@ let package = Package(
     ],
     targets: [
         .executableTarget(
-            name: "BridgeplayApp",
-            dependencies: [.product(name: "Sparkle", package: "Sparkle"), "BridgeplayUI"],
-            path: "Sources/BridgeplayApp",
+            name: "AmbaplayApp",
+            dependencies: [.product(name: "Sparkle", package: "Sparkle"), "AmbaplayUI"],
+            path: "Sources/AmbaplayApp",
             resources: (hasPayload ? [.copy("Resources/payload")] : []) + [
                 .process("Resources/Localization"),
                 .copy("Resources/payload.manifest"),
@@ -76,33 +76,33 @@ let package = Package(
         ),
     ] + (hasTests ? [
         .testTarget(
-            name: "BridgeplayAppTests",
-            dependencies: ["BridgeplayApp"],
+            name: "AmbaplayAppTests",
+            dependencies: ["AmbaplayApp"],
             path: testsPath
         ),
     ] : []) + [
         .target(
-            name: "BridgeplayUI",
-            path: "Sources/BridgeplayUI",
+            name: "AmbaplayUI",
+            path: "Sources/AmbaplayUI",
             resources: [.copy("Resources/Fonts")],
             swiftSettings: [.swiftLanguageMode(.v6)]
         ),
         .target(
-            name: "BridgeplayInstallerCore",
-            path: "Sources/BridgeplayInstallerCore",
+            name: "AmbaplayInstallerCore",
+            path: "Sources/AmbaplayInstallerCore",
             swiftSettings: [.swiftLanguageMode(.v6)]
         ),
         .executableTarget(
-            name: "BridgeplayInstaller",
-            dependencies: ["BridgeplayUI", "BridgeplayInstallerCore"],
-            path: "Sources/BridgeplayInstaller",
+            name: "AmbaplayInstaller",
+            dependencies: ["AmbaplayUI", "AmbaplayInstallerCore"],
+            path: "Sources/AmbaplayInstaller",
             resources: [.process("Resources/Localization")],
             swiftSettings: [.swiftLanguageMode(.v6)]
         ),
         .testTarget(
-            name: "BridgeplayInstallerCoreTests",
-            dependencies: ["BridgeplayInstallerCore"],
-            path: "Tests/BridgeplayInstallerCoreTests"
+            name: "AmbaplayInstallerCoreTests",
+            dependencies: ["AmbaplayInstallerCore"],
+            path: "Tests/AmbaplayInstallerCoreTests"
         ),
     ]
 )

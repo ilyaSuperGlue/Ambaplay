@@ -38,9 +38,9 @@ const CASES = [
     gone: D3DM, kept: NVEXT },
   // Stripping arguments by name is the kind of thing that takes neighbours with it.
   { to: 'dxvk',
-    from: 'MTL_HUD_ENABLED=1 WINEMSYNC=1 BRIDGEPLAY_RETINA=1 ' + UPSCALED + ' %command% -novid',
+    from: 'MTL_HUD_ENABLED=1 WINEMSYNC=1 AMBAPLAY_RETINA=1 ' + UPSCALED + ' %command% -novid',
     gone: DXMT,
-    kept: ['-novid', 'MTL_HUD_ENABLED=1', 'WINEMSYNC=1', 'BRIDGEPLAY_RETINA=1', '%command%'] },
+    kept: ['-novid', 'MTL_HUD_ENABLED=1', 'WINEMSYNC=1', 'AMBAPLAY_RETINA=1', '%command%'] },
 ];
 
 let failed = 0;

@@ -5,7 +5,7 @@ Upstream Wine builds hide the macdrv functions DXMT's `winemetal.so` looks up wi
 them as the `macdrv_functions` table DXMT checks first, translating `struct macdrv_win_data`
 to the older layout DXMT expects and creating the window's client view on demand.
 
-To rebuild `app/Sources/BridgeplayApp/Resources/winemac-winehq-11.15.so`:
+To rebuild `app/Sources/AmbaplayApp/Resources/winemac-winehq-11.15.so`:
 
     tar xf wine-11.15.tar.xz && cd wine-11.15
     cp ../winemac-patch/dxmt_export.c dlls/winemac.drv/
@@ -45,7 +45,7 @@ and above the Dock, minus the caption), then goes borderless 3024x1964 and resiz
 the proxy reads `-frame` on the main thread behind them. With it the drawable follows to
 3024x1964.
 
-To rebuild `app/Sources/BridgeplayApp/Resources/winemac-winecx-11.15.so` from winecx
+To rebuild `app/Sources/AmbaplayApp/Resources/winemac-winecx-11.15.so` from winecx
 `5b45f45` (runtime 4.5.125), natively, with the CI's flags:
 
     git -C winecx apply ../winemac-patch/winecx-d3dmetal-retina.patch

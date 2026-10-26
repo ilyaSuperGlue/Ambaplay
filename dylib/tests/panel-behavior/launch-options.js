@@ -26,7 +26,7 @@ for (const form of Object.keys(FORMS)) {
     'WINEDEBUG=err+all,\\ trace+seh %command% --name two\\ words',
     'MTL_HUD_ENABLED_EXTRA=1 %command% --title "MTL_HUD_ENABLED=0 extra"',
     'DXMT_CONFIG="literal \\"quote\\" and \\\\slash" %command%',
-    'WINEDEBUG="$(touch /tmp/bridgeplay-panel-must-not-run)" %command%',
+    'WINEDEBUG="$(touch /tmp/ambaplay-panel-must-not-run)" %command%',
     '\tWINEDEBUG="a b"\t%command%\t--name "two words"  ',
   ]) {
     written.length = 0;

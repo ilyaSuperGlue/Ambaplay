@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Inventory installed Steam games and rate them for Bridgeplay.
+"""Inventory installed Steam games and rate them for Ambaplay.
 
 Reads appmanifest_*.acf from all configured Steam libraries, queries the Steam store
 (native Mac?), PCGamingWiki (D3D/Vulkan, 64-bit) and AreWeAntiCheatYet (anti-cheat), writes

@@ -1,6 +1,6 @@
 # WineCX engine
 
-Bridgeplay's second free engine. WineCX is CodeWeavers' open-source (LGPL) CrossOver 26.3
+Ambaplay's second free engine. WineCX is CodeWeavers' open-source (LGPL) CrossOver 26.3
 Wine changes, rebased by dappermint onto upstream Wine
 ([dappermint/winecx](https://github.com/dappermint/winecx)). It is built in CI into a Whisky
 runtime by [dappermint/winecx-gptk](https://github.com/dappermint/winecx-gptk).
@@ -9,15 +9,15 @@ Two releases are pinned side by side (`FreeEngineWinecx.releases`):
 
 | Build | Runtime | winecx | Wine | Tool | Bundle |
 |---|---|---|---|---|---|
-| `winecx-11.17` (current) | 4.7.3 | `e0aa380` | 11.17 | `bridgeplay-winecx-11.17` | `WineCX 11.17.app` |
-| `winecx-11.15` | 4.5.125 | `5b45f45` | 11.15 | `bridgeplay-winecx` | `WineCX 11.15.app` |
+| `winecx-11.17` (current) | 4.7.3 | `e0aa380` | 11.17 | `ambaplay-winecx-11.17` | `WineCX 11.17.app` |
+| `winecx-11.15` | 4.5.125 | `5b45f45` | 11.15 | `ambaplay-winecx` | `WineCX 11.15.app` |
 
 The WineCX row installs the current one. Each release is its own runner build with its own
-pins, ntdll detours and Steam tool. `bridgeplay-winecx` stays on 11.15: every existing prefix's
+pins, ntdll detours and Steam tool. `ambaplay-winecx` stays on 11.15: every existing prefix's
 build record (`notproton-build`) names `winecx-11.15`, and `refuse_other_build` in
 `compat_run.sh` refuses a prefix claimed by another build, so moving the default tool would
 stop every WineCX game until its prefix is rebuilt. 11.17 is picked per game as "WineCX 11.17"
-(`bridgeplay-winecx-11.17`), on a rebuilt prefix.
+(`ambaplay-winecx-11.17`), on a rebuilt prefix.
 
 4.7.3 over 4.5.125: msync fixes (wake one waiter, skip wake syscalls nobody waits on, sleep
 instead of spinning while a wait registers, unregister on contention), kernelbase
@@ -38,7 +38,7 @@ Compared with the WineHQ 11.15 engine it adds:
   `e94c312` build as the WineHQ engine ([DXMT.md](DXMT.md)), not the archive's 0.80. The
   builtin Direct3D is Wine's own, or D3DMetal once a Game Porting Toolkit is linked.
 
-In Bridgeplay the current build is `winecx-11.17`, tool `bridgeplay-winecx-11.17`, shown as
+In Ambaplay the current build is `winecx-11.17`, tool `ambaplay-winecx-11.17`, shown as
 "WineCX 11.17 (msync, D3DMetal)". Like the WineHQ engine it needs no CrossOver license. The licence check
 treats it as free only because the loader hash matches the pinned one, so a CrossOver install
 can never pass as it.
@@ -82,10 +82,10 @@ waiting on.
 Layout inside the archive: `Libraries/Wine` is the Wine tree (`bin/`, `lib/wine/{x86_64-unix,
 x86_64-windows,i386-windows}`, bundled dylibs in `lib/`, `share/wine` with wine-mono 11.2.0
 and gecko). `Libraries/DXMT/{x64,x32}` holds DXMT 0.80's frontends with the builtin marker
-stripped, which Bridgeplay does not use. `Libraries/DXVK/{x64,x32}` holds DXVK. A 0.80-era
-`winemetal` is a builtin in `lib/wine`, which Bridgeplay replaces.
+stripped, which Ambaplay does not use. `Libraries/DXVK/{x64,x32}` holds DXVK. A 0.80-era
+`winemetal` is a builtin in `lib/wine`, which Ambaplay replaces.
 
-## What Bridgeplay lays out
+## What Ambaplay lays out
 
 The engine root (`…/WineCX 11.17.app/Contents/SharedSupport/CrossOver`, cloned into the runner
 `runners/crossover-winecx-11.17`; likewise for 11.15) is the archive's `Libraries/Wine`, plus:
@@ -123,7 +123,7 @@ The engine's `winemac.so` is still replaced, for D3DMetal: winecx's own let D3DM
 swapchain from its view's frame in points, so with High Resolution (Retina) on, a game got a
 half-size drawable and showed only the top-left quarter, and a `ResizeBuffers` from
 `WM_SIZE` read the view's frame before it had followed the window, so the swapchain kept
-its old size (Ravenswatch: 3024x1752 stretched over a 3024x1964 screen). Bridgeplay installs
+its old size (Ravenswatch: 3024x1752 stretched over a 3024x1964 screen). Ambaplay installs
 `winemac-winecx-<build>.so`, built from winecx `e0aa380` with
 `winemac-patch/winecx-11.17-d3dmetal-retina.patch` (11.17) or from `5b45f45` with
 `winemac-patch/winecx-d3dmetal-retina.patch` (11.15), see `winemac-patch/README.md`, pinned as
@@ -137,7 +137,7 @@ macOS 26 SDK lacks. A gamepad then had no path into Wine: winebus ignores the IO
 HID device for a gamepad unless that device has `Hidraw=1`, and with it the pad comes in as
 `is_hidraw 1, is_gamepad 0`, which XInput never opens.
 
-Bridgeplay installs `winebus-winecx-<build>.so`: that winecx tree's own, built with
+Ambaplay installs `winebus-winecx-<build>.so`: that winecx tree's own, built with
 `SONAME_LIBSDL2` = `libSDL2-2.0.0.dylib`, the name the WineHQ engine's `winebus.so` dlopens.
 SDL's bus then presents the pad as a gamepad (`is_gamepad 1`), the device XInput opens.
 dyld resolves the leaf name through the caller's `LC_RPATH`s, and `winebus.so` carries
@@ -303,20 +303,20 @@ name CrossOver gives it when it copies it into each prefix. The prefix's placeho
 
 ## Using D3DMetal with your own Game Porting Toolkit
 
-Apple's licence does not let Bridgeplay redistribute D3DMetal, so you supply it:
+Apple's licence does not let Ambaplay redistribute D3DMetal, so you supply it:
 
 1. Download the Game Porting Toolkit from Apple:
    https://developer.apple.com/download/all/?q=Game%20Porting%20Toolkit (free Apple
    developer account).
 2. Open the disk image ("Evaluation environment for Windows games").
 3. Copy the **contents of its `redist/lib` folder** into
-   `~/Library/Application Support/bridgeplay/gptk/`, so you end up with `gptk/external/` and
+   `~/Library/Application Support/ambaplay/gptk/`, so you end up with `gptk/external/` and
    `gptk/wine/`.
-4. In Bridgeplay's Status page, press **Rescan** on the "Game Porting Toolkit" row. It turns
+4. In Ambaplay's Status page, press **Rescan** on the "Game Porting Toolkit" row. It turns
    green with "Linked from <path>." If the WineCX engine is not installed yet, "Download & Set
    Up" on the "WineCX Engine" row links it during setup.
 
-Bridgeplay looks in this order and links the first complete copy: that folder (the
+Ambaplay looks in this order and links the first complete copy: that folder (the
 `redist` folder itself, or the whole volume, is also accepted), then
 `/Applications/Game Porting Toolkit.app` (`brew install --cask gcenx/wine/game-porting-toolkit`,
 which keeps it in `Contents/Resources/wine/lib`), then `~/Applications/Game Porting Toolkit.app`.
@@ -325,7 +325,7 @@ A copy counts only when `external/libd3dshared.dylib`, `external/D3DMetal.framew
 `wine/x86_64-windows/{d3d10,d3d11,d3d12,dxgi}.dll` are all present and each forwarder carries
 the `Wine builtin DLL` marker. GPTK 4.0 beta 2 also has `wine/x86_64-unix/<name>.so` (links
 to `../../external/libd3dshared.dylib`), `nvapi64` and `nvngx-on-metalfx`, `License.rtf` and
-`SOURCE.txt`; the unix halves and nvapi64 are linked when present. Bridgeplay only reads the
+`SOURCE.txt`; the unix halves and nvapi64 are linked when present. Ambaplay only reads the
 folder.
 
 ## Risks
@@ -352,7 +352,7 @@ folder.
 - **The CrossOver user profile.** A prefix built by another engine keeps its profile under
   `users/<name>`, while CrossOver-lineage Wine uses `users/crossover`
   ([frankea notes](https://github.com/frankea/Whisky/releases/tag/v4.5.105-beta.1)).
-  Bridgeplay prefixes are tied to one build, so this only matters if a prefix is moved
+  Ambaplay prefixes are tied to one build, so this only matters if a prefix is moved
   between engines.
 - **Bridge compatibility is inferred, not run.** `ntdll.so` exports a superset of stock
   11.15's (299 → 302 symbols), so `lsteamclient.so` resolves. The PE `ntdll.dll` exports were
@@ -366,11 +366,11 @@ folder.
   https://github.com/3Shain/dxmt/tree/e94c312f5c054263acf261cfa109edf13e757587), DXVK zlib, MoltenVK Apache-2.0. The tarball also
   bundles nixpkgs libraries: ffmpeg 7.1.1 built `--enable-gpl` with x264/x265 (GPL-3.0+),
   and gstreamer's fdk-aac plugin. It ships **no licence texts**, and winecx-gptk has no
-  licence of its own. Bridgeplay only downloads the upstream release on the user's machine
+  licence of its own. Ambaplay only downloads the upstream release on the user's machine
   and redistributes none of it. Anyone mirroring the archive takes on those obligations.
 - **Rosetta.** The engine is x86_64 and Apple has said Rosetta is largely going away in
   macOS 28. D3DMetal is x86_64 only too (winecx-gptk README).
-- **GPTK authenticity.** Bridgeplay checks the builtin marker and file presence but not Apple's
+- **GPTK authenticity.** Ambaplay checks the builtin marker and file presence but not Apple's
   code signature (Whisky checks both, in `GPTKImporter+Authenticity.swift`). The payload is
   a local folder the user chose.
 
@@ -408,11 +408,11 @@ every other shipped file are in [Shipped binaries](#shipped-binaries).
 
 The unpack test (`FreeEngineWinecxTests.unpacksRealArchive`, once per release) checks all of
 this against the real archive when `NOTPROTON_WINECX_ARCHIVE` points at it, or when it sits in
-Bridgeplay's download cache.
+Ambaplay's download cache.
 
 ## Shipped binaries
 
-Every binary in `app/Sources/BridgeplayApp/Resources/` built from a patch or source in this
+Every binary in `app/Sources/AmbaplayApp/Resources/` built from a patch or source in this
 repository, with the sha256 of the committed file, which must equal the Swift pin in the last
 column. Build recipes are in the sections above and in each patch folder's README.
 

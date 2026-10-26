@@ -432,7 +432,7 @@ static int start_rebuild(uintptr_t request, uintptr_t response) {
             return answer_json(response, appid, "{\"error\":\"busy\"}");
         }
         snprintf(status, sizeof status, "%s/notproton-rebuild", st.compatdata);
-        snprintf(log, sizeof log, "%s/bridgeplay-run.log", st.compatdata);
+        snprintf(log, sizeof log, "%s/ambaplay-run.log", st.compatdata);
         int fd = open(status, O_WRONLY | O_CREAT | O_NOFOLLOW | O_NONBLOCK | O_CLOEXEC, 0600);
         struct stat info;
         int recorded = fd >= 0 && fstat(fd, &info) == 0 && S_ISREG(info.st_mode)
@@ -472,7 +472,7 @@ static int open_prefix_log(uintptr_t request, uintptr_t response) {
     np_prefix_state_t st;
     if (!read_state(appid, &st) || !st.compatdata[0]) return RESULT_FAIL;
     char log[PATH_MAX];
-    snprintf(log, sizeof log, "%s/bridgeplay-run.log", st.compatdata);
+    snprintf(log, sizeof log, "%s/ambaplay-run.log", st.compatdata);
     // open waits on LaunchServices, which is not something Steam's WebUI thread should do.
     char *argv[] = { "/bin/sh", "-c", "/usr/bin/open -t \"$0\" &", log, NULL };
     struct stat info;

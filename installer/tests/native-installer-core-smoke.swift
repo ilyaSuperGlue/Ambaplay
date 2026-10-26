@@ -5,7 +5,7 @@ import Foundation
 @main
 struct NativeInstallerCoreSmoke {
     private static let archiveURL = URL(
-        string: "https://github.com/raymondchins/Bridgeplay/releases/download/v3.5.0/Bridgeplay.zip"
+        string: "https://github.com/raymondchins/Ambaplay/releases/download/v3.5.0/Ambaplay.zip"
     )!
 
     static func main() {
@@ -65,11 +65,11 @@ struct NativeInstallerCoreSmoke {
         _ = try InstallerRelease.parse(appcast: appcast(signature: signature, minimumOS: "26.0"))
         try expectInstallerError("wrong archive host") {
             _ = try InstallerRelease.parse(appcast: appcast(signature: signature,
-                                                            archive: "https://github.com.attacker.invalid/raymondchins/Bridgeplay/releases/download/v3.5.0/Bridgeplay.zip"))
+                                                            archive: "https://github.com.attacker.invalid/raymondchins/Ambaplay/releases/download/v3.5.0/Ambaplay.zip"))
         }
         try expectInstallerError("wrong archive path") {
             _ = try InstallerRelease.parse(appcast: appcast(signature: signature,
-                                                            archive: "https://github.com/raymondchins/Bridgeplay/releases/download/v3.5.0/Other.zip"))
+                                                            archive: "https://github.com/raymondchins/Ambaplay/releases/download/v3.5.0/Other.zip"))
         }
         try expectInstallerError("oversized archive length") {
             _ = try InstallerRelease.parse(appcast: appcast(signature: signature, length: "1073741825"))
@@ -97,7 +97,7 @@ struct NativeInstallerCoreSmoke {
     private static func appcast(
         signature: String,
         minimumOS: String = "26.0",
-        archive: String = "https://github.com/raymondchins/Bridgeplay/releases/download/v3.5.0/Bridgeplay.zip",
+        archive: String = "https://github.com/raymondchins/Ambaplay/releases/download/v3.5.0/Ambaplay.zip",
         length: String = "512",
         version: String = "3.5.0",
         hardware: String? = "arm64"
@@ -127,12 +127,12 @@ struct NativeInstallerCoreSmoke {
     ) throws {
         let directory = root.appending(path: "install-flow", directoryHint: .isDirectory)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        let destination = directory.appending(path: "Bridgeplay.app", directoryHint: .isDirectory)
+        let destination = directory.appending(path: "Ambaplay.app", directoryHint: .isDirectory)
         let service = InstallerService(destination: destination, ensureAppIsClosed: {})
         try require(try service.state(for: release) == .notInstalled, "new-install detection")
 
         let save = directory.appending(path: "saves/slot.sav")
-        let config = directory.appending(path: "Application Support/bridgeplay/gamefixes/default.conf")
+        let config = directory.appending(path: "Application Support/ambaplay/gamefixes/default.conf")
         try FileManager.default.createDirectory(at: save.deletingLastPathComponent(), withIntermediateDirectories: true)
         try FileManager.default.createDirectory(at: config.deletingLastPathComponent(), withIntermediateDirectories: true)
         try Data("save survives".utf8).write(to: save)
@@ -143,7 +143,7 @@ struct NativeInstallerCoreSmoke {
         try require(try Data(contentsOf: save) == Data("save survives".utf8), "save remains untouched")
         try require(try Data(contentsOf: config) == Data("user config survives".utf8), "config remains untouched")
         let lockMode = try FileManager.default.attributesOfItem(
-            atPath: directory.appending(path: ".Bridgeplay.app.install.lock").path
+            atPath: directory.appending(path: ".Ambaplay.app.install.lock").path
         )[.posixPermissions] as? NSNumber
         try require(lockMode?.intValue == 0o644, "persistent lock is readable by other macOS accounts")
 
@@ -159,11 +159,11 @@ struct NativeInstallerCoreSmoke {
 
         let updateDirectory = root.appending(path: "update-flow", directoryHint: .isDirectory)
         try FileManager.default.createDirectory(at: updateDirectory, withIntermediateDirectories: true)
-        let updateDestination = updateDirectory.appending(path: "Bridgeplay.app", directoryHint: .isDirectory)
+        let updateDestination = updateDirectory.appending(path: "Ambaplay.app", directoryHint: .isDirectory)
         try writeSignedApp(at: updateDestination, version: "3.4.1", build: "34")
         let updateService = InstallerService(destination: updateDestination, ensureAppIsClosed: {})
         guard case .updateAvailable(let currentBuild, let currentVersion, _) = try updateService.state(for: release) else {
-            throw SmokeFailure("Existing Bridgeplay did not report an available update.")
+            throw SmokeFailure("Existing Ambaplay did not report an available update.")
         }
         try require(currentBuild == 34 && currentVersion == "3.4.1", "update detection")
 
@@ -183,13 +183,13 @@ struct NativeInstallerCoreSmoke {
         }
 
         try updateService.install(release: release, archive: archive)
-        let previousApp = updateDirectory.appending(path: ".Bridgeplay.app.previous", directoryHint: .isDirectory)
+        let previousApp = updateDirectory.appending(path: ".Ambaplay.app.previous", directoryHint: .isDirectory)
         try require(try installedBuild(at: updateDestination) == "35", "update installs offered build")
         try require(try installedBuild(at: previousApp) == "34", "update retains previous signed build")
 
         let unrelatedDirectory = root.appending(path: "unrelated-app", directoryHint: .isDirectory)
         try FileManager.default.createDirectory(at: unrelatedDirectory, withIntermediateDirectories: true)
-        let unrelated = unrelatedDirectory.appending(path: "Bridgeplay.app", directoryHint: .isDirectory)
+        let unrelated = unrelatedDirectory.appending(path: "Ambaplay.app", directoryHint: .isDirectory)
         try writeApp(at: unrelated, identifier: "com.example.other", version: "1.0", build: "1")
         let unrelatedService = InstallerService(destination: unrelated, ensureAppIsClosed: {})
         try expectInstallerError("unrelated app") {
@@ -203,7 +203,7 @@ struct NativeInstallerCoreSmoke {
     private static func testRejectedReplacement(release: InstallerRelease, archive: URL, root: URL) throws {
         let directory = root.appending(path: "reject-replacement", directoryHint: .isDirectory)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        let destination = directory.appending(path: "Bridgeplay.app", directoryHint: .isDirectory)
+        let destination = directory.appending(path: "Ambaplay.app", directoryHint: .isDirectory)
         try writeApp(at: destination, version: "3.4.1", build: "34")
         let originalInfo = try Data(contentsOf: destination.appending(path: "Contents/Info.plist"))
         let tampered = directory.appending(path: "tampered.zip")
@@ -225,10 +225,10 @@ struct NativeInstallerCoreSmoke {
     private static func testLockAndReadonlyLock(release: InstallerRelease, archive: URL, root: URL) throws {
         let directory = root.appending(path: "locked-install", directoryHint: .isDirectory)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        let destination = directory.appending(path: "Bridgeplay.app", directoryHint: .isDirectory)
+        let destination = directory.appending(path: "Ambaplay.app", directoryHint: .isDirectory)
         try writeApp(at: destination, version: "3.4.1", build: "34")
         let originalInfo = try Data(contentsOf: destination.appending(path: "Contents/Info.plist"))
-        let lockURL = directory.appending(path: ".Bridgeplay.app.install.lock")
+        let lockURL = directory.appending(path: ".Ambaplay.app.install.lock")
         let fd = open(lockURL.path, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR)
         guard fd >= 0 else { throw SmokeFailure("Could not create lock fixture: \(String(cString: strerror(errno)))") }
         defer {
@@ -248,9 +248,9 @@ struct NativeInstallerCoreSmoke {
 
         let readonlyDirectory = root.appending(path: "readonly-lock", directoryHint: .isDirectory)
         try FileManager.default.createDirectory(at: readonlyDirectory, withIntermediateDirectories: true)
-        let readonlyDestination = readonlyDirectory.appending(path: "Bridgeplay.app", directoryHint: .isDirectory)
+        let readonlyDestination = readonlyDirectory.appending(path: "Ambaplay.app", directoryHint: .isDirectory)
         try writeApp(at: readonlyDestination, version: "3.4.1", build: "34")
-        let readonlyLock = readonlyDirectory.appending(path: ".Bridgeplay.app.install.lock")
+        let readonlyLock = readonlyDirectory.appending(path: ".Ambaplay.app.install.lock")
         try Data().write(to: readonlyLock)
         try FileManager.default.setAttributes([.posixPermissions: 0o444], ofItemAtPath: readonlyLock.path)
         let readonlyFD = open(readonlyLock.path, O_RDONLY | O_NOFOLLOW)
@@ -279,7 +279,7 @@ struct NativeInstallerCoreSmoke {
         }
         let directory = root.appending(path: "readonly-parent", directoryHint: .isDirectory)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        let destination = directory.appending(path: "Bridgeplay.app", directoryHint: .isDirectory)
+        let destination = directory.appending(path: "Ambaplay.app", directoryHint: .isDirectory)
         try writeApp(at: destination, version: "3.4.1", build: "34")
         let originalInfo = try Data(contentsOf: destination.appending(path: "Contents/Info.plist"))
         let save = root.appending(path: "readonly-save.dat")
@@ -302,7 +302,7 @@ struct NativeInstallerCoreSmoke {
     private static func testProcessGate(release: InstallerRelease, archive: URL, root: URL) throws {
         let directory = root.appending(path: "running-app", directoryHint: .isDirectory)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        let destination = directory.appending(path: "Bridgeplay.app", directoryHint: .isDirectory)
+        let destination = directory.appending(path: "Ambaplay.app", directoryHint: .isDirectory)
         try writeApp(at: destination, version: "3.4.1", build: "34")
         let originalInfo = try Data(contentsOf: destination.appending(path: "Contents/Info.plist"))
         let service = InstallerService(destination: destination, ensureAppIsClosed: {
@@ -321,13 +321,13 @@ struct NativeInstallerCoreSmoke {
     private static func testRollback(release: InstallerRelease, archive: URL, root: URL) throws {
         let directory = root.appending(path: "rollback", directoryHint: .isDirectory)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        let destination = directory.appending(path: "Bridgeplay.app", directoryHint: .isDirectory)
+        let destination = directory.appending(path: "Ambaplay.app", directoryHint: .isDirectory)
         try writeSignedApp(at: destination, version: "3.4.1", build: "34")
         let originalInfo = try Data(contentsOf: destination.appending(path: "Contents/Info.plist"))
         let service = InstallerService(destination: destination, ensureAppIsClosed: {
             let stage = try FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
-                .first { $0.lastPathComponent.hasPrefix(".BridgeplayInstaller-") }
-            guard let stagedApp = stage?.appending(path: "payload/Bridgeplay.app") else {
+                .first { $0.lastPathComponent.hasPrefix(".AmbaplayInstaller-") }
+            guard let stagedApp = stage?.appending(path: "payload/Ambaplay.app") else {
                 throw SmokeFailure("Validated staging directory was not found.")
             }
             try FileManager.default.removeItem(at: stagedApp)
@@ -340,15 +340,15 @@ struct NativeInstallerCoreSmoke {
         }
         try require(try Data(contentsOf: destination.appending(path: "Contents/Info.plist")) == originalInfo,
                     "failed replacement restores previous app")
-        try require(!FileManager.default.fileExists(atPath: directory.appending(path: ".Bridgeplay.app.previous").path),
+        try require(!FileManager.default.fileExists(atPath: directory.appending(path: ".Ambaplay.app.previous").path),
                     "rollback consumes recovery backup only after restoring it")
     }
 
     private static func testBackupRecovery(release: InstallerRelease, root: URL) throws {
         let directory = root.appending(path: "backup-recovery", directoryHint: .isDirectory)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        let destination = directory.appending(path: "Bridgeplay.app", directoryHint: .isDirectory)
-        let backup = directory.appending(path: ".Bridgeplay.app.previous", directoryHint: .isDirectory)
+        let destination = directory.appending(path: "Ambaplay.app", directoryHint: .isDirectory)
+        let backup = directory.appending(path: ".Ambaplay.app.previous", directoryHint: .isDirectory)
         try writeSignedApp(at: backup, version: "3.4.1", build: "34")
         let save = directory.appending(path: "saves/slot.sav")
         try FileManager.default.createDirectory(at: save.deletingLastPathComponent(), withIntermediateDirectories: true)
@@ -367,7 +367,7 @@ struct NativeInstallerCoreSmoke {
     private static func testDanglingSymlink(root: URL) throws {
         let directory = root.appending(path: "dangling-symlink", directoryHint: .isDirectory)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        let destination = directory.appending(path: "Bridgeplay.app")
+        let destination = directory.appending(path: "Ambaplay.app")
         let target = directory.appending(path: "target-does-not-exist")
         try FileManager.default.createSymbolicLink(at: destination, withDestinationURL: target)
         let release = try InstallerRelease(
@@ -395,9 +395,9 @@ struct NativeInstallerCoreSmoke {
         version: String,
         key: Curve25519.Signing.PrivateKey
     ) throws -> (InstallerRelease, URL) {
-        let source = root.appending(path: "source-\(build)/Bridgeplay.app", directoryHint: .isDirectory)
+        let source = root.appending(path: "source-\(build)/Ambaplay.app", directoryHint: .isDirectory)
         try writeSignedApp(at: source, version: version, build: build)
-        let archive = root.appending(path: "Bridgeplay-\(build).zip")
+        let archive = root.appending(path: "Ambaplay-\(build).zip")
         try run("/usr/bin/ditto", ["-c", "-k", "--keepParent", source.path, archive.path])
         let bytes = try Data(contentsOf: archive)
         let release = try InstallerRelease(
@@ -441,13 +441,13 @@ struct NativeInstallerCoreSmoke {
             "CFBundleIdentifier": identifier,
             "CFBundleShortVersionString": version,
             "CFBundleVersion": build,
-            "CFBundleExecutable": "BridgeplayApp",
+            "CFBundleExecutable": "AmbaplayApp",
         ]
         let infoURL = url.appending(path: "Contents/Info.plist")
         try FileManager.default.createDirectory(at: infoURL.deletingLastPathComponent(), withIntermediateDirectories: true)
         let data = try PropertyListSerialization.data(fromPropertyList: info, format: .xml, options: 0)
         try data.write(to: infoURL)
-        let executable = url.appending(path: "Contents/MacOS/BridgeplayApp")
+        let executable = url.appending(path: "Contents/MacOS/AmbaplayApp")
         try FileManager.default.createDirectory(at: executable.deletingLastPathComponent(), withIntermediateDirectories: true)
         try Data("#!/bin/sh\nexit 0\n".utf8).write(to: executable)
         try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: executable.path)
@@ -455,7 +455,7 @@ struct NativeInstallerCoreSmoke {
 
     private static func writeSignedApp(at url: URL, version: String, build: String) throws {
         try writeApp(at: url, version: version, build: build)
-        let executable = url.appending(path: "Contents/MacOS/BridgeplayApp")
+        let executable = url.appending(path: "Contents/MacOS/AmbaplayApp")
         try FileManager.default.removeItem(at: executable)
         try FileManager.default.copyItem(at: URL(fileURLWithPath: "/usr/bin/true"), to: executable)
         try run("/usr/bin/codesign", ["--force", "--sign", "-", "--deep", url.path])

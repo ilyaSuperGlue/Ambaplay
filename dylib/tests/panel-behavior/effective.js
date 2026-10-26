@@ -15,7 +15,7 @@ if (!emit) { console.error('usage: effective.js <emit>'); process.exit(2); }
 // A quote and a space in the home have to reach the page escaped and the launch options quoted.
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'np-effective-'));
 const home = path.join(tmp, 'home "q" x');
-const np = path.join(home, 'Library', 'Application Support', 'bridgeplay');
+const np = path.join(home, 'Library', 'Application Support', 'ambaplay');
 const put = (rel, text) => {
   fs.mkdirSync(path.dirname(path.join(np, rel)), { recursive: true });
   fs.writeFileSync(path.join(np, rel), text);
@@ -29,18 +29,18 @@ put('gamefixes/default.conf',
   'D3DM_ENABLE_METALFX=1\n' +
   'FRAMEGEN=1\nFRAMEGEN_QUALITY=quality\nFRAMEGEN_UI=0\nFRAMEGEN_FALLBACK=0\nFRAMEGEN_ENGINE=metalfx\n');
 put('gamefixes-default/1888930.conf', 'ROSETTA_ADVERTISE_AVX=1\n');
-// The run script's short keys also take the BRIDGEPLAY_ name.
-put('gamefixes/1778821.conf', 'BRIDGEPLAY_FRAMEGEN=0\n');
+// The run script's short keys also take the AMBAPLAY_ name.
+put('gamefixes/1778821.conf', 'AMBAPLAY_FRAMEGEN=0\n');
 // np-native's own confs: raw variable names, export and quotes allowed, and the pre-3.0
-// NOTPROTON_ spelling still read under the BRIDGEPLAY_ name.
+// NOTPROTON_ spelling still read under the AMBAPLAY_ name.
 put('gamefixes/native-default.conf', '# native\nexport MTL_HUD_ENABLED=1\nNP_PAD_MODE = "hid"\n' +
-  'NOTPROTON_FRAMEGEN=3\nFRAMEGEN=2\nBRIDGEPLAY_RETINA=1\n');
-put('gamefixes/native/1778820.conf', "NP_PAD_MODE='gc'\nBRIDGEPLAY_FRAMEGEN_ENGINE=metalfx\n");
+  'NOTPROTON_FRAMEGEN=3\nFRAMEGEN=2\nAMBAPLAY_RETINA=1\n');
+put('gamefixes/native/1778820.conf', "NP_PAD_MODE='gc'\nAMBAPLAY_FRAMEGEN_ENGINE=metalfx\n");
 // The first tool is the default one, and its name runs past the 16 characters a value may.
 put('tools',
-  'bridgeplay-proton-winecx-11.17\twinecx-11.17\trosetta\tWineCX 11.17 (msync, D3DMetal)\n' +
-  'bridgeplay-proton-winecx\twinecx-11.15\trosetta\tWineCX 11.15 (msync, D3DMetal)\n' +
-  'bridgeplay-proton-winehq\twinehq-11.15\trosetta\tWineHQ 11.15 - Rosetta\n');
+  'ambaplay-proton-winecx-11.17\twinecx-11.17\trosetta\tWineCX 11.17 (msync, D3DMetal)\n' +
+  'ambaplay-proton-winecx\twinecx-11.15\trosetta\tWineCX 11.15 (msync, D3DMetal)\n' +
+  'ambaplay-proton-winehq\twinehq-11.15\trosetta\tWineHQ 11.15 - Rosetta\n');
 
 // Steam's chunks end in a source map comment with no newline after it.
 const chunk = path.join(home, 'chunk.js');
@@ -52,7 +52,7 @@ let failed = 0;
 const t0 = runner('chunk');
 let fx, legacyFx;
 try {
-  const out = execFileSync(emit, ['transform', chunk, 'bridgeplay-proton-winecx-11.17'],
+  const out = execFileSync(emit, ['transform', chunk, 'ambaplay-proton-winecx-11.17'],
                            { encoding: 'utf8', env: Object.assign({}, process.env, { HOME: home }) });
   // Everything from the comment on is code the browser parses at the end of the chunk.
   const tail = out.slice(out.lastIndexOf(map));
@@ -73,21 +73,21 @@ try {
   fs.rmSync(tmp, { recursive: true, force: true });
 }
 t0.ok(fx !== undefined, 'the defaults survive the source map comment the chunk ends in');
-t0.ok(!!(fx && fx.e && fx.e['bridgeplay-proton-winecx-11.17'] && fx.e['bridgeplay-proton-winecx-11.17'].WINEMSYNC === '1'),
+t0.ok(!!(fx && fx.e && fx.e['ambaplay-proton-winecx-11.17'] && fx.e['ambaplay-proton-winecx-11.17'].WINEMSYNC === '1'),
       'a tool name longer than a value still reaches the engine map');
 t0.ok(!!(fx && fx.e && fx.e[''] && fx.e[''].WINEMSYNC === '1'), 'the default tool stands in for an unpinned game');
 t0.ok(!!fx && fx.h === home, `the home reaches the page escaped (${fx && JSON.stringify(fx.h)})`);
-t0.ok(!!fx && JSON.stringify(fx.g).includes('"BRIDGEPLAY_FRAMEGEN":"1"') &&
-      fx.g.BRIDGEPLAY_FRAMEGEN_QUALITY === 'quality' && fx.g.BRIDGEPLAY_FRAMEGEN_UI === '0' &&
-      fx.g.BRIDGEPLAY_FRAMEGEN_FALLBACK === '0' && fx.g.BRIDGEPLAY_FRAMEGEN_ENGINE === 'metalfx',
+t0.ok(!!fx && JSON.stringify(fx.g).includes('"AMBAPLAY_FRAMEGEN":"1"') &&
+      fx.g.AMBAPLAY_FRAMEGEN_QUALITY === 'quality' && fx.g.AMBAPLAY_FRAMEGEN_UI === '0' &&
+      fx.g.AMBAPLAY_FRAMEGEN_FALLBACK === '0' && fx.g.AMBAPLAY_FRAMEGEN_ENGINE === 'metalfx',
       'the FRAMEGEN conf keys map to their variables');
-t0.ok(!!fx && fx.d.BRIDGEPLAY_FRAMEGEN_UI === '1' && fx.d.BRIDGEPLAY_FRAMEGEN_FALLBACK === '1',
+t0.ok(!!fx && fx.d.AMBAPLAY_FRAMEGEN_UI === '1' && fx.d.AMBAPLAY_FRAMEGEN_FALLBACK === '1',
       'Protect UI and the fast-motion fallback default on');
-t0.ok(!!fx && JSON.stringify(fx.ng) === '{"MTL_HUD_ENABLED":"1","NP_PAD_MODE":"hid","BRIDGEPLAY_FRAMEGEN":"3"}',
+t0.ok(!!fx && JSON.stringify(fx.ng) === '{"MTL_HUD_ENABLED":"1","NP_PAD_MODE":"hid","AMBAPLAY_FRAMEGEN":"3"}',
       `native-default.conf is read the way np-native reads it (${fx && JSON.stringify(fx.ng)})`);
-t0.ok(!!fx && JSON.stringify(fx.na) === '{"1778820":{"NP_PAD_MODE":"gc","BRIDGEPLAY_FRAMEGEN_ENGINE":"metalfx"}}',
+t0.ok(!!fx && JSON.stringify(fx.na) === '{"1778820":{"NP_PAD_MODE":"gc","AMBAPLAY_FRAMEGEN_ENGINE":"metalfx"}}',
       `native/<appid>.conf lands per app (${fx && JSON.stringify(fx.na)})`);
-t0.ok(!!legacyFx && legacyFx.g.BRIDGEPLAY_RETINA === '1',
+t0.ok(!!legacyFx && legacyFx.g.AMBAPLAY_RETINA === '1',
       `a home with only the pre-3.0 support folder is still read (${legacyFx && JSON.stringify(legacyFx.g)})`);
 failed += t0.failed;
 
@@ -103,9 +103,9 @@ for (const form of Object.keys(FORMS)) {
   const on = checked({ strCompatToolName: '' });
   t.ok(LABELS.every(l => on.includes(l)),
        `a game on the default tool shows every conf and engine default on (${on.join(',')})`);
-  t.ok(checked({ strCompatToolName: 'bridgeplay-proton-winecx-11.17' }).includes('MSync'),
+  t.ok(checked({ strCompatToolName: 'ambaplay-proton-winecx-11.17' }).includes('MSync'),
        'the default tool named outright reads MSync as on');
-  t.ok(!checked({ strCompatToolName: 'bridgeplay-proton-winehq' }).includes('MSync'),
+  t.ok(!checked({ strCompatToolName: 'ambaplay-proton-winehq' }).includes('MSync'),
        'a tool without msync reads MSync as off');
   // Frame generation as the confs set it up.
   const fg = (id, o, os) => walk(P({ details: details(o || '', Object.assign({ unAppID: id }, os || {})) }));
@@ -127,7 +127,7 @@ for (const form of Object.keys(FORMS)) {
   t.ok(lab(fg(999, '', mac), 'Controller layer').props.selectedOption === 'hid', 'another native game gets the default');
   written.length = 0;
   lab(fg(999, '-novid', mac), 'Metal HUD').props.onChange(false);
-  const want = "'" + home.replace(/'/g, "'\\''") + "/.bridgeplay/np-native' MTL_HUD_ENABLED=0 %command% -novid";
+  const want = "'" + home.replace(/'/g, "'\\''") + "/.ambaplay/np-native' MTL_HUD_ENABLED=0 %command% -novid";
   t.ok(written.length === 1 && written[0].opts === want, `the launcher path is the user's home (${written[0] && written[0].opts})`);
   failed += t.failed;
 }

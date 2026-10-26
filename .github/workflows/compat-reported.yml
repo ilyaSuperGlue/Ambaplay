@@ -1,5 +1,5 @@
 # Weekly refresh of compat/reported.json, the AppleGamingWiki CrossOver ratings that
-# bridgeplay.dev/compatibility shows as "Should work". The site reads the file from main,
+# ambaplay.dev/compatibility shows as "Should work". The site reads the file from main,
 # so a commit here is live without a deploy. Commits only when the game list changed.
 name: compat-reported
 

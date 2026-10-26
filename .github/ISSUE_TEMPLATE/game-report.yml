@@ -1,16 +1,16 @@
 name: Game report
-description: Report how a Windows game runs under Bridgeplay
+description: Report how a Windows game runs under Ambaplay
 title: "[Game] <name> (<appid>)"
 labels: ["game-report"]
 body:
   - type: markdown
     attributes:
       value: |
-        **Have Bridgeplay? You don't need this form.** After you play, the app asks how the game ran; one tap posts the report, log included, to [Compatibility reports](https://github.com/raymondchins/Bridgeplay/discussions/categories/compatibility-reports) and it counts on the [compatibility list](https://bridgeplay.dev/compatibility). Missed the question? Right-click the game on the Prefixes page and choose **Report This Game…**.
+        **Have Ambaplay? You don't need this form.** After you play, the app asks how the game ran; one tap posts the report, log included, to [Compatibility reports](https://github.com/raymondchins/Ambaplay/discussions/categories/compatibility-reports) and it counts on the [compatibility list](https://ambaplay.dev/compatibility). Missed the question? Right-click the game on the Prefixes page and choose **Report This Game…**.
 
-        This form is for anyone reporting without the app. A maintainer checks it and adds the result to the list by hand. Bridgeplay is a hobby project maintained part-time, so that can take a while, and not every game can be fixed.
+        This form is for anyone reporting without the app. A maintainer checks it and adds the result to the list by hand. Ambaplay is a hobby project maintained part-time, so that can take a while, and not every game can be fixed.
 
-        Working from a Bridgeplay checkout? Run `scripts/np-test-game.sh <appid> --stop` instead and attach the zipped `compat/runs/<appid>-<timestamp>/` folder.
+        Working from a Ambaplay checkout? Run `scripts/np-test-game.sh <appid> --stop` instead and attach the zipped `compat/runs/<appid>-<timestamp>/` folder.
   - type: input
     id: name
     attributes:
@@ -68,7 +68,7 @@ body:
   - type: input
     id: fork_commit
     attributes:
-      label: Bridgeplay version
+      label: Ambaplay version
       description: Shown at the bottom of the app's sidebar (for example 3.0.1 (35)), or `git rev-parse --short HEAD` in a checkout.
     validations:
       required: true
@@ -113,4 +113,4 @@ body:
     id: logs
     attributes:
       label: Logs
-      description: Drag and drop `bridgeplay-run.log`, or the zipped `compat/runs/<appid>-<timestamp>/` folder, or paste `result.json`.
+      description: Drag and drop `ambaplay-run.log`, or the zipped `compat/runs/<appid>-<timestamp>/` folder, or paste `result.json`.

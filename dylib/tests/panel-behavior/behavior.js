@@ -83,20 +83,20 @@ for (const form of Object.keys(FORMS)) {
        'controller hiding is on unless the game says otherwise');
   written.length = 0;
   nodes('').find(x => x.props.label === 'Disable hidraw').props.onChange(true);
-  t.ok(last().trim() === 'BRIDGEPLAY_DISABLE_HIDRAW=1 %command%', `hidraw (${last()})`);
+  t.ok(last().trim() === 'AMBAPLAY_DISABLE_HIDRAW=1 %command%', `hidraw (${last()})`);
   written.length = 0;
   raw('').props.onChange(true);
-  t.ok(last().trim() === 'BRIDGEPLAY_RAW_CONTROLLERS=1 %command%', `the controller row writes its flag (${last()})`);
-  t.ok(raw('BRIDGEPLAY_RAW_CONTROLLERS=1').props.checked === true, 'the controller row reads its flag');
+  t.ok(last().trim() === 'AMBAPLAY_RAW_CONTROLLERS=1 %command%', `the controller row writes its flag (${last()})`);
+  t.ok(raw('AMBAPLAY_RAW_CONTROLLERS=1').props.checked === true, 'the controller row reads its flag');
   written.length = 0;
-  raw('BRIDGEPLAY_RAW_CONTROLLERS=1 WINEMSYNC=1').props.onChange(false);
+  raw('AMBAPLAY_RAW_CONTROLLERS=1 WINEMSYNC=1').props.onChange(false);
   t.ok(last().trim() === 'WINEMSYNC=1 %command%', `turning the controller row off removes its flag (${last()})`);
   // Settings that come from the gamefix confs or the engine show as they will apply.
   globalThis.MSCXFx = {
-    g: { MTL_HUD_ENABLED: '1', BRIDGEPLAY_RETINA: '1' },
-    a: { 287700: { BRIDGEPLAY_RETINA: '0' } },
-    e: { 'bridgeplay-proton': { WINEMSYNC: '1' }, '': { WINEMSYNC: '0' } },
-    d: { BRIDGEPLAY_RAW_CONTROLLERS: '1' },
+    g: { MTL_HUD_ENABLED: '1', AMBAPLAY_RETINA: '1' },
+    a: { 287700: { AMBAPLAY_RETINA: '0' } },
+    e: { 'ambaplay-proton': { WINEMSYNC: '1' }, '': { WINEMSYNC: '0' } },
+    d: { AMBAPLAY_RAW_CONTROLLERS: '1' },
   };
   const row = (o, l) => nodes(o).find(x => x.props.label === l || (typeof x.props.label === 'string' && x.props.label.startsWith(l + ' (')));
   t.ok(row('', 'Metal HUD').props.checked === true, 'a global conf value reads as on');
@@ -112,10 +112,10 @@ for (const form of Object.keys(FORMS)) {
   t.ok(last() === '', `turning it back on drops the override (${JSON.stringify(last())})`);
   written.length = 0;
   row('', 'High Resolution').props.onChange(true);
-  t.ok(last().trim() === 'BRIDGEPLAY_RETINA=1 %command%', `turning on what a conf turns off writes 1 (${last()})`);
+  t.ok(last().trim() === 'AMBAPLAY_RETINA=1 %command%', `turning on what a conf turns off writes 1 (${last()})`);
   written.length = 0;
   row('', 'Let games read controllers directly').props.onChange(false);
-  t.ok(last().trim() === 'BRIDGEPLAY_RAW_CONTROLLERS=0 %command%', `opting out of raw controllers writes 0 (${last()})`);
+  t.ok(last().trim() === 'AMBAPLAY_RAW_CONTROLLERS=0 %command%', `opting out of raw controllers writes 0 (${last()})`);
   delete globalThis.MSCXFx;
 
   // Frame generation: a mode for every backend, and the rest of its rows only once it is on.
@@ -141,66 +141,66 @@ for (const form of Object.keys(FORMS)) {
        `the modes name themselves (${mode.props.rgOptions.map(x => x.label).join(',')})`);
   t.ok(mode.props.selectedOption === '0', 'frame generation is off by default');
   t.ok(fgRows('').length === 1, 'off hides every other frame generation row');
-  t.ok(fgrow('BRIDGEPLAY_FRAMEGEN=0', 'Quality') === undefined, 'an explicit 0 hides them too');
-  t.ok(fgrow('BRIDGEPLAY_FRAMEGEN=off', 'Mode').props.selectedOption === '0', 'off reads as Off');
-  const ordered = fgRows('BRIDGEPLAY_FRAMEGEN=2').map(x => x.props.label);
+  t.ok(fgrow('AMBAPLAY_FRAMEGEN=0', 'Quality') === undefined, 'an explicit 0 hides them too');
+  t.ok(fgrow('AMBAPLAY_FRAMEGEN=off', 'Mode').props.selectedOption === '0', 'off reads as Off');
+  const ordered = fgRows('AMBAPLAY_FRAMEGEN=2').map(x => x.props.label);
   t.ok(ordered.join('|') === ['Mode', 'Quality', FGT.ui, FGT.fb, 'Engine'].join('|'),
        `on shows five rows in order (${ordered.join('|')})`);
-  t.ok(fgRows('BRIDGEPLAY_FRAMEGEN=2').every(x => x.type === 'Dropdown' ? x.props.strClassName === 'MSCXDrop'
+  t.ok(fgRows('AMBAPLAY_FRAMEGEN=2').every(x => x.type === 'Dropdown' ? x.props.strClassName === 'MSCXDrop'
        : x.props.className === 'MSCXRow'),
        'frame generation toggles are rows and its dropdowns stack their label above');
   for (const [v, want] of [['1', '2'], ['2', '2'], ['3', '3'], ['adaptive', 'adaptive'], ['Adaptive', 'adaptive']]) {
-    t.ok(fgrow('BRIDGEPLAY_FRAMEGEN=' + v, 'Mode').props.selectedOption === want, `${v} reads as ${want}`);
+    t.ok(fgrow('AMBAPLAY_FRAMEGEN=' + v, 'Mode').props.selectedOption === want, `${v} reads as ${want}`);
   }
-  for (const [v, want] of [['2', 'BRIDGEPLAY_FRAMEGEN=2 %command%'], ['3', 'BRIDGEPLAY_FRAMEGEN=3 %command%'],
-                           ['adaptive', 'BRIDGEPLAY_FRAMEGEN=adaptive %command%']]) {
+  for (const [v, want] of [['2', 'AMBAPLAY_FRAMEGEN=2 %command%'], ['3', 'AMBAPLAY_FRAMEGEN=3 %command%'],
+                           ['adaptive', 'AMBAPLAY_FRAMEGEN=adaptive %command%']]) {
     written.length = 0;
     fgrow('', 'Mode').props.onChange({ data: v });
     t.ok(last().trim() === want, `picking ${v} writes it (${last()})`);
   }
   written.length = 0;
-  fgrow('BRIDGEPLAY_FRAMEGEN=1 WINEMSYNC=1', 'Mode').props.onChange({ data: '0' });
+  fgrow('AMBAPLAY_FRAMEGEN=1 WINEMSYNC=1', 'Mode').props.onChange({ data: '0' });
   t.ok(last().trim() === 'WINEMSYNC=1 %command%', `turning frame generation off removes its flag (${last()})`);
   written.length = 0;
-  fgrow('BRIDGEPLAY_FRAMEGEN=1', 'Mode').props.onChange({ data: '3' });
-  t.ok(last().trim() === 'BRIDGEPLAY_FRAMEGEN=3 %command%', `a legacy 1 is replaced, not kept (${last()})`);
+  fgrow('AMBAPLAY_FRAMEGEN=1', 'Mode').props.onChange({ data: '3' });
+  t.ok(last().trim() === 'AMBAPLAY_FRAMEGEN=3 %command%', `a legacy 1 is replaced, not kept (${last()})`);
   written.length = 0;
-  fgrow('BRIDGEPLAY_FRAMEGEN=2 BRIDGEPLAY_FRAMEGEN_QUALITY=quality', 'Mode').props.onChange({ data: '0' });
-  t.ok(last().trim() === 'BRIDGEPLAY_FRAMEGEN_QUALITY=quality %command%',
+  fgrow('AMBAPLAY_FRAMEGEN=2 AMBAPLAY_FRAMEGEN_QUALITY=quality', 'Mode').props.onChange({ data: '0' });
+  t.ok(last().trim() === 'AMBAPLAY_FRAMEGEN_QUALITY=quality %command%',
        `turning it off keeps the sub-settings for the next time (${last()})`);
 
-  const on = 'BRIDGEPLAY_FRAMEGEN=2';
+  const on = 'AMBAPLAY_FRAMEGEN=2';
   const quality = fgrow(on, 'Quality');
   t.ok(quality.type === 'Dropdown' && quality.props.selectedOption === 'balanced', 'quality is balanced by default');
   t.ok(quality.props.rgOptions.map(x => x.label + ':' + x.data).join(',') ===
        'Performance:performance,Balanced:balanced,Quality:quality', 'the qualities name themselves');
-  t.ok(fgrow(on + ' BRIDGEPLAY_FRAMEGEN_QUALITY=performance', 'Quality').props.selectedOption === 'performance',
+  t.ok(fgrow(on + ' AMBAPLAY_FRAMEGEN_QUALITY=performance', 'Quality').props.selectedOption === 'performance',
        'quality reads its flag');
   written.length = 0;
   fgrow(on, 'Quality').props.onChange({ data: 'quality' });
-  t.ok(last().trim() === 'BRIDGEPLAY_FRAMEGEN_QUALITY=quality BRIDGEPLAY_FRAMEGEN=2 %command%',
+  t.ok(last().trim() === 'AMBAPLAY_FRAMEGEN_QUALITY=quality AMBAPLAY_FRAMEGEN=2 %command%',
        `quality writes its flag (${last()})`);
   written.length = 0;
-  fgrow(on + ' BRIDGEPLAY_FRAMEGEN_QUALITY=quality', 'Quality').props.onChange({ data: 'balanced' });
+  fgrow(on + ' AMBAPLAY_FRAMEGEN_QUALITY=quality', 'Quality').props.onChange({ data: 'balanced' });
   t.ok(last().trim() === on + ' %command%', `balanced drops the flag (${last()})`);
 
   const engine = fgrow(on, 'Engine');
   t.ok(engine.type === 'Dropdown' && engine.props.selectedOption === 'own', 'the engine is the built-in one by default');
   t.ok(engine.props.rgOptions.map(x => x.label + ':' + x.data).join(',') ===
        'Built-in optical flow:own,MetalFX:metalfx', 'the engines name themselves');
-  t.ok(fgrow(on + ' BRIDGEPLAY_FRAMEGEN_ENGINE=metalfx', 'Engine').props.selectedOption === 'metalfx',
+  t.ok(fgrow(on + ' AMBAPLAY_FRAMEGEN_ENGINE=metalfx', 'Engine').props.selectedOption === 'metalfx',
        'the engine reads its flag');
   written.length = 0;
   fgrow(on, 'Engine').props.onChange({ data: 'metalfx' });
-  t.ok(last().includes('BRIDGEPLAY_FRAMEGEN_ENGINE=metalfx '), `the engine writes its flag (${last()})`);
+  t.ok(last().includes('AMBAPLAY_FRAMEGEN_ENGINE=metalfx '), `the engine writes its flag (${last()})`);
   written.length = 0;
-  fgrow(on + ' BRIDGEPLAY_FRAMEGEN_ENGINE=metalfx', 'Engine').props.onChange({ data: 'own' });
+  fgrow(on + ' AMBAPLAY_FRAMEGEN_ENGINE=metalfx', 'Engine').props.onChange({ data: 'own' });
   t.ok(last().trim() === on + ' %command%', `own drops the flag (${last()})`);
 
   // Both toggles are on unless told otherwise, which only the run script defaults say.
   globalThis.MSCXFx = { g: {}, a: {}, e: {},
-                        d: { BRIDGEPLAY_FRAMEGEN_UI: '1', BRIDGEPLAY_FRAMEGEN_FALLBACK: '1' } };
-  for (const [k, l] of [['BRIDGEPLAY_FRAMEGEN_UI', FGT.ui], ['BRIDGEPLAY_FRAMEGEN_FALLBACK', FGT.fb]]) {
+                        d: { AMBAPLAY_FRAMEGEN_UI: '1', AMBAPLAY_FRAMEGEN_FALLBACK: '1' } };
+  for (const [k, l] of [['AMBAPLAY_FRAMEGEN_UI', FGT.ui], ['AMBAPLAY_FRAMEGEN_FALLBACK', FGT.fb]]) {
     t.ok(fgrow(on, l).type === 'Toggle' && fgrow(on, l).props.checked === true, `${k} is on by default`);
     t.ok(fgrow(on + ` ${k}=0`, l).props.checked === false, `${k} reads 0 as off`);
     written.length = 0;
@@ -211,9 +211,9 @@ for (const form of Object.keys(FORMS)) {
     t.ok(last().trim() === `${on} %command%`, `turning ${k} back on drops it (${last()})`);
   }
   // A conf that turns frame generation on: Off has to say so, picking the conf's mode says nothing.
-  globalThis.MSCXFx = { g: { BRIDGEPLAY_FRAMEGEN: '1', BRIDGEPLAY_FRAMEGEN_QUALITY: 'performance',
-                             BRIDGEPLAY_FRAMEGEN_ENGINE: 'metalfx', BRIDGEPLAY_FRAMEGEN_UI: '0' },
-                        a: {}, e: {}, d: { BRIDGEPLAY_FRAMEGEN_UI: '1', BRIDGEPLAY_FRAMEGEN_FALLBACK: '1' } };
+  globalThis.MSCXFx = { g: { AMBAPLAY_FRAMEGEN: '1', AMBAPLAY_FRAMEGEN_QUALITY: 'performance',
+                             AMBAPLAY_FRAMEGEN_ENGINE: 'metalfx', AMBAPLAY_FRAMEGEN_UI: '0' },
+                        a: {}, e: {}, d: { AMBAPLAY_FRAMEGEN_UI: '1', AMBAPLAY_FRAMEGEN_FALLBACK: '1' } };
   t.ok(fgrow('', 'Mode').props.selectedOption === '2', 'a global conf 1 reads frame generation as 2x');
   t.ok(fgRows('').length === 5, 'a conf that turns it on shows every row');
   t.ok(fgrow('', 'Quality').props.selectedOption === 'performance', 'quality reads the conf');
@@ -221,24 +221,24 @@ for (const form of Object.keys(FORMS)) {
   t.ok(fgrow('', FGT.ui).props.checked === false, 'the conf beats the run script default');
   written.length = 0;
   fgrow('', 'Mode').props.onChange({ data: '0' });
-  t.ok(last().trim() === 'BRIDGEPLAY_FRAMEGEN=0 %command%', `off over a conf default writes 0 (${last()})`);
+  t.ok(last().trim() === 'AMBAPLAY_FRAMEGEN=0 %command%', `off over a conf default writes 0 (${last()})`);
   written.length = 0;
-  fgrow('BRIDGEPLAY_FRAMEGEN=0', 'Mode').props.onChange({ data: '2' });
+  fgrow('AMBAPLAY_FRAMEGEN=0', 'Mode').props.onChange({ data: '2' });
   t.ok(last() === '', `the conf's own mode drops the override (${JSON.stringify(last())})`);
   written.length = 0;
   fgrow('', 'Quality').props.onChange({ data: 'balanced' });
-  t.ok(last().trim() === 'BRIDGEPLAY_FRAMEGEN_QUALITY=balanced %command%',
+  t.ok(last().trim() === 'AMBAPLAY_FRAMEGEN_QUALITY=balanced %command%',
        `balanced over a conf default writes it (${last()})`);
   delete globalThis.MSCXFx;
 
   // Native macOS builds with nothing pinned run through np-native: HUD, frame generation, pads.
   const HOME = '/Users/some one';
-  const NAT = "'/Users/some one/.bridgeplay/np-native'";
+  const NAT = "'/Users/some one/.ambaplay/np-native'";
   const mac = (o, over) => details(o, Object.assign({ vecPlatforms: ['osx'], strCompatToolName: '' }, over || {}));
   const nnodes = o => walk(P({ details: mac(o) }));
   const nrow = (o, l) => nnodes(o).find(x => x.props.label === l || (typeof x.props.label === 'string' && x.props.label.startsWith(l + ' (')));
-  globalThis.MSCXFx = { g: { MTL_HUD_ENABLED: '1', BRIDGEPLAY_FRAMEGEN: '2' }, a: { 287700: { WINEMSYNC: '1' } },
-                        e: {}, d: { BRIDGEPLAY_FRAMEGEN_UI: '1', BRIDGEPLAY_FRAMEGEN_FALLBACK: '1' },
+  globalThis.MSCXFx = { g: { MTL_HUD_ENABLED: '1', AMBAPLAY_FRAMEGEN: '2' }, a: { 287700: { WINEMSYNC: '1' } },
+                        e: {}, d: { AMBAPLAY_FRAMEGEN_UI: '1', AMBAPLAY_FRAMEGEN_FALLBACK: '1' },
                         ng: {}, na: {}, h: HOME };
   let n = nnodes('');
   t.ok(P({ details: mac('') }) !== null && P({ details: mac('') }).props.className === 'MSCXPanel',
@@ -249,7 +249,7 @@ for (const form of Object.keys(FORMS)) {
        'native dropdowns: the mode and the controller layer');
   t.ok(nrow('', 'Metal HUD').props.checked === false && nrow('', 'Mode').props.selectedOption === '0',
        'the Wine confs do not reach a native game');
-  t.ok(nnodes('BRIDGEPLAY_FRAMEGEN=3 %command%').filter(x => x.props.label === 'Quality').length === 1,
+  t.ok(nnodes('AMBAPLAY_FRAMEGEN=3 %command%').filter(x => x.props.label === 'Quality').length === 1,
        'the native panel carries the same frame generation rows');
   const pad = nrow('', 'Controller layer');
   t.ok(pad.props.rgOptions.map(x => x.label + ':' + x.data).join(',') ===
@@ -261,12 +261,12 @@ for (const form of Object.keys(FORMS)) {
   t.ok(nnodes('').some(x => x.type === 'Section' && x.props.label === 'Controllers'), 'the native controller section');
   t.ok(P({ details: mac('', { unAppID: 3420702832 }) }).props.children.props.children.length > 4,
        'a mac shortcut still gets the full panel');
-  t.ok(P({ details: mac('', { strCompatToolName: 'bridgeplay-proton' }) }).props.children.props.children.length > 4,
+  t.ok(P({ details: mac('', { strCompatToolName: 'ambaplay-proton' }) }).props.children.props.children.length > 4,
        'a mac build with a tool pinned still gets the full panel');
 
   const ARCH = '/usr/bin/arch -arm64 -x86_64 -e "DYLD_INSERT_LIBRARIES=/Users/x/Library/Application Support/a.dylib"' +
                ' -e NP_PAD_MODE=hid -e MTL_HUD_ENABLED=1 %command% -novid';
-  const NEW = '/Users/someone/.bridgeplay/np-native NP_PAD_MODE=hid MTL_HUD_ENABLED=1 %command% -novid';
+  const NEW = '/Users/someone/.ambaplay/np-native NP_PAD_MODE=hid MTL_HUD_ENABLED=1 %command% -novid';
   for (const [name, o] of [['arch', ARCH], ['np-native', NEW]]) {
     t.ok(nrow(o, 'Metal HUD').props.checked === true, `${name}: the HUD reads from -e/VAR pairs`);
     t.ok(nrow(o, 'Controller layer').props.selectedOption === 'hid', `${name}: the controller layer reads hid`);
@@ -276,7 +276,7 @@ for (const form of Object.keys(FORMS)) {
          `${name}: rewritten under the launcher, -novid kept (${last()})`);
     written.length = 0;
     nrow(o, 'Mode').props.onChange({ data: 'adaptive' });
-    t.ok(last() === NAT + ' NP_PAD_MODE=hid MTL_HUD_ENABLED=1 BRIDGEPLAY_FRAMEGEN=adaptive %command% -novid',
+    t.ok(last() === NAT + ' NP_PAD_MODE=hid MTL_HUD_ENABLED=1 AMBAPLAY_FRAMEGEN=adaptive %command% -novid',
          `${name}: a new variable goes before %command% (${last()})`);
     written.length = 0;
     nrow(o, 'Metal HUD').props.onChange(false);
@@ -292,18 +292,18 @@ for (const form of Object.keys(FORMS)) {
   nrow(NAT + ' NP_PAD_MODE=gc %command% -novid +map x', 'Controller layer').props.onChange({ data: '' });
   t.ok(last() === NAT + ' %command% -novid +map x', `Automatic as the last variable keeps the launcher (${last()})`);
   written.length = 0;
-  nrow('/x/.bridgeplay/np-native MTL_HUD_ENABLED=1 %command% -novid', 'Metal HUD').props.onChange(false);
+  nrow('/x/.ambaplay/np-native MTL_HUD_ENABLED=1 %command% -novid', 'Metal HUD').props.onChange(false);
   t.ok(last() === NAT + ' %command% -novid', `no variable left keeps the launcher and the arguments (${last()})`);
   written.length = 0;
   nrow('', 'Controller layer').props.onChange({ data: 'off' });
   t.ok(last() === NAT + ' NP_PAD_MODE=off %command%', `empty options get the launcher (${last()})`);
   written.length = 0;
   nrow('-novid', 'Mode').props.onChange({ data: '3' });
-  t.ok(last() === NAT + ' BRIDGEPLAY_FRAMEGEN=3 %command% -novid', `bare game arguments follow %command% (${last()})`);
+  t.ok(last() === NAT + ' AMBAPLAY_FRAMEGEN=3 %command% -novid', `bare game arguments follow %command% (${last()})`);
 
   // Native defaults come from np-native's confs, the per-app one first.
-  globalThis.MSCXFx = { g: {}, a: {}, e: {}, d: { BRIDGEPLAY_FRAMEGEN_UI: '1', BRIDGEPLAY_FRAMEGEN_FALLBACK: '1' },
-                        ng: { MTL_HUD_ENABLED: '1', NP_PAD_MODE: 'hid', BRIDGEPLAY_FRAMEGEN: 'adaptive' },
+  globalThis.MSCXFx = { g: {}, a: {}, e: {}, d: { AMBAPLAY_FRAMEGEN_UI: '1', AMBAPLAY_FRAMEGEN_FALLBACK: '1' },
+                        ng: { MTL_HUD_ENABLED: '1', NP_PAD_MODE: 'hid', AMBAPLAY_FRAMEGEN: 'adaptive' },
                         na: { 287700: { NP_PAD_MODE: 'gc' } }, h: '/Users/me' };
   t.ok(nrow('', 'Metal HUD').props.checked === true, 'native-default.conf reads the HUD as on');
   t.ok(nrow('', 'Mode').props.selectedOption === 'adaptive', 'native-default.conf sets the mode');
@@ -311,16 +311,16 @@ for (const form of Object.keys(FORMS)) {
   t.ok(nrow('', FGT.ui).props.checked === true, 'the shim defaults hold for native games');
   written.length = 0;
   nrow('', 'Metal HUD').props.onChange(false);
-  t.ok(last() === '/Users/me/.bridgeplay/np-native MTL_HUD_ENABLED=0 %command%',
+  t.ok(last() === '/Users/me/.ambaplay/np-native MTL_HUD_ENABLED=0 %command%',
        `turning a native default off writes 0 under the home from the page (${last()})`);
   written.length = 0;
   nrow('NP_PAD_MODE=hid %command%', 'Controller layer').props.onChange({ data: 'gc' });
-  t.ok(last() === '/Users/me/.bridgeplay/np-native %command%', `the conf's own layer drops the override (${last()})`);
+  t.ok(last() === '/Users/me/.ambaplay/np-native %command%', `the conf's own layer drops the override (${last()})`);
   // Without a home from the page the launcher already there is reused, and nothing is guessed.
   globalThis.MSCXFx = { g: {}, a: {}, e: {}, d: {} };
   written.length = 0;
   nrow(NEW, 'Mode').props.onChange({ data: '2' });
-  t.ok(last() === '/Users/someone/.bridgeplay/np-native NP_PAD_MODE=hid MTL_HUD_ENABLED=1 BRIDGEPLAY_FRAMEGEN=2 %command% -novid',
+  t.ok(last() === '/Users/someone/.ambaplay/np-native NP_PAD_MODE=hid MTL_HUD_ENABLED=1 AMBAPLAY_FRAMEGEN=2 %command% -novid',
        `no home: the existing launcher path is kept (${last()})`);
   written.length = 0;
   nrow(ARCH, 'Mode').props.onChange({ data: '2' });
@@ -330,26 +330,26 @@ for (const form of Object.keys(FORMS)) {
   // Launch options written before 3.0: NOTPROTON_<X> and ~/.notproton/np-native still read,
   // NOTPROTON_<X> winning as in the run script, and a write moves the line to the new names.
   t.ok(raw('NOTPROTON_RAW_CONTROLLERS=1').props.checked === true, 'a NOTPROTON_ flag still reads');
-  t.ok(raw('NOTPROTON_RAW_CONTROLLERS=1 BRIDGEPLAY_RAW_CONTROLLERS=0').props.checked === true,
-       'NOTPROTON_ wins over BRIDGEPLAY_ when a line has both');
+  t.ok(raw('NOTPROTON_RAW_CONTROLLERS=1 AMBAPLAY_RAW_CONTROLLERS=0').props.checked === true,
+       'NOTPROTON_ wins over AMBAPLAY_ when a line has both');
   t.ok(fgrow('NOTPROTON_FRAMEGEN=3', 'Mode').props.selectedOption === '3', 'a NOTPROTON_ value still reads');
   written.length = 0;
   raw('NOTPROTON_RAW_CONTROLLERS=1 WINEMSYNC=1').props.onChange(false);
   t.ok(last().trim() === 'WINEMSYNC=1 %command%', `turning a NOTPROTON_ flag off removes it (${last()})`);
   written.length = 0;
   nodes('NOTPROTON_RETINA=0 WINEMSYNC=1').find(x => x.props.label === 'High Resolution').props.onChange(true);
-  t.ok(last().trim() === 'BRIDGEPLAY_RETINA=1 WINEMSYNC=1 %command%', `a write replaces the NOTPROTON_ name (${last()})`);
+  t.ok(last().trim() === 'AMBAPLAY_RETINA=1 WINEMSYNC=1 %command%', `a write replaces the NOTPROTON_ name (${last()})`);
   globalThis.MSCXFx = { g: {}, a: {}, e: {}, d: {}, ng: {}, na: {}, h: '/Users/me' };
   t.ok(nrow('/Users/me/.notproton/np-native NOTPROTON_FRAMEGEN=2 %command% -novid', 'Mode').props.selectedOption === '2',
        'a native line under the old launcher reads');
   written.length = 0;
   nrow('/Users/me/.notproton/np-native NOTPROTON_FRAMEGEN=2 %command% -novid', 'Mode').props.onChange({ data: '3' });
-  t.ok(last() === '/Users/me/.bridgeplay/np-native BRIDGEPLAY_FRAMEGEN=3 %command% -novid',
+  t.ok(last() === '/Users/me/.ambaplay/np-native AMBAPLAY_FRAMEGEN=3 %command% -novid',
        `a native write moves the launcher and the name (${last()})`);
   globalThis.MSCXFx = { g: {}, a: {}, e: {}, d: {} };
   written.length = 0;
   nrow('/Users/someone/.notproton/np-native MTL_HUD_ENABLED=1 %command%', 'Mode').props.onChange({ data: '2' });
-  t.ok(last() === '/Users/someone/.notproton/np-native MTL_HUD_ENABLED=1 BRIDGEPLAY_FRAMEGEN=2 %command%',
+  t.ok(last() === '/Users/someone/.notproton/np-native MTL_HUD_ENABLED=1 AMBAPLAY_FRAMEGEN=2 %command%',
        `no home: the old launcher is found and kept (${last()})`);
   delete globalThis.MSCXFx;
 

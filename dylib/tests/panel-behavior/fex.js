@@ -9,15 +9,15 @@ if (!emit) { console.error('usage: fex.js <emit>'); process.exit(2); }
 const AVX = 'Advertise AVX2 to Rosetta';
 const X87 = 'Reduced x87 Precision (Reducing precision improves game performance, is enabled by default in CrossOver Preview)';
 
-// The hook passes only FEX tools; bridgeplay-proton-rosetta stands for a Rosetta tool next to it.
-const FEX_TOOLS = ['bridgeplay-proton-fex'];
+// The hook passes only FEX tools; ambaplay-proton-rosetta stands for a Rosetta tool next to it.
+const FEX_TOOLS = ['ambaplay-proton-fex'];
 
 let failed = 0;
 for (const form of Object.keys(FORMS)) {
   for (const fex of [false, true]) {
     const { render: P, written } = panel(emit, form, undefined, { fexTools: FEX_TOOLS });
     const t = runner(`${form}, ${fex ? 'FEX' : 'Rosetta'}`);
-    const tool = fex ? 'bridgeplay-proton-fex' : 'bridgeplay-proton-rosetta';
+    const tool = fex ? 'ambaplay-proton-fex' : 'ambaplay-proton-rosetta';
     const nodes = opts =>
       walk(P({ details: details(opts + ' %command%', { strCompatToolName: tool }) }));
     const toggles = ns => ns.filter(x => x.type === 'Toggle').map(x => x.props.label);
@@ -94,7 +94,7 @@ for (const form of Object.keys(FORMS)) {
 
   // A game with no tool name runs under the fallback tool.
   for (const first of [false, true]) {
-    const fallback = first ? 'bridgeplay-proton-fex' : 'bridgeplay-proton-rosetta';
+    const fallback = first ? 'ambaplay-proton-fex' : 'ambaplay-proton-rosetta';
     const { render: P } = panel(emit, form, undefined, { fallback, fexTools: FEX_TOOLS });
     const t = runner(`${form}, unmapped, fallback ${fallback}`);
     const r = walk(P({ details: details('', { strCompatToolName: '' }) }));
@@ -104,9 +104,9 @@ for (const form of Object.keys(FORMS)) {
     failed += t.failed;
   }
 
-  const { render: L } = panel(emit, form, undefined, { fexTools: ['bridgeplay-proton-fex-41069'] });
+  const { render: L } = panel(emit, form, undefined, { fexTools: ['ambaplay-proton-fex-41069'] });
   const tp = runner(`${form}, FEX tool name prefix`);
-  const pr = walk(L({ details: details('', { strCompatToolName: 'bridgeplay-proton-fex' }) }));
+  const pr = walk(L({ details: details('', { strCompatToolName: 'ambaplay-proton-fex' }) }));
   tp.ok(pr.find(x => x.type === 'Dropdown').props.rgOptions.some(o => o.data === 'd3dmetal'),
         'a tool whose name prefixes a FEX tool keeps the Rosetta options');
   failed += tp.failed;
@@ -122,18 +122,18 @@ for (const form of Object.keys(FORMS)) {
   };
   const all = 'WINEDEBUG=-all CX_GRAPHICS_BACKEND=d3dmetal D3DM_ENABLE_METALFX=1 MTL_HUD_ENABLED=1 ' +
               "ROSETTA_ADVERTISE_AVX=0 FEX_X87REDUCEDPRECISION=0 DXMT_CONFIG='a;b' %command% -novid";
-  const r = choose(all, 'bridgeplay-proton-fex');
+  const r = choose(all, 'ambaplay-proton-fex');
   t.ok(r === "WINEDEBUG=-all MTL_HUD_ENABLED=1 FEX_X87REDUCEDPRECISION=0 DXMT_CONFIG='a;b' %command% -novid",
        `picking FEX drops only the D3DMetal and Rosetta entries (${r})`);
-  t.ok(choose(all, 'bridgeplay-proton-rosetta') === null, 'picking a Rosetta tool writes nothing');
-  t.ok(choose('D3DM_lower=1 %command%', 'bridgeplay-proton-fex') === null,
+  t.ok(choose(all, 'ambaplay-proton-rosetta') === null, 'picking a Rosetta tool writes nothing');
+  t.ok(choose('D3DM_lower=1 %command%', 'ambaplay-proton-fex') === null,
        'names the launch script does not forward are left alone');
   for (const o of ['>D3DM_LOG=1 %command%', "X=$'a\\'b D3DM_Y=1 c' %command%",
                    'wrapper <(x) D3DM_Y=1 %command%', 'D3DM_Y=1 \\\n%command%'])
-    t.ok(choose(o, 'bridgeplay-proton-fex') === null, `text the parser does not model is left alone (${o})`);
-  t.ok(choose('CX_GRAPHICS_BACKEND=dxmt %command%', 'bridgeplay-proton-fex') === null,
+    t.ok(choose(o, 'ambaplay-proton-fex') === null, `text the parser does not model is left alone (${o})`);
+  t.ok(choose('CX_GRAPHICS_BACKEND=dxmt %command%', 'ambaplay-proton-fex') === null,
        'another backend is not a reason to write');
-  t.ok(choose('-novid CX_GRAPHICS_BACKEND=d3dmetal', 'bridgeplay-proton-fex') === null,
+  t.ok(choose('-novid CX_GRAPHICS_BACKEND=d3dmetal', 'ambaplay-proton-fex') === null,
        'text after the game, not set before %command%, is left alone');
   failed += t.failed;
 }
@@ -143,11 +143,11 @@ for (const form of Object.keys(FORMS)) {
   const globals = { document: { documentElement: { lang: 'en' } },
                     appDetailsStore: { GetAppDetails: id => id === 287700 ? details(opts) : undefined } };
   const { toolQuery, written } = panel(emit, 'statement', globals,
-                                       { fallback: 'bridgeplay-proton-fex', fexTools: FEX_TOOLS });
+                                       { fallback: 'ambaplay-proton-fex', fexTools: FEX_TOOLS });
   const t = runner('statement, the new tool picker');
-  const data = { default_tool_identifier: 'bridgeplay-proton-fex',
-                 aliases: [{ alias: 'np-latest', current_tool_name: 'bridgeplay-proton-fex' },
-                           { alias: 'np-rosetta', current_tool_name: 'bridgeplay-proton-rosetta' }] };
+  const data = { default_tool_identifier: 'ambaplay-proton-fex',
+                 aliases: [{ alias: 'np-latest', current_tool_name: 'ambaplay-proton-fex' },
+                           { alias: 'np-rosetta', current_tool_name: 'ambaplay-proton-rosetta' }] };
   const choose = (value, id = 287700, d = data) => {
     const saved = [];
     written.length = 0;
@@ -155,21 +155,21 @@ for (const form of Object.keys(FORMS)) {
     set(value);
     return { query, saved, opts: written.length ? written[written.length - 1].opts : null };
   };
-  let r = choose('bridgeplay-proton-fex');
-  t.ok(r.saved[0] === 'bridgeplay-proton-fex' && r.query.data === data, 'the query and the pick still reach Steam');
+  let r = choose('ambaplay-proton-fex');
+  t.ok(r.saved[0] === 'ambaplay-proton-fex' && r.query.data === data, 'the query and the pick still reach Steam');
   t.ok(r.opts === 'MTL_HUD_ENABLED=1 %command%', `picking FEX drops the D3DMetal entry (${r.opts})`);
   t.ok(choose('').opts === 'MTL_HUD_ENABLED=1 %command%', 'the default entry counts as the default tool');
   t.ok(choose('', 287700, { ...data, default_tool_identifier: '' }).opts === 'MTL_HUD_ENABLED=1 %command%',
        'with no default saved, the default entry counts as the fallback tool');
-  t.ok(choose('', 287700, { ...data, default_tool_identifier: 'bridgeplay-proton-rosetta' }).opts === null,
+  t.ok(choose('', 287700, { ...data, default_tool_identifier: 'ambaplay-proton-rosetta' }).opts === null,
        'a Rosetta default wins over a FEX fallback');
   t.ok(choose('np-latest').opts === 'MTL_HUD_ENABLED=1 %command%', 'an alias counts as its current tool');
   t.ok(choose('np-rosetta').opts === null, 'an alias for a Rosetta tool writes nothing');
-  t.ok(choose('bridgeplay-proton-rosetta').opts === null, 'picking a Rosetta tool writes nothing');
-  r = choose('bridgeplay-proton-fex', null);
-  t.ok(r.saved[0] === 'bridgeplay-proton-fex' && r.opts === null, 'the settings page picker has no game to edit');
-  t.ok(choose('bridgeplay-proton-fex', 4000).opts === null, 'a game with no loaded details is left alone');
-  t.ok(choose('bridgeplay-proton-fex', 287700, null).opts === null, 'a picker with no tool list writes nothing');
+  t.ok(choose('ambaplay-proton-rosetta').opts === null, 'picking a Rosetta tool writes nothing');
+  r = choose('ambaplay-proton-fex', null);
+  t.ok(r.saved[0] === 'ambaplay-proton-fex' && r.opts === null, 'the settings page picker has no game to edit');
+  t.ok(choose('ambaplay-proton-fex', 4000).opts === null, 'a game with no loaded details is left alone');
+  t.ok(choose('ambaplay-proton-fex', 287700, null).opts === null, 'a picker with no tool list writes nothing');
   failed += t.failed;
 }
 console.log(failed ? `\n${failed} failure(s)` : '\nFEX hides what it cannot run, Rosetta keeps everything');

@@ -13,7 +13,7 @@ Build: against winecx `e0aa380` (runtime 4.7.3), in a tree configured as in
 `make dlls/wined3d/x86_64-windows/wined3d.dll`, then `x86_64-w64-mingw32-strip --strip-debug`
 (as for `ws2_32-patch`, see `docs/WINECX.md`, Own host name).
 
-Output: `app/Sources/BridgeplayApp/Resources/wined3d-winecx-11.17.dll`, installed at
+Output: `app/Sources/AmbaplayApp/Resources/wined3d-winecx-11.17.dll`, installed at
 `lib/wine/x86_64-windows/wined3d.dll`, sha256
 `9298c83d927b3b80d0fa36f52bb5f2ecd60ec4daffff3c93d9b080293e59dfe9`
 (pinned in `FreeEngineWinecx.swift`).

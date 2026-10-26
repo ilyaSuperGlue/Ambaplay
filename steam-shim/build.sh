@@ -15,7 +15,7 @@ repo=$(cd "$here/.." && pwd)
 WINE_BUILD=${WINE_BUILD:-$repo/scratch/wine-build-dual}
 # Relative, since it ends up in the debug info.
 WINE_SRC_REL=${WINE_SRC_REL:-../wine}
-BRIDGE_DIR=${BRIDGE_DIR:-$HOME/Library/Application Support/bridgeplay/bridge}
+BRIDGE_DIR=${BRIDGE_DIR:-$HOME/Library/Application Support/ambaplay/bridge}
 
 install=0
 [ "${1:-}" = "--install" ] && install=1

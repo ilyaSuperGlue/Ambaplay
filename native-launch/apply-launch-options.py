@@ -5,7 +5,7 @@
 
 For each app id in GAMES the LaunchOptions value becomes
 
-    ~/.bridgeplay/np-native NP_PAD_MODE=<mode> [SDL_JOYSTICK_MFI=0] \
+    ~/.ambaplay/np-native NP_PAD_MODE=<mode> [SDL_JOYSTICK_MFI=0] \
         MTL_HUD_ENABLED=1 [other VAR=VALUE kept from the old prefix] \
         %command% <game flags that followed %command%>
 
@@ -30,7 +30,7 @@ import sys
 import tempfile
 import time
 
-NP_NATIVE = os.path.join(os.path.expanduser("~"), ".bridgeplay", "np-native")
+NP_NATIVE = os.path.join(os.path.expanduser("~"), ".ambaplay", "np-native")
 LEGACY_NP_NATIVE = os.path.join(os.path.expanduser("~"), ".notproton", "np-native")
 STEAM_DIR = os.path.join(os.path.expanduser("~"), "Library", "Application Support", "Steam")
 

@@ -1,6 +1,6 @@
 # win32u-patch
 
-`patch-driver-version.sh` makes `app/Sources/BridgeplayApp/Resources/win32u-winecx-11.17.so`
+`patch-driver-version.sh` makes `app/Sources/AmbaplayApp/Resources/win32u-winecx-11.17.so`
 from runtime 4.7.3's `lib/wine/x86_64-unix/win32u.so` (winecx `e0aa380`). It is a binary edit,
 not a source patch: `driver_vendor_to_version()` reports NVIDIA as `35.0.15.6094` (560.94) in
 the display class key's `DriverVersion`, which games that read it (Deadlock) call out of date,

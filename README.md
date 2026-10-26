@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://bridgeplay.dev"><img src="docs/readme/banner-v5.png" alt="Bridgeplay: Windows games, in your Mac's Steam" width="100%"></a>
+  <a href="https://ambaplay.dev"><img src="docs/readme/banner-v5.png" alt="Ambaplay: Windows games, in your Mac's Steam" width="100%"></a>
 </p>
 
 <p align="center">
@@ -8,19 +8,19 @@
 </p>
 
 <p align="center">
-  <a href="https://bridgeplay.dev"><img alt="Website" src="https://img.shields.io/badge/bridgeplay.dev-000?style=for-the-badge&logo=safari&logoColor=white"></a>
-  <a href="https://github.com/raymondchins/Bridgeplay/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/raymondchins/Bridgeplay?style=for-the-badge&logo=github&color=000&labelColor=1c1c1e"></a>
+  <a href="https://ambaplay.dev"><img alt="Website" src="https://img.shields.io/badge/ambaplay.dev-000?style=for-the-badge&logo=safari&logoColor=white"></a>
+  <a href="https://github.com/raymondchins/Ambaplay/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/raymondchins/Ambaplay?style=for-the-badge&logo=github&color=000&labelColor=1c1c1e"></a>
   <img alt="Apple Silicon" src="https://img.shields.io/badge/Apple_Silicon-M1_or_later-000?style=for-the-badge&logo=apple&logoColor=white">
   <img alt="macOS 26+" src="https://img.shields.io/badge/macOS-26%2B-000?style=for-the-badge">
   <a href="LICENSE"><img alt="License GPL-3.0" src="https://img.shields.io/badge/license-GPL--3.0-000?style=for-the-badge"></a>
 </p>
 
-> **Bridgeplay is a fork of [NotProton](https://github.com/NotProtonNot/NotProton)** by NotProtonNot. Games run on CodeWeavers' open-source Wine, the engine behind [CrossOver](https://www.codeweavers.com/crossover), and Apple's Game Porting Toolkit. I'm not affiliated with either. If CrossOver works for you, buy it: that money is a big part of what keeps Wine on the Mac moving. Bridgeplay is a hobby project I maintain part-time, so support is best-effort. Full list in [Credits](#credits) and [Support Wine](#support-wine).
+> **Ambaplay is a fork of [NotProton](https://github.com/NotProtonNot/NotProton)** by NotProtonNot. Games run on CodeWeavers' open-source Wine, the engine behind [CrossOver](https://www.codeweavers.com/crossover), and Apple's Game Porting Toolkit. I'm not affiliated with either. If CrossOver works for you, buy it: that money is a big part of what keeps Wine on the Mac moving. Ambaplay is a hobby project I maintain part-time, so support is best-effort. Full list in [Credits](#credits) and [Support Wine](#support-wine).
 
 <br>
 
 <p align="center">
-  <img src="docs/readme/bento-v5.png" alt="What Bridgeplay does: plays inside Mac Steam, experimental frame generation, DLSS answered by MetalFX, DirectX 12 on Metal, any controller, full Retina one switch away, guided install" width="100%">
+  <img src="docs/readme/bento-v5.png" alt="What Ambaplay does: plays inside Mac Steam, experimental frame generation, DLSS answered by MetalFX, DirectX 12 on Metal, any controller, full Retina one switch away, guided install" width="100%">
 </p>
 
 ## What it does
@@ -43,7 +43,7 @@
 ## Already playing
 
 <p align="center">
-  <img src="docs/readme/games-v5.png" alt="Games running with Bridgeplay: Resident Evil Requiem, Marvel's Spider-Man 2, 007 First Light and more" width="100%">
+  <img src="docs/readme/games-v5.png" alt="Games running with Ambaplay: Resident Evil Requiem, Marvel's Spider-Man 2, 007 First Light and more" width="100%">
 </p>
 
 Developer's tests on an M5 Max MacBook Pro with Game Porting Toolkit 4.0 beta 3: 90+ fps, with MetalFX upscaling and frame generation where listed. Settings come from each game's launch log.
@@ -60,22 +60,22 @@ Also running on the same setup: Mortal Kombat 1, The Last of Us Part I, Death St
 
 ### Compatibility list
 
-Every game tested so far, and the Mac it ran on, is at [bridgeplay.dev/compatibility](https://bridgeplay.dev/compatibility). It combines results a maintainer checked ([`compat/`](compat/)), one-tap reports from players, and CrossOver ratings from AppleGamingWiki for games nobody has tried with Bridgeplay yet.
+Every game tested so far, and the Mac it ran on, is at [ambaplay.dev/compatibility](https://ambaplay.dev/compatibility). It combines results a maintainer checked ([`compat/`](compat/)), one-tap reports from players, and CrossOver ratings from AppleGamingWiki for games nobody has tried with Ambaplay yet.
 
-To add yours: after you play, Bridgeplay asks once per game *How did it run?* One tap posts the result, with your Mac and the game's log, to [Compatibility reports](https://github.com/raymondchins/Bridgeplay/discussions/categories/compatibility-reports). No GitHub account needed, and the log is stripped of your user, computer and Steam account details. **Report Your Games…** in the Prefix menu covers everything you've already played. Without the app, use the [Game report form](https://github.com/raymondchins/Bridgeplay/issues/new?template=game-report.yml).
+To add yours: after you play, Ambaplay asks once per game *How did it run?* One tap posts the result, with your Mac and the game's log, to [Compatibility reports](https://github.com/raymondchins/Ambaplay/discussions/categories/compatibility-reports). No GitHub account needed, and the log is stripped of your user, computer and Steam account details. **Report Your Games…** in the Prefix menu covers everything you've already played. Without the app, use the [Game report form](https://github.com/raymondchins/Ambaplay/issues/new?template=game-report.yml).
 
 ## Install
 
-1. **Download the installer** from [bridgeplay.dev](https://bridgeplay.dev): `Bridgeplay-Setup.zip`, under 1 MB. It fetches Bridgeplay, Apple's graphics, the engine and Steam (from Valve, if missing) as it installs, and checks every download against Bridgeplay's signature.
-2. **Open Bridgeplay Installer.** macOS blocks it the first time: `READ ME FIRST.html` in the download shows the three clicks, Done, then **Open Anyway** in **System Settings > Privacy & Security**, then confirm with your password or Touch ID. It needs an admin account.
-3. **Follow the Setup Assistant**: Rosetta, graphics, Steam sign-in, App Management and a couple of other standard macOS prompts. Setup modifies your Steam app; see [What Bridgeplay changes in Steam](#what-bridgeplay-changes-in-steam).
+1. **Download the installer** from [ambaplay.dev](https://ambaplay.dev): `Ambaplay-Setup.zip`, under 1 MB. It fetches Ambaplay, Apple's graphics, the engine and Steam (from Valve, if missing) as it installs, and checks every download against Ambaplay's signature.
+2. **Open Ambaplay Installer.** macOS blocks it the first time: `READ ME FIRST.html` in the download shows the three clicks, Done, then **Open Anyway** in **System Settings > Privacy & Security**, then confirm with your password or Touch ID. It needs an admin account.
+3. **Follow the Setup Assistant**: Rosetta, graphics, Steam sign-in, App Management and a couple of other standard macOS prompts. Setup modifies your Steam app; see [What Ambaplay changes in Steam](#what-ambaplay-changes-in-steam).
 4. **Press Play** on any Windows game in Steam. The first time you use a controller, allow Steam's Input Monitoring request.
 
-Each game's Bridgeplay settings (graphics backend, Metal HUD, DLSS, frame generation, controllers) are in Steam: right-click the game, **Properties… › Bridgeplay**.
+Each game's Ambaplay settings (graphics backend, Metal HUD, DLSS, frame generation, controllers) are in Steam: right-click the game, **Properties… › Ambaplay**.
 
-Updates install themselves: Bridgeplay, its patch in Steam and the engine. **Refresh** on the Status page checks on demand.
+Updates install themselves: Ambaplay, its patch in Steam and the engine. **Refresh** on the Status page checks on demand.
 
-The installer includes Apple's Game Porting Toolkit redistributables under Apple's license, which allows non-commercial distribution only. Bridgeplay is free and non-commercial.
+The installer includes Apple's Game Porting Toolkit redistributables under Apple's license, which allows non-commercial distribution only. Ambaplay is free and non-commercial.
 
 <p align="center">
   <img src="docs/readme/install-v5.png" alt="The Setup Assistant working through Your Mac, Rosetta, Graphics, Steam and Set Up" width="100%">
@@ -84,7 +84,7 @@ The installer includes Apple's Game Porting Toolkit redistributables under Apple
 ## Requirements
 
 <p align="center">
-  <a href="https://bridgeplay.dev/#specs"><img src="docs/readme/specs-v5.png" alt="Check your Mac in one click on bridgeplay.dev, next to the minimum requirements" width="100%"></a>
+  <a href="https://ambaplay.dev/#specs"><img src="docs/readme/specs-v5.png" alt="Check your Mac in one click on ambaplay.dev, next to the minimum requirements" width="100%"></a>
 </p>
 
 | | |
@@ -96,28 +96,28 @@ The installer includes Apple's Game Porting Toolkit redistributables under Apple
 
 ## How it works
 
-Bridgeplay runs inside the native macOS Steam client and registers itself as a Steam Play compatibility tool. Under the hood:
+Ambaplay runs inside the native macOS Steam client and registers itself as a Steam Play compatibility tool. Under the hood:
 
-- **Engine:** CodeWeavers' open-source WineCX 11.17 with MSync, running under Rosetta 2. Bridgeplay does not include CrossOver: its free engine is built from the LGPL source CodeWeavers publishes ([dappermint/winecx](https://github.com/dappermint/winecx)). If you own CrossOver, Bridgeplay can run games on your copy instead.
+- **Engine:** CodeWeavers' open-source WineCX 11.17 with MSync, running under Rosetta 2. Ambaplay does not include CrossOver: its free engine is built from the LGPL source CodeWeavers publishes ([dappermint/winecx](https://github.com/dappermint/winecx)). If you own CrossOver, Ambaplay can run games on your copy instead.
 - **Graphics:** Apple's Game Porting Toolkit 4.0 beta 3 (D3DMetal). It is not stored in this repository; the installer ships its redistributables under Apple's non-commercial license (see Install). DXMT and DXVK are available for games that prefer them.
 - **Extras:** NVAPI/NGX routing for DLSS on Apple's MetalFX, in-process frame generation on `CAMetalLayer`, per-game Game Mode, Retina back buffers and a controller layer for HID pads.
 
 <p align="center">
-  <img src="docs/readme/architecture-v5.png" alt="How a Windows game reaches the Mac's GPU: Steam, Bridgeplay, the WineCX and Wine engines, D3DMetal, DXMT, DXVK and MoltenVK, then Metal, with the open-source project behind each piece" width="100%">
+  <img src="docs/readme/architecture-v5.png" alt="How a Windows game reaches the Mac's GPU: Steam, Ambaplay, the WineCX and Wine engines, D3DMetal, DXMT, DXVK and MoltenVK, then Metal, with the open-source project behind each piece" width="100%">
 </p>
 
 Building from source: see [docs/DEVELOPING.md](docs/DEVELOPING.md), [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and [docs/BUILD-LOCAL.md](docs/BUILD-LOCAL.md). The installer lives in [`installer/`](installer/) and is packaged by `scripts/package-installer.sh`.
 
-## What Bridgeplay changes in Steam
+## What Ambaplay changes in Steam
 
-Bridgeplay modifies your Steam app. It copies a library (`notproton.dylib`) into `/Applications/Steam.app`, makes Steam load it at startup through `Info.plist`, and re-signs Steam on your Mac, replacing Valve's signature. The library hooks Steam's compatibility tool, shortcut and launch option code, and edits Steam's interface in memory to show Steam Play.
+Ambaplay modifies your Steam app. It copies a library (`notproton.dylib`) into `/Applications/Steam.app`, makes Steam load it at startup through `Info.plist`, and re-signs Steam on your Mac, replacing Valve's signature. The library hooks Steam's compatibility tool, shortcut and launch option code, and edits Steam's interface in memory to show Steam Play.
 
 Also changed:
 
-- Steam's default compatibility tool is set in `config.vdf`, and Bridgeplay's tools go in `compatibilitytools.d`.
+- Steam's default compatibility tool is set in `config.vdf`, and Ambaplay's tools go in `compatibilitytools.d`.
 - Steam's Accessibility and input permissions are reset (`tccutil`), so macOS asks again.
 - Steam is signed with a local "NotProton Local Signing" keychain identity, or ad hoc, and loses Valve's hardened runtime.
-- The quarantine flag is removed from Steam.app and Bridgeplay's folder, and Wine loaders are re-signed ad hoc where needed.
+- The quarantine flag is removed from Steam.app and Ambaplay's folder, and Wine loaders are re-signed ad hoc where needed.
 - Optional **Block Steam client updates** (`steam.cfg`) also blocks Steam's security fixes.
 - The library loads for every macOS user of a shared `/Applications/Steam.app`.
 - In games, Steam calls reach your Mac Steam through Proton's lsteamclient, via an in-memory redirect (`ntdll-patch/`).
@@ -125,38 +125,38 @@ Also changed:
 - For Apple's MetalFX DLSS only, patched `crypt32` and `wintrust` pass NVIDIA's signature check on Apple's `nvngx.dll` (`ngx-signer-patch/`).
 - Some gamefixes turn off a game's Wine check to unlock DLSS, for example in Resident Evil Requiem and The Witcher 3.
 
-Valve doesn't support or endorse Bridgeplay, and modifying Steam may go against the [Steam Subscriber Agreement](https://store.steampowered.com/subscriber_agreement/). Use it at your own risk. **Repair Steam** or **Remove Everything** on the Status page restores Steam's `Info.plist`; if Valve's signature isn't back, reinstall Steam from Valve.
+Valve doesn't support or endorse Ambaplay, and modifying Steam may go against the [Steam Subscriber Agreement](https://store.steampowered.com/subscriber_agreement/). Use it at your own risk. **Repair Steam** or **Remove Everything** on the Status page restores Steam's `Info.plist`; if Valve's signature isn't back, reinstall Steam from Valve.
 
 ## Online games and anti-cheat
 
-Online games with anti-cheat (Easy Anti-Cheat, BattlEye and others) often won't start, and Bridgeplay can't promise that anti-cheat, VAC included, won't flag it. Counter-Strike 2 and Dota 2 run, but VAC keeps them off its secure servers. Play online at your own risk. The [compatibility list](compat/README.md) shows what other players found.
+Online games with anti-cheat (Easy Anti-Cheat, BattlEye and others) often won't start, and Ambaplay can't promise that anti-cheat, VAC included, won't flag it. Counter-Strike 2 and Dota 2 run, but VAC keeps them off its secure servers. Play online at your own risk. The [compatibility list](compat/README.md) shows what other players found.
 
 ## Credits
 
-Bridgeplay is a fork of [NotProton](https://github.com/NotProtonNot/NotProton) by [NotProtonNot](https://github.com/NotProtonNot) and [its contributors](https://github.com/NotProtonNot/NotProton/graphs/contributors) (GPL-3.0), by way of [Leon Seemann](https://github.com/leonseemann)'s NotProton-WineHQ. The Steam hooks, the Steam Play interface patches, the run script and the steamclient bridge all started as their work. Copyright and license details are in [NOTICE](NOTICE).
+Ambaplay is a fork of [NotProton](https://github.com/NotProtonNot/NotProton) by [NotProtonNot](https://github.com/NotProtonNot) and [its contributors](https://github.com/NotProtonNot/NotProton/graphs/contributors) (GPL-3.0), by way of [Leon Seemann](https://github.com/leonseemann)'s NotProton-WineHQ. The Steam hooks, the Steam Play interface patches, the run script and the steamclient bridge all started as their work. Copyright and license details are in [NOTICE](NOTICE).
 
 - **Engine:** CodeWeavers' [WineCX](https://www.codeweavers.com/crossover) (LGPL-2.1-or-later), as rebased by [dappermint](https://github.com/dappermint/winecx) and packaged with [winecx-gptk](https://github.com/dappermint/winecx-gptk).
 - **Graphics:** Apple's [Game Porting Toolkit](https://developer.apple.com/games/game-porting-toolkit/) (Apple's license), [DXMT](https://github.com/3Shain/dxmt) by 3Shain and [DXVK-macOS](https://github.com/Gcenx/DXVK-macOS) by Gcenx.
 - **Steam bridge:** `lsteamclient` and `steam.exe` come from Valve's [Proton](https://github.com/ValveSoftware/Proton).
-- **Controllers and Game Mode:** [sn0wst0rm](https://github.com/sn0wst0rm) wrote the DualSense Bluetooth bridge, Steam rumble forwarding and game-mode host that Bridgeplay 0.7.51 and earlier shipped. They are paused until NotProton merges the same work ([NotProton#90](https://github.com/NotProtonNot/NotProton/pull/90)).
+- **Controllers and Game Mode:** [sn0wst0rm](https://github.com/sn0wst0rm) wrote the DualSense Bluetooth bridge, Steam rumble forwarding and game-mode host that Ambaplay 0.7.51 and earlier shipped. They are paused until NotProton merges the same work ([NotProton#90](https://github.com/NotProtonNot/NotProton/pull/90)).
 - **Libraries:** [Dobby](https://github.com/jmpews/Dobby) (Apache-2.0), [Sparkle](https://sparkle-project.org) (MIT), [SDL](https://www.libsdl.org) (zlib) and [cJSON](https://github.com/DaveGamble/cJSON) (MIT).
-- **Bridgeplay:** [everyone who has contributed](https://github.com/raymondchins/Bridgeplay/graphs/contributors).
+- **Ambaplay:** [everyone who has contributed](https://github.com/raymondchins/Ambaplay/graphs/contributors).
 
 NotProton in turn thanks the people who came before it, among them Nat Brown's Kaon, mont127's Neutron and Gio's work on Steam Play in Mac Steam; see [docs/UPSTREAM.md](docs/UPSTREAM.md).
 
 ## Support Wine
 
-Wine on the Mac exists largely because of [CodeWeavers](https://www.codeweavers.com), the biggest contributor to the Wine project. They fund that work by selling [CrossOver](https://www.codeweavers.com/crossover). Bridgeplay's free engine is built from the source code CodeWeavers publishes, so every game it runs also stands on their work.
+Wine on the Mac exists largely because of [CodeWeavers](https://www.codeweavers.com), the biggest contributor to the Wine project. They fund that work by selling [CrossOver](https://www.codeweavers.com/crossover). Ambaplay's free engine is built from the source code CodeWeavers publishes, so every game it runs also stands on their work.
 
 If you can, buy CrossOver.
 
 ## License
 
-Bridgeplay is licensed under the [GPL-3.0](LICENSE). Third-party licenses, and the source for the patched Wine files the app ships (LGPL-2.1-or-later), are listed in [NOTICE](NOTICE).
+Ambaplay is licensed under the [GPL-3.0](LICENSE). Third-party licenses, and the source for the patched Wine files the app ships (LGPL-2.1-or-later), are listed in [NOTICE](NOTICE).
 
 <p>
   <a href="https://github.com/raymondchins"><img src="https://github.com/raymondchins.png?size=64" width="32" height="32" alt="" align="left" style="border-radius:50%"></a>
   &nbsp;Built by <a href="https://github.com/raymondchins"><b>Raymond Chin</b></a>, Jakarta.
 </p>
 
-<sub>Bridgeplay is not affiliated with Apple, Valve, NVIDIA or CodeWeavers. Game Porting Toolkit is Apple software provided under Apple's license for non-commercial use. Steam is a trademark of Valve Corporation. DLSS is a trademark of NVIDIA Corporation. Game names are trademarks of their owners.</sub>
+<sub>Ambaplay is not affiliated with Apple, Valve, NVIDIA or CodeWeavers. Game Porting Toolkit is Apple software provided under Apple's license for non-commercial use. Steam is a trademark of Valve Corporation. DLSS is a trademark of NVIDIA Corporation. Game names are trademarks of their owners.</sub>

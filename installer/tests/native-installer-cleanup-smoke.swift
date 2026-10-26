@@ -9,12 +9,12 @@ struct CleanupSmoke {
     @MainActor
     static func main() throws {
         let fm = FileManager.default
-        let root = fm.temporaryDirectory.appendingPathComponent("bridgeplay-cleanup-tests-\(UUID().uuidString)")
+        let root = fm.temporaryDirectory.appendingPathComponent("ambaplay-cleanup-tests-\(UUID().uuidString)")
         try fm.createDirectory(at: root, withIntermediateDirectories: true)
         defer { try? fm.removeItem(at: root) }
         let image = root.appendingPathComponent("Installer.dmg")
         try Data("test image identity".utf8).write(to: image)
-        let executable = URL(fileURLWithPath: "/Volumes/Test Installer/Bridgeplay Installer.app/Contents/MacOS/BridgeplayInstaller")
+        let executable = URL(fileURLWithPath: "/Volumes/Test Installer/Ambaplay Installer.app/Contents/MacOS/AmbaplayInstaller")
         func info(image: URL, mount: String = "/Volumes/Test Installer", device: String = "/dev/disk123s1") throws -> Data {
             try PropertyListSerialization.data(fromPropertyList: ["images": [
                 ["image-path": image.path, "system-entities": [["mount-point": mount, "dev-entry": device]]]

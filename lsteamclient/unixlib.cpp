@@ -740,7 +740,7 @@ static void sync_env_var( const char *name, bool unset, const char *val )
 #ifdef __APPLE__
 /* The FEX wine loader is hardened without allow-dyld-environment-variables, so
  * dyld drops the insert list that would carry the overlay renderer and the
- * Bridgeplay overlay shim. Load them by hand instead. */
+ * Ambaplay overlay shim. Load them by hand instead. */
 static void load_overlay_libraries( void )
 {
     const char *inserts = getenv( "STEAM_DYLD_INSERT_LIBRARIES" );

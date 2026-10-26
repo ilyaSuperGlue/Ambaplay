@@ -19,8 +19,8 @@
 // The client maps Cloud's Windows path roots into the compat prefix only when
 // the tool's name contains "proton" so without a match every AutoCloud rule silently
 // skips the app.
-#define TOOL_DIR_NAME "bridgeplay-proton"
-// The prefix tools had before Bridgeplay 3.0. The app renames them, and until it has, a
+#define TOOL_DIR_NAME "ambaplay-proton"
+// The prefix tools had before Ambaplay 3.0. The app renames them, and until it has, a
 // tool under the old name is still ours.
 #define LEGACY_TOOL_DIR_NAME "notproton"
 #define TOOL_RUN      "/run"
@@ -426,7 +426,7 @@ int np_compat_load_tool_list(const char *path, const char *tools_dir) {
     FILE *f = fopen(path, "r");
     if (!f) {
         NP_WARN("np_compat_load_tool_list: %s is missing, so no build has a tool "
-                "until Bridgeplay sets one up", path);
+                "until Ambaplay sets one up", path);
         return 0;
     }
     g_tool_list_present = 1;
@@ -547,7 +547,7 @@ static int write_tool(const tool_entry_t *tool) {
     return 0;
 }
 
-#define RUN_SCRIPT_MARK        "\n# bridgeplay CrossOver compatibility tool shim\n"
+#define RUN_SCRIPT_MARK        "\n# ambaplay CrossOver compatibility tool shim\n"
 #define LEGACY_RUN_SCRIPT_MARK "\n# notproton CrossOver compatibility tool shim\n"
 
 static int written_here(const char *tool_dir) {

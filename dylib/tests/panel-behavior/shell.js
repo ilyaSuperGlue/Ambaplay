@@ -11,15 +11,15 @@ if (!emit) { console.error('usage: shell.js <emit>'); process.exit(2); }
 const TOGGLES = {
   'Metal HUD': 'MTL_HUD_ENABLED',
   'MSync': 'WINEMSYNC',
-  'High Resolution': 'BRIDGEPLAY_RETINA',
+  'High Resolution': 'AMBAPLAY_RETINA',
   'Advertise AVX2 to Rosetta': 'ROSETTA_ADVERTISE_AVX',
-  'Let games read controllers directly (Recommended on Mac. Turn off only for Steam Input remapping)': 'BRIDGEPLAY_RAW_CONTROLLERS',
-  'Disable hidraw': 'BRIDGEPLAY_DISABLE_HIDRAW',
+  'Let games read controllers directly (Recommended on Mac. Turn off only for Steam Input remapping)': 'AMBAPLAY_RAW_CONTROLLERS',
+  'Disable hidraw': 'AMBAPLAY_DISABLE_HIDRAW',
 };
 const ON_UNLESS_0 = { ROSETTA_ADVERTISE_AVX: true };
 const PANEL_KEYS = ['CX_GRAPHICS_BACKEND', 'MTL_HUD_ENABLED', 'D3DM_ENABLE_METALFX', 'DXMT_ENABLE_NVEXT',
-  'DXMT_METALFX_SPATIAL_SWAPCHAIN', 'DXMT_CONFIG', 'ROSETTA_ADVERTISE_AVX', 'WINEMSYNC', 'BRIDGEPLAY_RETINA',
-  'BRIDGEPLAY_RAW_CONTROLLERS', 'BRIDGEPLAY_DISABLE_HIDRAW'];
+  'DXMT_METALFX_SPATIAL_SWAPCHAIN', 'DXMT_CONFIG', 'ROSETTA_ADVERTISE_AVX', 'WINEMSYNC', 'AMBAPLAY_RETINA',
+  'AMBAPLAY_RAW_CONTROLLERS', 'AMBAPLAY_DISABLE_HIDRAW'];
 const OTHER_KEYS = ['WINEDEBUG', 'DXVK_HUD', 'FOO'];
 
 const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'np-shell-'));
@@ -123,8 +123,8 @@ const ACTIONS = [
     want: (v0, v1) => v1.toggles.WINEMSYNC.props.checked === !v0.toggles.WINEMSYNC.props.checked },
   { name: 'AVX2', run: v => v.toggles.ROSETTA_ADVERTISE_AVX.props.onChange(!v.toggles.ROSETTA_ADVERTISE_AVX.props.checked),
     want: (v0, v1) => v1.toggles.ROSETTA_ADVERTISE_AVX.props.checked === !v0.toggles.ROSETTA_ADVERTISE_AVX.props.checked },
-  { name: 'raw controllers', run: v => v.toggles.BRIDGEPLAY_RAW_CONTROLLERS.props.onChange(!v.toggles.BRIDGEPLAY_RAW_CONTROLLERS.props.checked),
-    want: (v0, v1) => v1.toggles.BRIDGEPLAY_RAW_CONTROLLERS.props.checked === !v0.toggles.BRIDGEPLAY_RAW_CONTROLLERS.props.checked },
+  { name: 'raw controllers', run: v => v.toggles.AMBAPLAY_RAW_CONTROLLERS.props.onChange(!v.toggles.AMBAPLAY_RAW_CONTROLLERS.props.checked),
+    want: (v0, v1) => v1.toggles.AMBAPLAY_RAW_CONTROLLERS.props.checked === !v0.toggles.AMBAPLAY_RAW_CONTROLLERS.props.checked },
   { name: 'backend dxvk', run: v => v.backend.props.onChange({ data: 'dxvk' }),
     want: (v0, v1) => v1.backend.props.selectedOption === 'dxvk' },
   { name: 'backend automatic', run: v => v.backend.props.onChange({ data: '' }),

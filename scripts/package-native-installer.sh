@@ -7,25 +7,25 @@
 set -eu
 repo=$(cd "$(dirname "$0")/.." && pwd)
 cd "$repo"
-identity=${BRIDGEPLAY_SIGN_IDENTITY:--}
+identity=${AMBAPLAY_SIGN_IDENTITY:--}
 configuration=${CONFIGURATION:-release}
 out="$repo/out/native-installer"
-app="$out/Bridgeplay Installer.app"
-zip="$repo/out/Bridgeplay-Setup.zip"
+app="$out/Ambaplay Installer.app"
+zip="$repo/out/Ambaplay-Setup.zip"
 
-swift build --package-path app -c "$configuration" --product BridgeplayInstaller --arch arm64
+swift build --package-path app -c "$configuration" --product AmbaplayInstaller --arch arm64
 bin=$(swift build --package-path app -c "$configuration" --show-bin-path --arch arm64)
-[ -x "$bin/BridgeplayInstaller" ] || { echo 'Installer executable missing' >&2; exit 1; }
+[ -x "$bin/AmbaplayInstaller" ] || { echo 'Installer executable missing' >&2; exit 1; }
 mkdir -p "$out"
 stage=$(mktemp -d "$out/.package.XXXXXX")
 trap 'rm -rf "$stage"' EXIT HUP INT TERM
-bundle="$stage/Bridgeplay Installer.app"
+bundle="$stage/Ambaplay Installer.app"
 mkdir -p "$bundle/Contents/MacOS" "$bundle/Contents/Resources"
-cp "$bin/BridgeplayInstaller" "$bundle/Contents/MacOS/BridgeplayInstaller"
-for resource in BridgeplayApp_BridgeplayUI.bundle BridgeplayApp_BridgeplayInstaller.bundle; do
+cp "$bin/AmbaplayInstaller" "$bundle/Contents/MacOS/AmbaplayInstaller"
+for resource in AmbaplayApp_AmbaplayUI.bundle AmbaplayApp_AmbaplayInstaller.bundle; do
     ditto "$bin/$resource" "$bundle/Contents/Resources/$resource"
 done
-python3 - "$repo/app/Sources/BridgeplayInstaller/Resources/Localization/Localizable.xcstrings" "$bundle/Contents/Resources/BridgeplayApp_BridgeplayInstaller.bundle" <<'PYTHON'
+python3 - "$repo/app/Sources/AmbaplayInstaller/Resources/Localization/Localizable.xcstrings" "$bundle/Contents/Resources/AmbaplayApp_AmbaplayInstaller.bundle" <<'PYTHON'
 import json
 import pathlib
 import sys
@@ -42,24 +42,24 @@ for language in ("en", "it", "zh-Hans"):
     (folder / "Localizable.strings").write_text("\n".join(values) + "\n", encoding="utf-16")
 (root / "Localizable.xcstrings").unlink(missing_ok=True)
 PYTHON
-"$bin/BridgeplayInstaller" --icon "$stage/icon.png"
-mkdir "$stage/Bridgeplay.iconset"
+"$bin/AmbaplayInstaller" --icon "$stage/icon.png"
+mkdir "$stage/Ambaplay.iconset"
 for points in 16 32 128 256 512; do
-    sips -z "$points" "$points" "$stage/icon.png" --out "$stage/Bridgeplay.iconset/icon_${points}x${points}.png" >/dev/null
+    sips -z "$points" "$points" "$stage/icon.png" --out "$stage/Ambaplay.iconset/icon_${points}x${points}.png" >/dev/null
     pixels=$((points * 2))
-    sips -z "$pixels" "$pixels" "$stage/icon.png" --out "$stage/Bridgeplay.iconset/icon_${points}x${points}@2x.png" >/dev/null
+    sips -z "$pixels" "$pixels" "$stage/icon.png" --out "$stage/Ambaplay.iconset/icon_${points}x${points}@2x.png" >/dev/null
 done
-iconutil -c icns "$stage/Bridgeplay.iconset" -o "$bundle/Contents/Resources/Bridgeplay.icns"
-rm -rf "$stage/icon.png" "$stage/Bridgeplay.iconset"
+iconutil -c icns "$stage/Ambaplay.iconset" -o "$bundle/Contents/Resources/Ambaplay.icns"
+rm -rf "$stage/icon.png" "$stage/Ambaplay.iconset"
 cat > "$bundle/Contents/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0"><dict>
-<key>CFBundleIdentifier</key><string>com.bridgeplay.Installer</string>
-<key>CFBundleName</key><string>Bridgeplay Installer</string>
-<key>CFBundleDisplayName</key><string>Bridgeplay Installer</string>
-<key>CFBundleExecutable</key><string>BridgeplayInstaller</string>
-<key>CFBundleIconFile</key><string>Bridgeplay</string>
+<key>CFBundleIdentifier</key><string>com.ambaplay.Installer</string>
+<key>CFBundleName</key><string>Ambaplay Installer</string>
+<key>CFBundleDisplayName</key><string>Ambaplay Installer</string>
+<key>CFBundleExecutable</key><string>AmbaplayInstaller</string>
+<key>CFBundleIconFile</key><string>Ambaplay</string>
 <key>CFBundlePackageType</key><string>APPL</string>
 <key>CFBundleShortVersionString</key><string>1.0</string>
 <key>CFBundleVersion</key><string>1</string>
@@ -80,8 +80,8 @@ ditto "$bundle" "$app"
 # READ ME FIRST.html carries its Geist font inline, so it is one file.
 package="$stage/package"
 mkdir -p "$package"
-ditto "$app" "$package/Bridgeplay Installer.app"
-python3 - "$repo/installer/native/READ ME FIRST.html" "$repo/app/Sources/BridgeplayUI/Resources/Fonts" "$package/READ ME FIRST.html" <<'PYTHON'
+ditto "$app" "$package/Ambaplay Installer.app"
+python3 - "$repo/installer/native/READ ME FIRST.html" "$repo/app/Sources/AmbaplayUI/Resources/Fonts" "$package/READ ME FIRST.html" <<'PYTHON'
 import base64
 import pathlib
 import re
@@ -91,11 +91,11 @@ def font(match):
     return "data:font/woff2;base64," + base64.b64encode((fonts / (match.group(1) + ".woff2")).read_bytes()).decode()
 out.write_text(re.sub(r"\{\{font:(\w+)\}\}", font, page.read_text()))
 PYTHON
-cp LICENSE NOTICE app/Sources/BridgeplayUI/Resources/Fonts/OFL-Geist.txt "$package/"
+cp LICENSE NOTICE app/Sources/AmbaplayUI/Resources/Fonts/OFL-Geist.txt "$package/"
 rm -f "$zip"
 (cd "$package" && ditto -c -k --norsrc --noextattr . "$zip")
 size=$(stat -f '%z' "$zip")
-limit=${BRIDGEPLAY_INSTALLER_MAX_BYTES:-5242880}
+limit=${AMBAPLAY_INSTALLER_MAX_BYTES:-5242880}
 if [ "$size" -gt "$limit" ]; then
     echo "Installer ZIP exceeds size budget: $size > $limit bytes" >&2
     exit 1

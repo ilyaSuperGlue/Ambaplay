@@ -53,7 +53,7 @@ const char *np_profile_name(const np_profile *profile);
 void np_xbox_encode(const np_pad_state *state, uint8_t out[NP_XBOX_REPORT_LEN]);
 
 // Mapping database: $NP_GAMECONTROLLERDB, else
-// ~/Library/Application Support/bridgeplay/gamecontrollerdb.txt (notproton until the app moves
+// ~/Library/Application Support/ambaplay/gamecontrollerdb.txt (notproton until the app moves
 // it), plus SDL_GAMECONTROLLERCONFIG.
 // Later lines win over earlier ones for the same GUID.
 void np_db_load(void);

@@ -39,9 +39,9 @@ build "$here/probe.c" -o "$probe"
 
 # fake HOME with real tiny dylibs where the launcher looks for them
 H=$tmp/home
-mkdir -p "$H/.bridgeplay" "$H/Library/Application Support/bridgeplay/gamefixes/native" "$tmp/libs"
-pad=$H/.bridgeplay/libnp_gamepad.dylib
-ov="$H/Library/Application Support/bridgeplay/overlay-shim.dylib"
+mkdir -p "$H/.ambaplay" "$H/Library/Application Support/ambaplay/gamefixes/native" "$tmp/libs"
+pad=$H/.ambaplay/libnp_gamepad.dylib
+ov="$H/Library/Application Support/ambaplay/overlay-shim.dylib"
 steamlib=$tmp/libs/steamoverlay.dylib
 build -dynamiclib -DMARKER='"pad"' "$here/marker.c" -o "$pad"
 build -dynamiclib -DMARKER='"overlay"' "$here/marker.c" -o "$ov"
@@ -51,7 +51,7 @@ build -dynamiclib -DMARKER='"user"' "$here/marker.c" -o "$tmp/libs/user.dylib"
 for f in "$launcher" "$probe" "$tmp/probe-x86" "$pad" "$ov" "$steamlib" "$tmp/libs/user.dylib"; do
 	codesign -s - -f "$f" 2>/dev/null
 done
-confdir="$H/Library/Application Support/bridgeplay/gamefixes"
+confdir="$H/Library/Application Support/ambaplay/gamefixes"
 
 # run: clean env (env -i) with HOME pointing at the fake home; extra
 # NAME=VALUE pairs before "--" go into the parent environment
@@ -128,7 +128,7 @@ rm -f "$confdir/native-default.conf" "$confdir/native/4242.conf"
 
 # --- DYLD composition ------------------------------------------------------
 V=NP_PROBE_VARS=DYLD_INSERT_LIBRARIES:STEAM_DYLD_INSERT_LIBRARIES
-run "$V" "DYLD_INSERT_LIBRARIES=$steamlib" -- NP_PAD_MODE=hid BRIDGEPLAY_FRAMEGEN=1 "$probe"
+run "$V" "DYLD_INSERT_LIBRARIES=$steamlib" -- NP_PAD_MODE=hid AMBAPLAY_FRAMEGEN=1 "$probe"
 expect_rc "dyld: exit 0" 0
 expect "dyld: ours first, Steam's kept, all loaded" \
 	"DYLD_INSERT_LIBRARIES=$pad:$ov:$steamlib" \
@@ -137,7 +137,7 @@ expect "dyld: ours first, Steam's kept, all loaded" \
 run "$V" "DYLD_INSERT_LIBRARIES=$pad:$steamlib" "STEAM_DYLD_INSERT_LIBRARIES=$steamlib" -- "$probe"
 expect "dyld: de-duplicated, pad by default when shim exists" \
 	"DYLD_INSERT_LIBRARIES=$pad:$steamlib"
-run "$V" "STEAM_DYLD_INSERT_LIBRARIES=$steamlib" -- NP_PAD_MODE=off BRIDGEPLAY_FRAMEGEN=0 "$probe"
+run "$V" "STEAM_DYLD_INSERT_LIBRARIES=$steamlib" -- NP_PAD_MODE=off AMBAPLAY_FRAMEGEN=0 "$probe"
 expect "dyld: pad off, framegen 0, STEAM_DYLD_ only (SIP-stripped parent)" \
 	"DYLD_INSERT_LIBRARIES=$steamlib" "loaded:steam"
 if has "loaded:pad" || has "loaded:overlay"; then bad "dyld: off shims still loaded"; else ok "dyld: off shims not loaded"; fi
@@ -239,37 +239,37 @@ expect "fail open: bad conf lines warned (file:line), good lines applied" \
 	"GOOD=1" "LATER=3" "arch=arm64"
 rm -f "$confdir/native-default.conf"
 
-# --- BRIDGEPLAY_ names and the pre-3.0 layout ----------------------------------
-R=NP_PROBE_VARS=NOTPROTON_RETINA:BRIDGEPLAY_RETINA
-run "$R" -- NP_PAD_MODE=off BRIDGEPLAY_RETINA=1 "$probe"
-expect "names: a BRIDGEPLAY_ argument sets the NOTPROTON_ one" "NOTPROTON_RETINA=1" "BRIDGEPLAY_RETINA=1"
-run "$R" -- NP_PAD_MODE=off NOTPROTON_RETINA=0 BRIDGEPLAY_RETINA=1 "$probe"
+# --- AMBAPLAY_ names and the pre-3.0 layout ----------------------------------
+R=NP_PROBE_VARS=NOTPROTON_RETINA:AMBAPLAY_RETINA
+run "$R" -- NP_PAD_MODE=off AMBAPLAY_RETINA=1 "$probe"
+expect "names: a AMBAPLAY_ argument sets the NOTPROTON_ one" "NOTPROTON_RETINA=1" "AMBAPLAY_RETINA=1"
+run "$R" -- NP_PAD_MODE=off NOTPROTON_RETINA=0 AMBAPLAY_RETINA=1 "$probe"
 expect "names: NOTPROTON_ wins within one source" "NOTPROTON_RETINA=0"
-run "$R" BRIDGEPLAY_RETINA=1 -- NP_PAD_MODE=off "$probe"
-expect "names: a BRIDGEPLAY_ variable from Steam is mapped" "NOTPROTON_RETINA=1"
-run "$R" BRIDGEPLAY_RETINA=1 NOTPROTON_RETINA=0 -- NP_PAD_MODE=off "$probe"
+run "$R" AMBAPLAY_RETINA=1 -- NP_PAD_MODE=off "$probe"
+expect "names: a AMBAPLAY_ variable from Steam is mapped" "NOTPROTON_RETINA=1"
+run "$R" AMBAPLAY_RETINA=1 NOTPROTON_RETINA=0 -- NP_PAD_MODE=off "$probe"
 expect "names: a NOTPROTON_ variable from Steam is kept" "NOTPROTON_RETINA=0"
-printf 'BRIDGEPLAY_RETINA=0\n' >"$confdir/native-default.conf"
+printf 'AMBAPLAY_RETINA=0\n' >"$confdir/native-default.conf"
 run "$R" NOTPROTON_RETINA=1 -- NP_PAD_MODE=off "$probe"
-expect "names: a conf BRIDGEPLAY_ beats the environment's NOTPROTON_" "NOTPROTON_RETINA=0"
+expect "names: a conf AMBAPLAY_ beats the environment's NOTPROTON_" "NOTPROTON_RETINA=0"
 printf 'NOTPROTON_RETINA=0\n' >"$confdir/native-default.conf"
-run "$R" -- NP_PAD_MODE=off BRIDGEPLAY_RETINA=1 "$probe"
-expect "names: a BRIDGEPLAY_ argument beats a conf NOTPROTON_" "NOTPROTON_RETINA=1"
+run "$R" -- NP_PAD_MODE=off AMBAPLAY_RETINA=1 "$probe"
+expect "names: a AMBAPLAY_ argument beats a conf NOTPROTON_" "NOTPROTON_RETINA=1"
 rm -f "$confdir/native-default.conf"
 run "$V" -- NP_PAD_MODE=off NOTPROTON_FRAMEGEN=1 "$probe"
 expect "names: NOTPROTON_FRAMEGEN still loads the overlay shim" "DYLD_INSERT_LIBRARIES=$ov"
 # A home the app has not moved over yet: only ~/.notproton and .../notproton exist.
 old_support="$H/Library/Application Support/notproton"
-mv "$H/.bridgeplay" "$H/.notproton"
-mv "$H/Library/Application Support/bridgeplay" "$old_support"
+mv "$H/.ambaplay" "$H/.notproton"
+mv "$H/Library/Application Support/ambaplay" "$old_support"
 printf 'FROM=old\n' >"$old_support/gamefixes/native-default.conf"
-run "$V" NP_PROBE_VARS=DYLD_INSERT_LIBRARIES:FROM -- NP_PAD_MODE=hid BRIDGEPLAY_FRAMEGEN=1 "$probe"
+run "$V" NP_PROBE_VARS=DYLD_INSERT_LIBRARIES:FROM -- NP_PAD_MODE=hid AMBAPLAY_FRAMEGEN=1 "$probe"
 expect "legacy layout: shims and confs come from the old folders" \
 	"DYLD_INSERT_LIBRARIES=$H/.notproton/libnp_gamepad.dylib:$old_support/overlay-shim.dylib" "FROM=old" \
 	"loaded:pad" "loaded:overlay"
 rm -f "$old_support/gamefixes/native-default.conf"
-mv "$H/.notproton" "$H/.bridgeplay"
-mv "$old_support" "$H/Library/Application Support/bridgeplay"
+mv "$H/.notproton" "$H/.ambaplay"
+mv "$old_support" "$H/Library/Application Support/ambaplay"
 
 echo "==> np-native-tests: $pass passed, $fail failed"
 [ "$fail" -eq 0 ]

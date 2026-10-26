@@ -1,6 +1,6 @@
-# Contributing to Bridgeplay
+# Contributing to Ambaplay
 
-Thanks for helping. Bridgeplay is a small, free project, so a short, focused pull request
+Thanks for helping. Ambaplay is a small, free project, so a short, focused pull request
 is the easiest to review. An imperfect PR is still welcome: say what is unfinished and I can
 help. These guidelines are adapted from
 [NotProton's contribution guide](https://github.com/NotProtonNot/NotProton/blob/main/CONTRIBUTING.md)
@@ -36,7 +36,7 @@ by NotProtonNot.
 ## Licensing
 
 A contribution is licensed under the license of the files it changes, as listed in
-[NOTICE](NOTICE). For most of Bridgeplay that is the GPL-3.0 ([LICENSE](LICENSE)). The
+[NOTICE](NOTICE). For most of Ambaplay that is the GPL-3.0 ([LICENSE](LICENSE)). The
 exceptions:
 
 | Path | License |
@@ -61,4 +61,4 @@ Code you take from someone else keeps their name on it:
 - New third-party code goes in [NOTICE](NOTICE) with its author and license.
 
 This project follows a [Code of Conduct](CODE_OF_CONDUCT.md). Report problems at
-https://github.com/raymondchins/Bridgeplay/issues.
+https://github.com/raymondchins/Ambaplay/issues.

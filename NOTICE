@@ -1,28 +1,28 @@
-Bridgeplay licensing
+Ambaplay licensing
 ====================
 
-Bridgeplay
+Ambaplay
 Copyright (C) 2026 NotProtonNot and the NotProton contributors
 Copyright (C) 2026 Leon Seemann (NotProton-WineHQ)
-Copyright (C) 2026 Raymond Chin and the Bridgeplay contributors
-https://github.com/raymondchins/Bridgeplay
+Copyright (C) 2026 Raymond Chin and the Ambaplay contributors
+https://github.com/raymondchins/Ambaplay
 
-Bridgeplay is a modified version (fork) of NotProton by NotProtonNot,
+Ambaplay is a modified version (fork) of NotProton by NotProtonNot,
 https://github.com/NotProtonNot/NotProton, by way of Leon Seemann's
-NotProton-WineHQ (below). Raymond Chin and the Bridgeplay contributors have
+NotProton-WineHQ (below). Raymond Chin and the Ambaplay contributors have
 modified it since October 2026. The git history records every change, when it
 was made and by whom; commits taken from NotProton name the upstream commit or
-pull request they came from. The NotProton version Bridgeplay is based on is
+pull request they came from. The NotProton version Ambaplay is based on is
 shown in the app's About window and in each release's notes.
 
-Bridgeplay is licensed under the GNU General Public License version 3 (GPL-3.0), the
-same terms as NotProton; see LICENSE. Bridgeplay is free and non-commercial.
-"Non-commercial" describes how Bridgeplay is distributed and is required by Apple's
+Ambaplay is licensed under the GNU General Public License version 3 (GPL-3.0), the
+same terms as NotProton; see LICENSE. Ambaplay is free and non-commercial.
+"Non-commercial" describes how Ambaplay is distributed and is required by Apple's
 Game Porting Toolkit license (below); it does not restrict anyone's rights under the
-GPL-3.0 to Bridgeplay's own code. Files under other licenses are listed below and keep
+GPL-3.0 to Ambaplay's own code. Files under other licenses are listed below and keep
 their own terms.
 
-Third-party components in Bridgeplay
+Third-party components in Ambaplay
 ------------------------------------
 
 Dobby (https://github.com/jmpews/Dobby, commit 5dfc8546), the hooking library
@@ -33,7 +33,7 @@ Sparkle 2.10.0 (https://github.com/sparkle-project/Sparkle), embedded in the app
 as Sparkle.framework for updates, is licensed under the MIT license together
 with the external licenses it lists. Full text: LICENSE.sparkle.
 
-Bridgeplay 0.7.51 and earlier also shipped a DualSense Bluetooth bridge, Steam
+Ambaplay 0.7.51 and earlier also shipped a DualSense Bluetooth bridge, Steam
 Input rumble forwarding and a game-mode host, written by sn0wst0rm
 (https://github.com/sn0wst0rm/NotProton, GPL-3.0). They are left out until the
 same work, proposed to NotProton as
@@ -76,17 +76,17 @@ sha256 pins are in docs/WINECX.md and each patch directory's README.
   Wine 11.15 (WineHQ release tarball):
     winemac-winehq-11.15.so       winemac-patch/dxmt_export.c
 
-All files above are in app/Sources/BridgeplayApp/Resources/. The engine's ntdll
+All files above are in app/Sources/AmbaplayApp/Resources/. The engine's ntdll
 is patched at setup with detours built from ntdll-patch/ (detour*.bin in the
-same folder). nvapi64-shim.dll is Bridgeplay's own code, built from nvapi-shim/.
+same folder). nvapi64-shim.dll is Ambaplay's own code, built from nvapi-shim/.
 
-Shipped in the one-click installer (Bridgeplay-Installer.zip)
+Shipped in the one-click installer (Ambaplay-Installer.zip)
 -------------------------------------------------------------
 
-The installer carries no app (Install.command downloads Bridgeplay.zip from this
+The installer carries no app (Install.command downloads Ambaplay.zip from this
 project's GitHub releases). It carries these unmodified archives, so a Mac can set
 up without downloading them. The app installs the same archives (pinned by sha256
-in app/Sources/BridgeplayApp/Model/FreeEngine.swift) when they are not there.
+in app/Sources/AmbaplayApp/Model/FreeEngine.swift) when they are not there.
 
   DXMT (dxmt-e94c312.tar.gz, built from https://github.com/3Shain/dxmt at
       e94c312f5c054263acf261cfa109edf13e757587; docs/DXMT.md), Copyright (c)
@@ -111,13 +111,13 @@ The license texts of DXMT and DXVK ship next to these archives in the installer.
 
 Not shipped in the installer: the WineCX runtime (Libraries.tar.gz from
 https://github.com/dappermint/winecx-gptk, pinned in
-app/Sources/BridgeplayApp/Model/FreeEngineWinecx.swift). Besides Wine it bundles
+app/Sources/AmbaplayApp/Model/FreeEngineWinecx.swift). Besides Wine it bundles
 third-party libraries, some under the GNU GPL (FFmpeg built with --enable-gpl
 --enable-version3, x264, x265, libdvdcss, libdvdread, libdvdnav), whose
-corresponding source neither dappermint/winecx-gptk nor Bridgeplay publishes. So
-Bridgeplay does not redistribute that archive: the app downloads it straight from
+corresponding source neither dappermint/winecx-gptk nor Ambaplay publishes. So
+Ambaplay does not redistribute that archive: the app downloads it straight from
 dappermint/winecx-gptk's GitHub release on the user's Mac. Installers up to
-Bridgeplay 0.7.50 carried it, which is why it was taken out;
+Ambaplay 0.7.50 carried it, which is why it was taken out;
 those old installer downloads have been removed from the releases.
 
 Written offer for source code: the Corresponding Source of each binary above is
@@ -125,14 +125,14 @@ the upstream source at the commit named above plus the patch or file named next
 to it, all of which are public: winecx at https://github.com/dappermint/winecx,
 Wine 11.15 at https://dl.winehq.org/wine/source/11.x/, DXMT at
 https://github.com/3Shain/dxmt, DXVK-macOS at https://github.com/Gcenx/DXVK-macOS,
-and the patches in this repository (https://github.com/raymondchins/Bridgeplay).
-This offer covers every LGPL- or GPL-licensed file Bridgeplay or its installer
+and the patches in this repository (https://github.com/raymondchins/Ambaplay).
+This offer covers every LGPL- or GPL-licensed file Ambaplay or its installer
 ships: the patched Wine files in the app (above) and DXMT. It also covers the
-WineCX runtime, including its GPL libraries, in the installers up to Bridgeplay
+WineCX runtime, including its GPL libraries, in the installers up to Ambaplay
 0.7.50 that carried it. For at least
 three years after the last release that ships them, Raymond Chin will also
 provide that source on request, for no more than the cost of providing it; open
-an issue at https://github.com/raymondchins/Bridgeplay/issues.
+an issue at https://github.com/raymondchins/Ambaplay/issues.
 
 NotProton-WineHQ licensing
 ==========================
@@ -166,11 +166,11 @@ MIT licensed, see
 https://github.com/sparkle-project/Sparkle/blob/2.10.0/LICENSE
 
 The app's interface uses the Geist and Unbounded typefaces, bundled in
-app/Sources/BridgeplayUI/Resources/Fonts/ under the SIL Open Font License 1.1
+app/Sources/AmbaplayUI/Resources/Fonts/ under the SIL Open Font License 1.1
 (OFL-Geist.txt, OFL-Unbounded.txt there). The native installer's READ ME FIRST.html
 embeds the same Geist font. Game covers shown in the app are read
 from the user's own Steam library cache or Steam's CDN at run time; none ship
-with Bridgeplay.
+with Ambaplay.
 
 /fonts/ contains the font sources from Valve's Proton repo. Fonts are licensed
 under their original licenses, see the LICENSE file in each folder. The build
@@ -190,12 +190,12 @@ notproton.dylib):
 The WineCX engine gets an x86_64 SDL2 from the app bundle, for controller support
 in winebus.so (docs/WINECX.md):
 
-  app/Sources/BridgeplayApp/Resources/libSDL2-2.0.0.dylib
+  app/Sources/AmbaplayApp/Resources/libSDL2-2.0.0.dylib
       Simple DirectMedia Layer 2.32.10 (SDL-release-2.32.10-0-g5d2495703),
       https://github.com/libsdl-org/SDL/tree/release-2.32.10, built x86_64 with
       winemac-patch/sdl2-iokit-gamepad-collection.patch and signed ad hoc.
       Copyright (C) 1997-2025 Sam Lantinga <slouken@libsdl.org>.
       zlib license, https://github.com/libsdl-org/SDL/blob/release-2.32.10/LICENSE.txt
 
-  app/Sources/BridgeplayApp/Resources/winebus-winecx-11.15.so
+  app/Sources/AmbaplayApp/Resources/winebus-winecx-11.15.so
       winecx 5b45f45 (Wine, LGPL-2.1-or-later), built with SDL2 support.

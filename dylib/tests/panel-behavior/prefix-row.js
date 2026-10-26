@@ -95,13 +95,13 @@ const need = { needsRebuild: true, app: true, running: false, rebuild: '' };
     await w.tick(); assert.equal(w.texts()[0], 'Finishing\u2026');
     assert.equal(w.timers.at(-1).ms, 500, 'it asks again every half second');
     await w.tick();
-    assert.deepEqual(w.texts(), ["Prefix rebuilt. A backup of the original is in Bridgeplay's Prefixes view."]);
+    assert.deepEqual(w.texts(), ["Prefix rebuilt. A backup of the original is in Ambaplay's Prefixes view."]);
     const left = w.timers.length;
     w.g.MSCXPrefixRow(w.row, 480);
     assert.equal(w.timers.length, left, 'nothing polls once it is done');
     // The dylib reports done once, so the next answer is empty, and the row keeps saying done.
     w.listeners.mscxstate({ detail: 481 }); await w.settle();
-    assert.deepEqual(w.texts(), ["Prefix rebuilt. A backup of the original is in Bridgeplay's Prefixes view."]);
+    assert.deepEqual(w.texts(), ["Prefix rebuilt. A backup of the original is in Ambaplay's Prefixes view."]);
   }
   {
     const w = world([need, { ...need, rebuild: 'setup' }, { needsRebuild: false, app: true, rebuild: 'done' },
@@ -139,7 +139,7 @@ const need = { needsRebuild: true, app: true, running: false, rebuild: '' };
   {
     const w = world([{ ...need, app: false }]);
     w.g.MSCXPrefixRow(w.row, 480); await w.settle(); await w.settle();
-    assert.deepEqual(w.texts(), ["Couldn't find the Bridgeplay app. Move Bridgeplay to Applications, open it and click Install again."]);
+    assert.deepEqual(w.texts(), ["Couldn't find the Ambaplay app. Move Ambaplay to Applications, open it and click Install again."]);
     assert.equal(w.buttons().length, 0);
   }
   {

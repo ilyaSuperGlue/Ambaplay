@@ -34,7 +34,7 @@ static void wrong(const char *fmt, ...) {
 static void *rewrite_fallback(void *arg) {
     atomic_int *stop = arg;
     while (!atomic_load(stop))
-        np_webpatch_set_fallback_tool("bridgeplay-proton-fex");
+        np_webpatch_set_fallback_tool("ambaplay-proton-fex");
     return NULL;
 }
 
@@ -43,7 +43,7 @@ static void check_fallback(void) {
         "return t?(0,i.jsx)(m.B,{feature:p.OK,label:(0,l.we)"
         "(\"#Settings_SteamPlay_DefaultTool\"),rgOptions:A,disabled:0==A.length,"
         "selectedOption:t,onChange:e=>g(e.data)}):null";
-    np_webpatch_set_fallback_tool("bridgeplay-proton-fex");
+    np_webpatch_set_fallback_tool("ambaplay-proton-fex");
     atomic_int stop = 0;
     pthread_t writer;
     if (pthread_create(&writer, NULL, rewrite_fallback, &stop) != 0) {
@@ -57,8 +57,8 @@ static void check_fallback(void) {
         char *out = np_webpatch_transform((const uint8_t *)source, sizeof(source) - 1,
                                          &length, NULL);
         int ok = out && !memchr(out, '\0', length)
-            && strstr(out, "A.some(e=>e.data===\"bridgeplay-proton-fex\")")
-            && strstr(out, "selectedOption:t||\"bridgeplay-proton-fex\"");
+            && strstr(out, "A.some(e=>e.data===\"ambaplay-proton-fex\")")
+            && strstr(out, "selectedOption:t||\"ambaplay-proton-fex\"");
         free(out);
         if (!ok) {
             wrong("concurrent fallback writes changed a chunk's tool name");
@@ -71,9 +71,9 @@ static void check_fallback(void) {
 }
 
 static void check_fex_tools(void) {
-    np_webpatch_set_fex_tools((const char *[]){ "bridgeplay-proton-fex", "bad name", NULL, "",
-                                                "x\"y", "bridgeplay-proton-fex-41069" }, 6);
-    if (strcmp(g_fex_tools, "[\"bridgeplay-proton-fex\",\"bridgeplay-proton-fex-41069\"]") != 0)
+    np_webpatch_set_fex_tools((const char *[]){ "ambaplay-proton-fex", "bad name", NULL, "",
+                                                "x\"y", "ambaplay-proton-fex-41069" }, 6);
+    if (strcmp(g_fex_tools, "[\"ambaplay-proton-fex\",\"ambaplay-proton-fex-41069\"]") != 0)
         wrong("the FEX tool array is %s", g_fex_tools);
 
     np_webpatch_set_fex_tools(NULL, 0);
@@ -537,8 +537,8 @@ int main(int argc, char **argv) {
         return g_wrong;
     }
 
-    np_webpatch_set_fallback_tool("bridgeplay-proton-fex");
-    np_webpatch_set_fex_tools((const char *[]){ "bridgeplay-proton-fex", "bridgeplay-proton-fex-41069" }, 2);
+    np_webpatch_set_fallback_tool("ambaplay-proton-fex");
+    np_webpatch_set_fex_tools((const char *[]){ "ambaplay-proton-fex", "ambaplay-proton-fex-41069" }, 2);
 
     for (int i = 1; i < argc; i++) {
         size_t len = 0;

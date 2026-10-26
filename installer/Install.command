@@ -1,25 +1,25 @@
 #!/bin/bash
-# Bridgeplay one-click installer.
-# Downloads the latest Bridgeplay from GitHub, copies Apple's Game Porting Toolkit
+# Ambaplay one-click installer.
+# Downloads the latest Ambaplay from GitHub, copies Apple's Game Porting Toolkit
 # (D3DMetal), the DXMT and DXVK archives and the default configs, installs Steam from
-# Valve's CDN when it is missing, then opens Bridgeplay, whose Setup Assistant does the
+# Valve's CDN when it is missing, then opens Ambaplay, whose Setup Assistant does the
 # rest: Rosetta, sign-in, the App Management permission, the WineCX engine (downloaded
 # from dappermint/winecx-gptk, see NOTICE) and the Steam setup. Assembled into a zip by scripts/package-installer.sh.
 set -uo pipefail
 
-# Bridgeplay Installer.app runs this script too, after it has installed the app itself:
-# BRIDGEPLAY_INSTALL_APP=0 skips the app, BRIDGEPLAY_NONINTERACTIVE=1 never waits for Enter
-# and leaves opening Bridgeplay and the Terminal window to the caller.
-install_app=${BRIDGEPLAY_INSTALL_APP:-1}
-noninteractive=${BRIDGEPLAY_NONINTERACTIVE:-0}
+# Ambaplay Installer.app runs this script too, after it has installed the app itself:
+# AMBAPLAY_INSTALL_APP=0 skips the app, AMBAPLAY_NONINTERACTIVE=1 never waits for Enter
+# and leaves opening Ambaplay and the Terminal window to the caller.
+install_app=${AMBAPLAY_INSTALL_APP:-1}
+noninteractive=${AMBAPLAY_NONINTERACTIVE:-0}
 
 here="$(cd "$(dirname "$0")" && pwd)"
-support="$HOME/Library/Application Support/bridgeplay"
-caches="$HOME/Library/Caches/bridgeplay"
-# Bridgeplay before 3.0.0 kept its files under "notproton". The app moves them to
-# "bridgeplay" itself on first launch (with a backup), so the installer never moves them.
+support="$HOME/Library/Application Support/ambaplay"
+caches="$HOME/Library/Caches/ambaplay"
+# Ambaplay before 3.0.0 kept its files under "notproton". The app moves them to
+# "ambaplay" itself on first launch (with a backup), so the installer never moves them.
 # While only the old folders exist, it writes into them so that move carries the new
-# files along; a bridgeplay folder made next to them would get in the migration's way.
+# files along; a ambaplay folder made next to them would get in the migration's way.
 legacy_support="$HOME/Library/Application Support/notproton"
 legacy_caches="$HOME/Library/Caches/notproton"
 migrate_later=0
@@ -49,10 +49,10 @@ steam_requirement="=anchor apple generic and certificate leaf[subject.OU] = \"$v
 steam_tmp=""
 steam_mnt=""
 # The installer carries no app, so it never goes stale: it installs the Latest release.
-app_url="https://github.com/raymondchins/Bridgeplay/releases/latest/download/Bridgeplay.zip"
-# Release builds are signed with the self-signed "Bridgeplay Release" identity; pin its leaf
+app_url="https://github.com/raymondchins/Ambaplay/releases/latest/download/Ambaplay.zip"
+# Release builds are signed with the self-signed "Ambaplay Release" identity; pin its leaf
 # so an ad-hoc or other-signed zip on the release fails.
-app_requirement='=identifier "com.bridgeplay.Bridgeplay" and certificate leaf = H"63cd686b8e4c1123ef885e90e1127fefd5bd42b1"'
+app_requirement='=identifier "com.ambaplay.Ambaplay" and certificate leaf = H"63cd686b8e4c1123ef885e90e1127fefd5bd42b1"'
 app_tmp=""
 # shellcheck disable=SC2329 # runs from the EXIT trap
 cleanup() {
@@ -65,39 +65,39 @@ trap cleanup EXIT
 
 xattr -dr com.apple.quarantine "$here" 2>/dev/null || true
 
-[ "$(sysctl -n hw.optional.arm64 2>/dev/null)" = "1" ] || die "Mac ini bukan Apple Silicon (M1/M2/M3/...). Bridgeplay tidak jalan di Mac Intel."
+[ "$(sysctl -n hw.optional.arm64 2>/dev/null)" = "1" ] || die "Mac ini bukan Apple Silicon (M1/M2/M3/...). Ambaplay tidak jalan di Mac Intel."
 major="$(sw_vers -productVersion | cut -d. -f1)"
 [ "$major" -ge 26 ] || die "Butuh macOS 26 atau lebih baru (sekarang $(sw_vers -productVersion)). Update macOS dulu."
 [ -w /Applications ] || die "Akun ini tidak bisa menulis ke folder Applications. Login dengan akun admin, lalu jalankan Install.command lagi."
-# An installer from before the app was left out still carries Bridgeplay.app; use it.
-app_src="$here/Bridgeplay.app"
+# An installer from before the app was left out still carries Ambaplay.app; use it.
+app_src="$here/Ambaplay.app"
 if [ "$install_app" = 1 ] && [ ! -d "$app_src" ]; then
-    say "Mengunduh Bridgeplay versi terbaru..."
+    say "Mengunduh Ambaplay versi terbaru..."
     app_tmp="$(mktemp -d)"
-    curl -fL --retry 3 --connect-timeout 20 -o "$app_tmp/Bridgeplay.zip" "$app_url" \
-        || die "Bridgeplay gagal diunduh. Cek koneksi internet, lalu jalankan Install.command lagi."
-    ditto -x -k "$app_tmp/Bridgeplay.zip" "$app_tmp" || die "File Bridgeplay yang diunduh rusak. Jalankan Install.command lagi."
-    app_src="$app_tmp/Bridgeplay.app"
-    [ -d "$app_src" ] || die "File Bridgeplay yang diunduh tidak berisi Bridgeplay.app. Jalankan Install.command lagi."
-    [ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$app_src/Contents/Info.plist" 2>/dev/null)" = "com.bridgeplay.Bridgeplay" ] \
-        || die "File yang diunduh bukan Bridgeplay. Jalankan Install.command lagi."
+    curl -fL --retry 3 --connect-timeout 20 -o "$app_tmp/Ambaplay.zip" "$app_url" \
+        || die "Ambaplay gagal diunduh. Cek koneksi internet, lalu jalankan Install.command lagi."
+    ditto -x -k "$app_tmp/Ambaplay.zip" "$app_tmp" || die "File Ambaplay yang diunduh rusak. Jalankan Install.command lagi."
+    app_src="$app_tmp/Ambaplay.app"
+    [ -d "$app_src" ] || die "File Ambaplay yang diunduh tidak berisi Ambaplay.app. Jalankan Install.command lagi."
+    [ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$app_src/Contents/Info.plist" 2>/dev/null)" = "com.ambaplay.Ambaplay" ] \
+        || die "File yang diunduh bukan Ambaplay. Jalankan Install.command lagi."
     codesign --verify --strict -R "$app_requirement" "$app_src" 2>/dev/null \
-        || die "Tanda tangan Bridgeplay yang diunduh tidak valid. Jalankan Install.command lagi."
+        || die "Tanda tangan Ambaplay yang diunduh tidak valid. Jalankan Install.command lagi."
 fi
 
 if [ "$install_app" = 1 ]; then
-    say "Memasang Bridgeplay..."
+    say "Memasang Ambaplay..."
     # quit is asynchronous: wait until the app has gone before its bundle is removed.
-    osascript -e 'tell application id "com.bridgeplay.Bridgeplay" to quit' >/dev/null 2>&1 || true
+    osascript -e 'tell application id "com.ambaplay.Ambaplay" to quit' >/dev/null 2>&1 || true
     waited=0
-    while pgrep -qx BridgeplayApp; do
-        [ "$waited" -lt 30 ] || die "Bridgeplay masih berjalan. Tutup Bridgeplay dulu, lalu jalankan Install.command lagi."
+    while pgrep -qx AmbaplayApp; do
+        [ "$waited" -lt 30 ] || die "Ambaplay masih berjalan. Tutup Ambaplay dulu, lalu jalankan Install.command lagi."
         sleep 1
         waited=$((waited + 1))
     done
-    rm -rf /Applications/Bridgeplay.app || die "Bridgeplay lama tidak bisa dihapus dari Applications."
-    ditto "$app_src" /Applications/Bridgeplay.app || die "Bridgeplay gagal disalin ke Applications."
-    xattr -dr com.apple.quarantine /Applications/Bridgeplay.app 2>/dev/null || true
+    rm -rf /Applications/Ambaplay.app || die "Ambaplay lama tidak bisa dihapus dari Applications."
+    ditto "$app_src" /Applications/Ambaplay.app || die "Ambaplay gagal disalin ke Applications."
+    xattr -dr com.apple.quarantine /Applications/Ambaplay.app 2>/dev/null || true
 fi
 
 if [ ! -d /Applications/Steam.app ]; then
@@ -125,17 +125,17 @@ fi
 
 say "Menyalin Game Porting Toolkit, DXMT, DXVK dan config..."
 if [ "$migrate_later" -eq 1 ]; then
-    say "Data Bridgeplay lama ditemukan di folder notproton. File baru ditaruh di sana dulu; Bridgeplay memindahkannya ke folder bridgeplay saat pertama dibuka (tutup Steam dan game dulu)."
+    say "Data Ambaplay lama ditemukan di folder notproton. File baru ditaruh di sana dulu; Ambaplay memindahkannya ke folder ambaplay saat pertama dibuka (tutup Steam dan game dulu)."
 fi
 mkdir -p "$support/gamefixes" "$support/gamefixes-default" "$support/.installer" "$caches" \
-    || die "Folder Bridgeplay di Library tidak bisa dibuat."
+    || die "Folder Ambaplay di Library tidak bisa dibuat."
 rm -rf "$support/gptk" || die "Game Porting Toolkit lama tidak bisa dihapus."
 ditto "$here/gptk" "$support/gptk" || die "Game Porting Toolkit gagal disalin."
-# Bridgeplay reuses any cached file whose hash matches its pin, so DXMT and DXVK are not
+# Ambaplay reuses any cached file whose hash matches its pin, so DXMT and DXVK are not
 # downloaded again. The WineCX runtime is not in the zip; the app downloads it.
 ditto "$here/cache" "$caches" || die "File engine gagal disalin."
 
-# Per-game confs are Bridgeplay's shipped defaults (gamefixes/ in the repository). They go
+# Per-game confs are Ambaplay's shipped defaults (gamefixes/ in the repository). They go
 # to gamefixes-default/, which the app owns and refreshes on every update, so a newer
 # default is never hidden behind an old copy. The user's gamefixes/ holds only overrides.
 for conf in "$here/config/gamefixes-default/"*.conf; do
@@ -176,12 +176,12 @@ if [ ! -f "$support/gamecontrollerdb.txt" ]; then
     cp "$here/config/gamecontrollerdb.txt" "$support/" || die "gamecontrollerdb.txt gagal disalin."
 fi
 xattr -dr com.apple.quarantine "$support" 2>/dev/null || true
-# Show the Setup Assistant again even if an earlier Bridgeplay was dismissed.
-defaults delete com.bridgeplay.Bridgeplay setupAssistantFinished >/dev/null 2>&1 || true
+# Show the Setup Assistant again even if an earlier Ambaplay was dismissed.
+defaults delete com.ambaplay.Ambaplay setupAssistantFinished >/dev/null 2>&1 || true
 
-say "Selesai. Bridgeplay terbuka, ikuti Setup Assistant-nya."
+say "Selesai. Ambaplay terbuka, ikuti Setup Assistant-nya."
 [ "$noninteractive" = 1 ] && exit 0
-open /Applications/Bridgeplay.app
+open /Applications/Ambaplay.app
 sleep 2
 osascript -e 'tell application "Terminal" to close (every window whose name contains "Install.command")' >/dev/null 2>&1 &
 exit 0

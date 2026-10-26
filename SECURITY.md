@@ -1,16 +1,16 @@
 # Security
 
-Bridgeplay loads code into the Steam client and into games, re-signs Steam, and updates
+Ambaplay loads code into the Steam client and into games, re-signs Steam, and updates
 itself with a signed Sparkle feed. Please report anything that could let someone else run
 code through it, read Steam data, or ship a bad update.
 
 ## Reporting
 
 Report privately through GitHub: **Security › Report a vulnerability** on
-https://github.com/raymondchins/Bridgeplay/security. Please don't open a public issue for a
+https://github.com/raymondchins/Ambaplay/security. Please don't open a public issue for a
 security problem.
 
-Include what you found, how to reproduce it, and which Bridgeplay version (Status page) and
+Include what you found, how to reproduce it, and which Ambaplay version (Status page) and
 macOS version you used. You will get a reply within a week. Fixes ship as a normal Sparkle
 update, and the release notes credit you unless you prefer not.
 
@@ -26,11 +26,11 @@ user is a hardening request, not a vulnerability, but it is still welcome as an 
 ## Known trade-offs
 
 - Releases are signed with a self-signed certificate (no Apple Developer ID) and not notarized, and the
-  installer removes the download's quarantine flag. Download only from https://bridgeplay.dev or GitHub.
-- Steam is re-signed to load Bridgeplay, with a local "NotProton Local Signing" keychain identity or ad hoc,
+  installer removes the download's quarantine flag. Download only from https://ambaplay.dev or GitHub.
+- Steam is re-signed to load Ambaplay, with a local "NotProton Local Signing" keychain identity or ad hoc,
   and loses Valve's hardened runtime.
 - `notproton.dylib` loads for every macOS user of a shared `/Applications/Steam.app`.
-- Setup removes quarantine from Steam.app and Bridgeplay's folder, resets Steam's Accessibility,
+- Setup removes quarantine from Steam.app and Ambaplay's folder, resets Steam's Accessibility,
   PostEvent and ListenEvent approvals (`tccutil`), re-signs Wine loaders ad hoc where needed, and sets
   Steam's default compatibility tool (`config.vdf`).
 - Optional "Block Steam client updates" (`BootStrapperInhibitUpdateOnLaunch` in `steam.cfg`) also blocks

@@ -1,7 +1,7 @@
 #!/bin/sh
 # Build the whole app on this Mac the way .github/workflows/app.yml does on CI.
 #
-#   scripts/build-local.sh            build build/Bridgeplay.app and build/Bridgeplay.zip
+#   scripts/build-local.sh            build build/Ambaplay.app and build/Ambaplay.zip
 #   scripts/build-local.sh --checks   the same, then the CI check targets and Swift tests
 #
 # Phases run in CI order: dobby, all, overlay-shim, iconmaker+appinfo, bridge,
@@ -17,7 +17,7 @@
 # A new worktree: scripts/worktree-seed.sh first, then this.
 #
 # Overridable: DEVELOPER_DIR (default Xcode-beta), JOBS (default hw.ncpu)
-# A beta build: BRIDGEPLAY_BETA=N BRIDGEPLAY_BETA_BUILD=B [BRIDGEPLAY_BETA_PLANNED=X.Y.Z], see docs/RELEASING.md
+# A beta build: AMBAPLAY_BETA=N AMBAPLAY_BETA_BUILD=B [AMBAPLAY_BETA_PLANNED=X.Y.Z], see docs/RELEASING.md
 
 set -eu
 
@@ -54,7 +54,7 @@ if [ -z "${DEVELOPER_DIR:-}" ] || [ ! -d "$DEVELOPER_DIR" ]; then
 fi
 export DEVELOPER_DIR
 
-# A malformed beta stamp (BRIDGEPLAY_BETA*, see stamp-beta.sh) fails now, not after the slow phases.
+# A malformed beta stamp (AMBAPLAY_BETA*, see stamp-beta.sh) fails now, not after the slow phases.
 sh scripts/stamp-beta.sh check
 
 JOBS=${JOBS:-$(sysctl -n hw.ncpu)}
@@ -218,10 +218,10 @@ phase fonts make fonts
 phase app-payload make app-payload
 phase app make app
 
-app_out=build/Bridgeplay.app
-zip_out=build/Bridgeplay.zip
+app_out=build/Ambaplay.app
+zip_out=build/Ambaplay.zip
 rm -rf "$app_out" "$zip_out"
-ditto out/Bridgeplay.app "$app_out"
+ditto out/Ambaplay.app "$app_out"
 ditto -c -k --keepParent "$app_out" "$zip_out"
 codesign --verify --strict --deep "$app_out"
 
@@ -232,16 +232,16 @@ sha=$(shasum -a 256 "$zip_out" | cut -d' ' -f1)
 
 # The checks depend on the source, not on the version number, so a tree that already
 # passed (a release right after its bump commit) skips them. Only a clean tree is stamped.
-# BRIDGEPLAY_FORCE_CHECKS=1 runs them anyway.
+# AMBAPLAY_FORCE_CHECKS=1 runs them anyway.
 checks_stamp=$repo/build/.checks-passed
 source_fingerprint() {
 	git -C "$repo" diff --quiet HEAD -- 2>/dev/null || return 1
 	git -C "$repo" ls-files -s | grep -v '	dylib/version.h$' | shasum | cut -d' ' -f1
 }
 fingerprint=$(source_fingerprint || true)
-if [ "$run_checks" -eq 1 ] && [ -n "$fingerprint" ] && [ "${BRIDGEPLAY_FORCE_CHECKS:-0}" != 1 ] \
+if [ "$run_checks" -eq 1 ] && [ -n "$fingerprint" ] && [ "${AMBAPLAY_FORCE_CHECKS:-0}" != 1 ] \
 	&& [ "$(cat "$checks_stamp" 2>/dev/null)" = "$fingerprint" ]; then
-	echo "==> [check] skipped: these sources already passed make ci-checks (BRIDGEPLAY_FORCE_CHECKS=1 runs them)"
+	echo "==> [check] skipped: these sources already passed make ci-checks (AMBAPLAY_FORCE_CHECKS=1 runs them)"
 	run_checks=0
 	checks_reused=1
 fi
@@ -251,7 +251,7 @@ fi
 # too: push, let CI pass, bump, release. Needs gh; without it, or with no passing run, the
 # checks run here. A docs-only run is green with its build and checks skipped, so a run
 # counts only when both jobs ran and succeeded (scripts/ci-run-passed.sh).
-ci_slug=${BRIDGEPLAY_CI_REPO:-raymondchins/Bridgeplay}
+ci_slug=${AMBAPLAY_CI_REPO:-raymondchins/Ambaplay}
 ci_passed() {
 	command -v gh >/dev/null 2>&1 || return 1
 	for sha in $(git -C "$repo" rev-list --max-count=5 HEAD); do
@@ -264,9 +264,9 @@ ci_passed() {
 	done
 	return 1
 }
-if [ "$run_checks" -eq 1 ] && [ -n "$fingerprint" ] && [ "${BRIDGEPLAY_FORCE_CHECKS:-0}" != 1 ] \
+if [ "$run_checks" -eq 1 ] && [ -n "$fingerprint" ] && [ "${AMBAPLAY_FORCE_CHECKS:-0}" != 1 ] \
 	&& ci_sha=$(ci_passed); then
-	echo "==> [check] skipped: GitHub CI (app) passed make ci-checks on $(printf '%.7s' "$ci_sha"), same sources (BRIDGEPLAY_FORCE_CHECKS=1 runs them)"
+	echo "==> [check] skipped: GitHub CI (app) passed make ci-checks on $(printf '%.7s' "$ci_sha"), same sources (AMBAPLAY_FORCE_CHECKS=1 runs them)"
 	run_checks=0
 	checks_reused=1
 fi
@@ -290,7 +290,7 @@ fi
 # --- summary -----------------------------------------------------------------------
 
 print_timings
-echo "==> Bridgeplay $version"
+echo "==> Ambaplay $version"
 echo "    app     $repo/$app_out (codesign --verify --strict ok)"
 echo "    signed  $(codesign -d -r- "$app_out" 2>&1 | sed -n 's/^#* *designated => //p')"
 echo "    zip     $repo/$zip_out"

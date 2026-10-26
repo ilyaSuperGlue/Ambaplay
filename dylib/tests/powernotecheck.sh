@@ -35,7 +35,7 @@ is() { if [ "$2" = "$3" ]; then ok "$1"; else bad "$1" "$2" "$3"; fi; }
 has() { if grep -qF -- "$2" "$3"; then ok "$1"; else bad "$1" "$2" "$(cat "$3")"; fi; }
 marked() { [ -e "$mark" ] && echo yes || echo no; }
 
-support="$work/Application Support/bridgeplay"
+support="$work/Application Support/ambaplay"
 mkdir -p "$support"
 mark="$support/low-power-noticed"
 lock="$support/.low-power.lock"

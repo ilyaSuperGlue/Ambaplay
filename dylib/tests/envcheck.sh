@@ -64,7 +64,7 @@ rm -rf "$vc_work"
 echo "== Apple GPTK initialization and launcher environment =="
 work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
-np_support="$work/Application Support/bridgeplay"
+np_support="$work/Application Support/ambaplay"
 np_build="test"
 library="$np_support/runners/crossover-$np_build/CrossOver/lib64/apple_gptk/external/libd3dshared.dylib"
 init=$(sed -n '/^CX_ROOT=/,/^wine_unix=/p' "$SRC")
@@ -169,9 +169,9 @@ done
 is "FEX settings reach the game" "FEX_MULTIBLOCK=0 FEX_X87REDUCEDPRECISION=0 " "$(printf %s "$fex_args" | sort | tr '\n' ' ')"
 unset -v FEX_X87REDUCEDPRECISION FEX_MULTIBLOCK
 
-echo "== the support folder and the BRIDGEPLAY_ names =="
+echo "== the support folder and the AMBAPLAY_ names =="
 # shellcheck disable=SC2016 # Match the literal assignment.
-pick=$(sed -n '/^np_support="\$HOME\/Library\/Application Support\/bridgeplay"$/,/^fi$/p' "$SRC")
+pick=$(sed -n '/^np_support="\$HOME\/Library\/Application Support\/ambaplay"$/,/^fi$/p' "$SRC")
 # shellcheck disable=SC2016 # Match the literal loop.
 names=$(sed -n '/^for np_name in \$(env /,/^done$/p' "$SRC")
 [ -n "$pick" ] && [ -n "$names" ] || { echo "FAIL: the support folder or name blocks not found"; exit 1; }
@@ -181,17 +181,17 @@ support_for() {
    for d in $2; do mkdir -p "$HOME/Library/Application Support/$d"; done
    eval "$pick"; printf '%s' "${np_support##*/}")
 }
-is "a migrated home uses bridgeplay" "bridgeplay" "$(support_for new bridgeplay)"
+is "a migrated home uses ambaplay" "ambaplay" "$(support_for new ambaplay)"
 is "a home with only the old folder keeps using it" "notproton" "$(support_for old notproton)"
-is "both present: bridgeplay wins" "bridgeplay" "$(support_for both 'bridgeplay notproton')"
-is "a fresh home gets bridgeplay" "bridgeplay" "$(support_for none '')"
+is "both present: ambaplay wins" "ambaplay" "$(support_for both 'ambaplay notproton')"
+is "a fresh home gets ambaplay" "ambaplay" "$(support_for none '')"
 # shellcheck disable=SC2016 # the inner sh expands them
 mapped() { env -i PATH="$PATH" "$@" names="$names" sh -ec 'eval "$names"; printf "%s|%s" "${NOTPROTON_RETINA-unset}" "${NOTPROTON_FRAMEGEN-unset}"'; }
-is "BRIDGEPLAY_ names reach the NOTPROTON_ ones" "1|2" "$(mapped BRIDGEPLAY_RETINA=1 BRIDGEPLAY_FRAMEGEN=2)"
-is "a NOTPROTON_ name already set wins" "0|unset" "$(mapped BRIDGEPLAY_RETINA=1 NOTPROTON_RETINA=0)"
-is "an empty BRIDGEPLAY_ value is still a value" "|unset" "$(mapped BRIDGEPLAY_RETINA=)"
+is "AMBAPLAY_ names reach the NOTPROTON_ ones" "1|2" "$(mapped AMBAPLAY_RETINA=1 AMBAPLAY_FRAMEGEN=2)"
+is "a NOTPROTON_ name already set wins" "0|unset" "$(mapped AMBAPLAY_RETINA=1 NOTPROTON_RETINA=0)"
+is "an empty AMBAPLAY_ value is still a value" "|unset" "$(mapped AMBAPLAY_RETINA=)"
 is "a value holding a quote and a newline is copied as is" "a'b
-c|unset" "$(mapped "BRIDGEPLAY_RETINA=a'b
+c|unset" "$(mapped "AMBAPLAY_RETINA=a'b
 c")"
 
 if [ "$fails" -eq 0 ]; then

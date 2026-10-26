@@ -15,7 +15,7 @@ for name in gamefix_log valid_dll_overrides gamefix_reason gamefix_read gamefix_
 $body"
 done
 public_names=$(sed -n '/^for np_name in $(env /,/^done$/p' "$SRC")
-[ -n "$public_names" ] || { echo "FAIL: the BRIDGEPLAY_ to NOTPROTON_ loop not found"; exit 1; }
+[ -n "$public_names" ] || { echo "FAIL: the AMBAPLAY_ to NOTPROTON_ loop not found"; exit 1; }
 bridge_line=$(grep 'export WINEDLLOVERRIDES=' "$SRC" | grep 'lsteamclient=b' | sed 's/^[[:space:]]*//')
 [ -n "$bridge_line" ] || { echo "FAIL: the bridge WINEDLLOVERRIDES line not found"; exit 1; }
 forward=$(sed -n '/^for name in $(env /,/^done$/p' "$SRC")
@@ -224,8 +224,8 @@ is "the later file wins DLLOVERRIDES whole" \
 new_case
 full_engine
 user_conf 'BACKEND=dxvk' 'DLLOVERRIDES=dinput8=n,b;dxgi=n'
-launch waitforexitandrun "$case_dir/game/game.exe" BRIDGEPLAY_BACKEND=wined3d WINEDLLOVERRIDES='dinput8=b'
-is "BRIDGEPLAY_BACKEND beats the conf" "wined3d" "$(got backend)"
+launch waitforexitandrun "$case_dir/game/game.exe" AMBAPLAY_BACKEND=wined3d WINEDLLOVERRIDES='dinput8=b'
+is "AMBAPLAY_BACKEND beats the conf" "wined3d" "$(got backend)"
 is "overrides run backend, conf, launch options, then the Steam trio" \
 	"d3d10core,d3d11,dxgi=b;dinput8=n,b;dxgi=n;dinput8=b;$trio" "$(got WINEDLLOVERRIDES)"
 new_case
@@ -236,9 +236,9 @@ launch waitforexitandrun "$case_dir/game/game.exe"
 is "a conf BACKEND beats auto-detection" "dxvk" "$(got backend)"
 new_case
 full_engine
-launch waitforexitandrun "$case_dir/game/game.exe" BRIDGEPLAY_BACKEND=metal
-is "an invalid BRIDGEPLAY_BACKEND falls through to auto" "dxmt" "$(got backend)"
-has "and is logged" "BRIDGEPLAY_BACKEND is not dxmt, dxvk, wined3d or d3dmetal, ignored" "$case_dir/log"
+launch waitforexitandrun "$case_dir/game/game.exe" AMBAPLAY_BACKEND=metal
+is "an invalid AMBAPLAY_BACKEND falls through to auto" "dxmt" "$(got backend)"
+has "and is logged" "AMBAPLAY_BACKEND is not dxmt, dxvk, wined3d or d3dmetal, ignored" "$case_dir/log"
 
 echo "== auto-detect reads the import table"
 new_case
@@ -537,19 +537,19 @@ full_engine
 user_conf 'RETINA=1'
 launch waitforexitandrun "$case_dir/game/game.exe"
 is "RETINA maps to NOTPROTON_RETINA" "1" "$(got NOTPROTON_RETINA)"
-launch waitforexitandrun "$case_dir/game/game.exe" BRIDGEPLAY_RETINA=0
+launch waitforexitandrun "$case_dir/game/game.exe" AMBAPLAY_RETINA=0
 is "the High Resolution launch option wins" "0" "$(got NOTPROTON_RETINA)"
 launch waitforexitandrun "$case_dir/game/game.exe" NOTPROTON_RETINA=0
 is "the pre-3.0 spelling still wins over the conf" "0" "$(got NOTPROTON_RETINA)"
-launch waitforexitandrun "$case_dir/game/game.exe" NOTPROTON_RETINA=0 BRIDGEPLAY_RETINA=1
+launch waitforexitandrun "$case_dir/game/game.exe" NOTPROTON_RETINA=0 AMBAPLAY_RETINA=1
 is "NOTPROTON_ wins when both spellings are set" "0" "$(got NOTPROTON_RETINA)"
 new_case
 full_engine
-user_conf 'BRIDGEPLAY_RETINA=1' 'BRIDGEPLAY_FRAMEGEN=2' 'BRIDGEPLAY_BACKEND=dxvk'
+user_conf 'AMBAPLAY_RETINA=1' 'AMBAPLAY_FRAMEGEN=2' 'AMBAPLAY_BACKEND=dxvk'
 launch waitforexitandrun "$case_dir/game/game.exe"
-is "a conf key takes the BRIDGEPLAY_ name" "1" "$(got NOTPROTON_RETINA)"
+is "a conf key takes the AMBAPLAY_ name" "1" "$(got NOTPROTON_RETINA)"
 is "and so does FRAMEGEN" "2" "$(got NOTPROTON_FRAMEGEN)"
-has "BACKEND does not, it names no variable" "rejected BRIDGEPLAY_BACKEND: not on the allow-list" "$case_dir/log"
+has "BACKEND does not, it names no variable" "rejected AMBAPLAY_BACKEND: not on the allow-list" "$case_dir/log"
 
 echo "== FRAMEGEN"
 new_case
@@ -589,13 +589,13 @@ is "no conf leaves the quality to the shim" "<unset>" "$(got NOTPROTON_FRAMEGEN_
 # The stub reports NOTPROTON_OVERLAY_SHIM, set beside DYLD_INSERT_LIBRARIES, since SIP strips DYLD_* from /bin/sh.
 # Without SIP (GitHub runners) dyld does load the shim into /bin/sh, so it is a real, empty arm64e dylib.
 echo "== the launcher loads the shim for frame generation unless it is off"
-mkdir -p "$work/launcher/Contents/MacOS" "$work/launcher/home/Library/Application Support/bridgeplay"
+mkdir -p "$work/launcher/Contents/MacOS" "$work/launcher/home/Library/Application Support/ambaplay"
 clang -dynamiclib -arch arm64e -arch arm64 -arch x86_64 -x c /dev/null \
-	-o "$work/launcher/home/Library/Application Support/bridgeplay/overlay-shim.dylib"
+	-o "$work/launcher/home/Library/Application Support/ambaplay/overlay-shim.dylib"
 printf '#!/bin/sh\nprintf "%%s" "${NOTPROTON_OVERLAY_SHIM:-none}"\n' > "$work/launcher/wine"
 chmod +x "$work/launcher/wine"
 env -i PATH="$PATH" HOME="$work/launcher/home" WINELOADER="$work/launcher/wine" loader_root="$work/launcher" \
-	np_support="$work/launcher/home/Library/Application Support/bridgeplay" \
+	np_support="$work/launcher/home/Library/Application Support/ambaplay" \
 	loader_macos="$work/launcher/Contents/MacOS" body="$launcher_body" sh -ec 'eval "$body"'
 chmod +x "$work/launcher/Contents/MacOS/launcher"
 for spec in '-:none' '0:none' 'off:none' '1:shim' '2:shim' '3:shim' 'adaptive:shim'; do
@@ -605,7 +605,7 @@ for spec in '-:none' '0:none' 'off:none' '1:shim' '2:shim' '3:shim' 'adaptive:sh
 	else
 		env -i PATH="$PATH" NOTPROTON_FRAMEGEN="$fg" "$work/launcher/Contents/MacOS/launcher" >/dev/null 2>&1 || true
 	fi
-	got_dyld=$(cat "$work/launcher/bridgeplay-wine.log")
+	got_dyld=$(cat "$work/launcher/ambaplay-wine.log")
 	case "$got_dyld" in *overlay-shim.dylib) got_dyld=shim ;; esac
 	is "NOTPROTON_FRAMEGEN=${fg#-} without the Steam overlay: $want" "$want" "$got_dyld"
 done

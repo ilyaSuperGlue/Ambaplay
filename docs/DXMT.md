@@ -1,6 +1,6 @@
 # DXMT build
 
-Bridgeplay ships DXMT built from a pinned master commit, not the v0.80 release, to pick up
+Ambaplay ships DXMT built from a pinned master commit, not the v0.80 release, to pick up
 the 262 commits since that release (D3D11 fixes, the macOS 27 HUD fix, Xcode 27 build
 fixes, the WIP D3D12 backend).
 
@@ -11,10 +11,10 @@ fixes, the WIP D3D12 backend).
 | Tarball | `dxmt-e94c312.tar.gz`, top-level directory `e94c312/` |
 | License | LGPL-2.1-or-later since `ec357fd` (v0.80 was the last MIT release) |
 
-## In Bridgeplay
+## In Ambaplay
 
 Both free engines download this tarball from
-`https://github.com/raymondchins/Bridgeplay/releases/download/dxmt-e94c312/` into the
+`https://github.com/raymondchins/Ambaplay/releases/download/dxmt-e94c312/` into the
 engine cache (`FreeEngine.dxmt`, also `FreeEngineWinecx.current.renderer`). `winemetal.so`
 and both `winemetal.dll` go into `lib/wine` as shipped. `d3d10core`, `d3d11` and `dxgi` go to
 `lib/notproton-backends/dxmt/` with the 16 bytes of the Wine builtin marker at 0x40

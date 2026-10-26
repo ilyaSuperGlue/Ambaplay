@@ -1,13 +1,13 @@
 #!/bin/sh
-# Bump Bridgeplay's version in dylib/version.h before a release.
+# Bump Ambaplay's version in dylib/version.h before a release.
 #
 #   scripts/bump-version.sh patch|minor|major|set X.Y.Z [--upstream "NotProton X.Y.Z"] [--highest-build N] [--named X.Y.Z]
 #
 # Almost always patch (fixes, features, upstream merges); minor and major are rare, see
-# docs/RELEASING.md. set picks any X.Y.Z above the committed one (0.7.3 -> 0.7.31). BRIDGEPLAY_BUILD goes up by one every time, since Sparkle orders updates by it.
+# docs/RELEASING.md. set picks any X.Y.Z above the committed one (0.7.3 -> 0.7.31). AMBAPLAY_BUILD goes up by one every time, since Sparkle orders updates by it.
 # --upstream records the NotProton release this build is based on (NOTPROTON_VERSION);
 # a clean upstream merge already brings upstream's value, so it is rarely needed.
-# --highest-build N (or BRIDGEPLAY_HIGHEST_BUILD) is the highest build ever published, stable or
+# --highest-build N (or AMBAPLAY_HIGHEST_BUILD) is the highest build ever published, stable or
 # beta. The new build is one above the larger of N and the committed build, so the stable that
 # ships a beta outranks every beta. --named X.Y.Z is the release that beta was named after: the
 # bump fails unless it lands exactly there.
@@ -41,7 +41,7 @@ case "$part" in
 esac
 
 upstream=""
-highest=${BRIDGEPLAY_HIGHEST_BUILD:-}
+highest=${AMBAPLAY_HIGHEST_BUILD:-}
 named=""
 while [ $# -gt 0 ]; do
 	case "$1" in
@@ -68,11 +68,11 @@ done
 
 die() { echo "==> $*" >&2; exit 1; }
 
-version=$(header_string "$header" BRIDGEPLAY_VERSION)
-build=$(header_number "$header" BRIDGEPLAY_BUILD)
+version=$(header_string "$header" AMBAPLAY_VERSION)
+build=$(header_number "$header" AMBAPLAY_BUILD)
 based=$(header_string "$header" NOTPROTON_VERSION)
-is_semver "$version" || die "BRIDGEPLAY_VERSION '$version' in $header is not X.Y.Z; a beta label is stamped at build time, never committed"
-[ -n "$build" ] || die "no numeric BRIDGEPLAY_BUILD in $header"
+is_semver "$version" || die "AMBAPLAY_VERSION '$version' in $header is not X.Y.Z; a beta label is stamped at build time, never committed"
+[ -n "$build" ] || die "no numeric AMBAPLAY_BUILD in $header"
 [ -n "$based" ] || die "no NOTPROTON_VERSION in $header"
 if [ -n "$upstream" ]; then
 	echo "$upstream" | grep -Eq '^[0-9]+(\.[0-9]+)*$' || die "--upstream wants 'NotProton X.Y.Z', got '$upstream'"
@@ -100,10 +100,10 @@ next_based=${upstream:-$based}
 tmp=$header.tmp.$$
 trap 'rm -f "$tmp"' EXIT
 sed \
-	-e "s/^#define BRIDGEPLAY_VERSION \".*\"$/#define BRIDGEPLAY_VERSION \"$next\"/" \
-	-e "s/^#define BRIDGEPLAY_BUILD [0-9][0-9]*$/#define BRIDGEPLAY_BUILD $next_build/" \
+	-e "s/^#define AMBAPLAY_VERSION \".*\"$/#define AMBAPLAY_VERSION \"$next\"/" \
+	-e "s/^#define AMBAPLAY_BUILD [0-9][0-9]*$/#define AMBAPLAY_BUILD $next_build/" \
 	-e "s/^#define NOTPROTON_VERSION \".*\"$/#define NOTPROTON_VERSION \"$next_based\"/" \
 	"$header" >"$tmp"
 cat "$tmp" >"$header"
 
-echo "==> Bridgeplay $version ($build) -> $next ($next_build), based on NotProton $next_based"
+echo "==> Ambaplay $version ($build) -> $next ($next_build), based on NotProton $next_based"

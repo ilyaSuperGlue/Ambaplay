@@ -1,6 +1,6 @@
 # Architecture
 
-Bridgeplay has three moving parts: an app that sets everything up, a dylib that runs inside
+Ambaplay has three moving parts: an app that sets everything up, a dylib that runs inside
 the Mac Steam client, and patched Wine engines that run the games. This page says what
 each folder is, which process it ends up in, and where new code belongs.
 
@@ -8,7 +8,7 @@ each folder is, which process it ends up in, and where new code belongs.
 
 | Folder | Runs in | How it gets there |
 |---|---|---|
-| `app/` | The Bridgeplay app (SwiftUI, Sparkle updates); also a CLI (`--install-into-steam`, `--setup-winecx`, `--remove-everything`) | `installer/Install.command` copies it to `/Applications` |
+| `app/` | The Ambaplay app (SwiftUI, Sparkle updates); also a CLI (`--install-into-steam`, `--setup-winecx`, `--remove-everything`) | `installer/Install.command` copies it to `/Applications` |
 | `dylib/` (`notproton.dylib`: hooks, signature resolver, Steam web UI patches, compat tool registration, the run script `feats/compat_run.sh`) | The Steam client (`steam_osx`) and Steam Helper | The app copies it into `Steam.app/Contents/MacOS`, sets `DYLD_INSERT_LIBRARIES` in Steam's Info.plist and re-signs Steam |
 | `signatures/macos.arm64/` | Data the dylib reads to find Steam functions | Copied to Application Support; the highest-numbered file wins |
 | `lsteamclient/`, `steam-shim/` | Wine: the steamclient bridge and the Windows `steam.exe` | Built against the Wine tree in `bridge/`, shipped in the app payload, put into runners |
@@ -26,7 +26,7 @@ each folder is, which process it ends up in, and where new code belongs.
 
 1. The app patches Steam, clones and patches the Wine runners, and re-applies its patch
    when Steam updates itself.
-2. Steam starts with the dylib, which registers the `bridgeplay-proton-*` compatibility
+2. Steam starts with the dylib, which registers the `ambaplay-proton-*` compatibility
    tools, so Windows games show Install and Play like Mac games.
 3. Steam launches a Windows game through the `run` script, which picks the engine
    (WineCX with D3DMetal, DXMT or DXVK), applies the game's gamefixes and injects the
@@ -47,5 +47,5 @@ each folder is, which process it ends up in, and where new code belongs.
 
 Runtime identifiers kept their NotProton names (`notproton.dylib`, `NOTPROTON_*` variables,
 `com.notproton.*` signing identifiers, the `NotProtonVersion` plist key); renaming them
-would need another migration. Everything on disk uses `bridgeplay` since 3.0.0; see
+would need another migration. Everything on disk uses `ambaplay` since 3.0.0; see
 [RELEASING.md](RELEASING.md#the-300-rename).

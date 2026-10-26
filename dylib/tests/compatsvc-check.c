@@ -151,7 +151,7 @@ int np_log_first_hit(const void *anchor, unsigned long tag) {
 #include <sys/wait.h>
 const char *np_home_dir(void) { return "/home"; }
 void np_support_path(char *buf, size_t bufsz, const char *home, const char *rel) {
-    snprintf(buf, bufsz, "%s/Library/Application Support/bridgeplay%s%s", home,
+    snprintf(buf, bufsz, "%s/Library/Application Support/ambaplay%s%s", home,
              rel && rel[0] ? "/" : "", rel ? rel : "");
 }
 static np_prefix_state_t stub_state;
@@ -787,7 +787,7 @@ static void rebuild_route_cases(void) {
     int rc = backup_and_rebuild_prefix(build_request(REQ_HAS_APPID, 480), (uintptr_t)response_buf);
     check(rc == RESULT_OK && strcmp(answer(), "{\"started\":true}") == 0, "a rebuild starts");
     char log[PATH_MAX];
-    snprintf(log, sizeof log, "%s/bridgeplay-run.log", scratch);
+    snprintf(log, sizeof log, "%s/ambaplay-run.log", scratch);
     const char *want[] = { "/bin/sh", "-c", REBUILD_SCRIPT, stub_state.app, log, scratch,
                            "notproton-fex-41073", "27.0.0.41073-fex", "fex", "keep-backup" };
     int same = spawned_count == 10;
@@ -834,7 +834,7 @@ static void rebuild_route_cases(void) {
     open_prefix_log(build_request(REQ_HAS_APPID, 480), (uintptr_t)response_buf);
     check(strcmp(answer(), "{\"error\":\"log\"}") == 0 && spawned_count == 0,
           "a missing log is not opened");
-    put("bridgeplay-run.log", "x\n");
+    put("ambaplay-run.log", "x\n");
     open_prefix_log(build_request(REQ_HAS_APPID, 480), (uintptr_t)response_buf);
     check(strcmp(answer(), "{\"opened\":true}") == 0 && spawned_count == 4
           && strcmp(spawned[0], "/bin/sh") == 0 && strcmp(spawned[3], log) == 0

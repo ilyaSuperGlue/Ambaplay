@@ -22,8 +22,8 @@ enum {
 int np_compatsvc_routes(void);
 
 // Sentinel name for "no tool", which Steam keeps in CompatToolMapping. Releases before
-// Bridgeplay 3.0 wrote the legacy one, and it means the same until the app rewrites it.
-#define NP_COMPAT_TOOL_NONE        "bridgeplay-proton.none"
+// Ambaplay 3.0 wrote the legacy one, and it means the same until the app rewrites it.
+#define NP_COMPAT_TOOL_NONE        "ambaplay-proton.none"
 #define NP_COMPAT_TOOL_NONE_LEGACY "notproton.none"
 
 static inline int np_compat_is_none(const char *name) {

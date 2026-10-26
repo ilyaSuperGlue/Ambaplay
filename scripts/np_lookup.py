@@ -1,4 +1,4 @@
-"""Shared lookups for the Bridgeplay compat tooling (stdlib only).
+"""Shared lookups for the Ambaplay compat tooling (stdlib only).
 
 Sources: Steam store appdetails (platforms), PCGamingWiki page wikitext (API / middleware
 templates; its Cargo API is closed to anonymous queries), AreWeAntiCheatYet games.json.
@@ -9,7 +9,7 @@ import time
 import urllib.parse
 import urllib.request
 
-UA = {"User-Agent": "bridgeplay-compat-tools/1.0 (+https://github.com/raymondchins/Bridgeplay)"}
+UA = {"User-Agent": "ambaplay-compat-tools/1.0 (+https://github.com/raymondchins/Ambaplay)"}
 _last = {}
 
 

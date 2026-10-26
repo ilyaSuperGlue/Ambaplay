@@ -4,8 +4,8 @@
 # those jobs skipped, so the run's own conclusion proves nothing about the sources.
 # The job names are the `name:` of the jobs in .github/workflows/app.yml.
 [ $# -eq 2 ] || { echo "usage: ci-run-passed.sh <owner/repo> <sha>" >&2; exit 2; }
-build_job=${BRIDGEPLAY_CI_BUILD_JOB:-full app build}
-checks_job=${BRIDGEPLAY_CI_CHECKS_JOB:-source checks}
+build_job=${AMBAPLAY_CI_BUILD_JOB:-full app build}
+checks_job=${AMBAPLAY_CI_CHECKS_JOB:-source checks}
 
 command -v gh >/dev/null 2>&1 || exit 1
 ids=$(gh run list -R "$1" -w app --commit "$2" --status success --limit 20 \

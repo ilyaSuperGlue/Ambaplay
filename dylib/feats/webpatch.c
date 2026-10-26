@@ -1,5 +1,5 @@
 // Enables Steam Play in the UI, and shows the game properties tab Steam calls Compatibility
-// as Bridgeplay, since on a Mac every setting on it is Bridgeplay's
+// as Ambaplay, since on a Mac every setting on it is Ambaplay's
 #include "webpatch.h"
 #include "nativeplatform.h"
 #include "../util/log.h"
@@ -277,9 +277,9 @@ static int out_expand(np_out_t *o, const char *replace, const np_cap_t *caps) {
     "(" NP_WEB_IS_ZH "?\"" ZH "\":" NP_WEB_IS_IT "?\"" IT "\":\"" EN "\")"
 
 #define NP_COMPAT_HINT NP_WEB_TEXT( \
-    "Enable CrossOver under Properties > Bridgeplay to install and run the Windows version.", \
-    "请在“属性 > Bridgeplay”中启用 CrossOver，以安装并运行 Windows 版本。", \
-    "Abilita CrossOver in Propriet\\u00e0 > Bridgeplay per installare e avviare la versione Windows.")
+    "Enable CrossOver under Properties > Ambaplay to install and run the Windows version.", \
+    "请在“属性 > Ambaplay”中启用 CrossOver，以安装并运行 Windows 版本。", \
+    "Abilita CrossOver in Propriet\\u00e0 > Ambaplay per installare e avviare la versione Windows.")
 
 #define NP_IMAGE_FILES_LABEL NP_WEB_TEXT( \
     "Image Files (*.tga,*.png,*.exe)", "图像文件 (*.tga,*.png,*.exe)", "File immagine (*.tga,*.png,*.exe)")
@@ -305,10 +305,10 @@ static int out_expand(np_out_t *o, const char *replace, const np_cap_t *caps) {
 #define NP_PREFIX_COPY NP_WEB_TEXT("Copying your files\\u2026", "正在复制你的文件\\u2026", "Copia dei tuoi file\\u2026")
 #define NP_PREFIX_FINISH NP_WEB_TEXT("Finishing\\u2026", "正在完成\\u2026", "Completamento\\u2026")
 #define NP_PREFIX_DONE NP_WEB_TEXT("Prefix rebuilt.", "游戏容器已重建。", "Prefisso ricostruito.")
-#define NP_PREFIX_DONE_BACKUP NP_WEB_TEXT("Prefix rebuilt. A backup of the original is in Bridgeplay's Prefixes view.", "游戏容器已重建。原容器的备份在 Bridgeplay 的“游戏容器”视图中。", "Prefisso ricostruito. Un backup dell'originale è nella vista Prefissi di Bridgeplay.")
+#define NP_PREFIX_DONE_BACKUP NP_WEB_TEXT("Prefix rebuilt. A backup of the original is in Ambaplay's Prefixes view.", "游戏容器已重建。原容器的备份在 Ambaplay 的“游戏容器”视图中。", "Prefisso ricostruito. Un backup dell'originale è nella vista Prefissi di Ambaplay.")
 #define NP_PREFIX_FAILED NP_WEB_TEXT("Prefix rebuild failed!", "游戏容器重建失败！", "Ricostruzione del prefisso non riuscita!")
 #define NP_PREFIX_LOG NP_WEB_TEXT("Open Log", "打开日志", "Apri il log")
-#define NP_PREFIX_APP NP_WEB_TEXT("Couldn't find the Bridgeplay app. Move Bridgeplay to Applications, open it and click Install again.", "找不到 Bridgeplay 应用。请将 Bridgeplay 移到“应用程序”文件夹，打开它并再次点击“安装”。", "Impossibile trovare l'app Bridgeplay. Sposta Bridgeplay in Applicazioni, aprila e fai di nuovo clic su Installa.")
+#define NP_PREFIX_APP NP_WEB_TEXT("Couldn't find the Ambaplay app. Move Ambaplay to Applications, open it and click Install again.", "找不到 Ambaplay 应用。请将 Ambaplay 移到“应用程序”文件夹，打开它并再次点击“安装”。", "Impossibile trovare l'app Ambaplay. Sposta Ambaplay in Applicazioni, aprila e fai di nuovo clic su Installa.")
 
 #define NP_CX_PREFIX_ROW \
     "globalThis.MSCXPrefixRow=(e,id)=>{if(e.npApp===id)return;e.npStop&&e.npStop();e.npApp=id;let ter" \
@@ -388,10 +388,10 @@ static int out_expand(np_out_t *o, const char *replace, const np_cap_t *caps) {
     "nat=t.unAppID<2147483648&&(t.vecPlatforms||[]).indexOf(\"osx\")>=0&&!t.strCompatToolName," \
     "wv=w=>w.value===null?o.slice(w.start,w.end):w.value," \
     "NE=E.c<0?[]:E.G.slice(0,E.c).filter(w=>/^[A-Za-z_]\\w*=/.test(wv(w)))," \
-    /* The panel writes BRIDGEPLAY_<X>. NOTPROTON_<X>, from launch options written before 3.0, \
+    /* The panel writes AMBAPLAY_<X>. NOTPROTON_<X>, from launch options written before 3.0, \
        is read too and wins, as it does in the run script and np-native. */ \
     "A1=k=>(nat?NE.filter(w=>wv(w).startsWith(k+\"=\")):E.e.filter(w=>o.startsWith(k+\"=\",w.start))).pop()," \
-    "A=k=>/^BRIDGEPLAY_/.test(k)&&A1(\"NOTPROTON_\"+k.slice(11))||A1(k)," \
+    "A=k=>/^AMBAPLAY_/.test(k)&&A1(\"NOTPROTON_\"+k.slice(11))||A1(k)," \
     "g=k=>{const p=A(k);if(!p)return\"\";const x=wv(p);return x.slice(x.indexOf(\"=\")+1)}," \
     "qv=v=>/^[\\w.,:=\\/+@%-]*$/.test(v)?v:\"'\"+v.replace(/'/g,\"'\\\\''\")+\"'\"," \
     "sl=ps=>{const add=ps.filter(p=>p[1]).map(p=>p[0]+\"=\"+qv(p[1])).join(\" \");let r;" \
@@ -405,8 +405,8 @@ static int out_expand(np_out_t *o, const char *replace, const np_cap_t *caps) {
        older "/usr/bin/arch ... -e VAR=VALUE" form is understood, and rewritten without the \
        arch prefix and its DYLD_INSERT_LIBRARIES. */ \
     "sn=ps=>{const c=E.c<0?null:E.G[E.c]," \
-    "L=Fx.h?Fx.h+\"/.bridgeplay/np-native\":(c&&E.G.slice(0,E.c).map(wv)" \
-    ".find(x=>/\\/\\.(bridgeplay|notproton)\\/np-native$/.test(x)))||\"\";" \
+    "L=Fx.h?Fx.h+\"/.ambaplay/np-native\":(c&&E.G.slice(0,E.c).map(wv)" \
+    ".find(x=>/\\/\\.(ambaplay|notproton)\\/np-native$/.test(x)))||\"\";" \
     "if(!L||!c&&!ps.some(p=>p[1]))return;" \
     "const kn=w=>{const x=wv(w);return x.slice(0,x.indexOf(\"=\"))};" \
     "let vs=NE.filter(w=>kn(w)!==\"DYLD_INSERT_LIBRARIES\").map(w=>[kn(w),o.slice(w.start,w.end)]);" \
@@ -415,8 +415,8 @@ static int out_expand(np_out_t *o, const char *replace, const np_cap_t *caps) {
     "const h=[qv(L)].concat(vs.map(x=>x[1])).join(\" \");" \
     "SteamClient.Apps.SetAppLaunchOptions(t.unAppID," \
     "c?o.slice(0,E.p)+h+\" \"+o.slice(c.start):h+\" %command%\"+(o.trim()?\" \"+o.trim():\"\"))}," \
-    /* Writing BRIDGEPLAY_<X> drops a NOTPROTON_<X> the line still carries. */ \
-    "s=ps=>{ps=ps.concat(ps.filter(p=>/^BRIDGEPLAY_/.test(p[0])).map(p=>[\"NOTPROTON_\"+p[0].slice(11),\"\"]));" \
+    /* Writing AMBAPLAY_<X> drops a NOTPROTON_<X> the line still carries. */ \
+    "s=ps=>{ps=ps.concat(ps.filter(p=>/^AMBAPLAY_/.test(p[0])).map(p=>[\"NOTPROTON_\"+p[0].slice(11),\"\"]));" \
     "return nat?sn(ps):sl(ps)}," \
     "Fx=globalThis.MSCXFx||{}," \
     "dv=k=>{if(nat){const a=(Fx.na||{})[t.unAppID]||{},n=Fx.ng||{};" \
@@ -434,15 +434,15 @@ static int out_expand(np_out_t *o, const char *replace, const np_cap_t *caps) {
     "selectedOption:n(ev(k)),onChange:v=>s([[k,v.data===n(dv(k))?\"\":v.data]])},k)," \
     "lc=z=>x=>(x||z).toLowerCase()," \
     "fz=x=>{x=(x||\"\").toLowerCase();return x===\"1\"?\"2\":/^(0|off|false|no)?$/.test(x)?\"0\":x}," \
-    "fo=fz(ev(\"BRIDGEPLAY_FRAMEGEN\"))!==\"0\"," \
+    "fo=fz(ev(\"AMBAPLAY_FRAMEGEN\"))!==\"0\"," \
     "FG=()=>(0," RT ".jsxs)(" BARREL ".XY,{label:\"Frame Generation (Experimental. Adds input lag)\",children:[" \
-    "D(\"BRIDGEPLAY_FRAMEGEN\",\"Mode\",[{data:\"0\",label:\"Off\"},{data:\"2\",label:\"2x\"}," \
+    "D(\"AMBAPLAY_FRAMEGEN\",\"Mode\",[{data:\"0\",label:\"Off\"},{data:\"2\",label:\"2x\"}," \
     "{data:\"3\",label:\"3x\"},{data:\"adaptive\",label:\"Adaptive (fills to display refresh)\"}],fz)," \
-    "fo&&D(\"BRIDGEPLAY_FRAMEGEN_QUALITY\",\"Quality\",[{data:\"performance\",label:\"Performance\"}," \
+    "fo&&D(\"AMBAPLAY_FRAMEGEN_QUALITY\",\"Quality\",[{data:\"performance\",label:\"Performance\"}," \
     "{data:\"balanced\",label:\"Balanced\"},{data:\"quality\",label:\"Quality\"}],lc(\"balanced\"))," \
-    "fo&&T([\"BRIDGEPLAY_FRAMEGEN_UI\"],\"Protect UI (keeps static HUD and menus sharp)\",\"1\",\"0\")," \
-    "fo&&T([\"BRIDGEPLAY_FRAMEGEN_FALLBACK\"],\"Fast-motion fallback (skips frames that would smear)\",\"1\",\"0\")," \
-    "fo&&D(\"BRIDGEPLAY_FRAMEGEN_ENGINE\",\"Engine\",[{data:\"own\",label:\"Built-in optical flow\"}," \
+    "fo&&T([\"AMBAPLAY_FRAMEGEN_UI\"],\"Protect UI (keeps static HUD and menus sharp)\",\"1\",\"0\")," \
+    "fo&&T([\"AMBAPLAY_FRAMEGEN_FALLBACK\"],\"Fast-motion fallback (skips frames that would smear)\",\"1\",\"0\")," \
+    "fo&&D(\"AMBAPLAY_FRAMEGEN_ENGINE\",\"Engine\",[{data:\"own\",label:\"Built-in optical flow\"}," \
     "{data:\"metalfx\",label:\"MetalFX\"}],lc(\"own\"))]},\"fgn\")," \
     /* A toggle that is on unless set to "0" (upstream 1.2.0: AVX2, FEX x87 precision). */ \
     "X=(k,l)=>(0," RT ".jsx)(" BARREL ".Yh,{className:\"MSCXRow\",label:l," \
@@ -489,7 +489,7 @@ static int out_expand(np_out_t *o, const char *replace, const np_cap_t *caps) {
     "\"dxmt\"===b&&T([\"DXMT_ENABLE_NVEXT\"],\"DLSS\",\"1\")," \
     "!fex&&X(\"ROSETTA_ADVERTISE_AVX\",npL(\"Advertise AVX2 to Rosetta\",\"向 Rosetta 声明 AVX2 支持\",\"Segnala AVX2 a Rosetta\"))," \
     "T([\"WINEMSYNC\"],\"MSync\",\"1\",\"0\")," \
-    "T([\"BRIDGEPLAY_RETINA\"],npL(\"High Resolution\",\"高分辨率\",\"Alta risoluzione\"),\"1\",\"0\")" \
+    "T([\"AMBAPLAY_RETINA\"],npL(\"High Resolution\",\"高分辨率\",\"Alta risoluzione\"),\"1\",\"0\")" \
     "]},\"gfx\")," \
     "dx&&(0," RT ".jsx)(" BARREL ".XY," \
     "{label:npL(\"MetalFX Upscaling (Samples from the resolution the game is set to)\"," \
@@ -499,10 +499,10 @@ static int out_expand(np_out_t *o, const char *replace, const np_cap_t *caps) {
     "onChange:v=>s([[\"DXMT_METALFX_SPATIAL_SWAPCHAIN\",v.data?\"1\":\"\"],[\"DXMT_CONFIG\",fx(v.data)]])})},\"usf\")," \
     "FG()," \
     "(0," RT ".jsxs)(" BARREL ".XY,{label:npL(\"Controllers\",\"控制器\",\"Controller\"),children:[" \
-    "T([\"BRIDGEPLAY_RAW_CONTROLLERS\"],npL(\"Let games read controllers directly (Recommended on Mac. Turn off only for Steam Input remapping)\"," \
+    "T([\"AMBAPLAY_RAW_CONTROLLERS\"],npL(\"Let games read controllers directly (Recommended on Mac. Turn off only for Steam Input remapping)\"," \
     "\"允许游戏直接读取控制器（Mac 上推荐，仅在需要 Steam Input 按键映射时关闭）\"," \
     "\"Lascia che i giochi leggano direttamente i controller (consigliato su Mac, disattiva solo per la rimappatura di Steam Input)\"),\"1\",\"\")," \
-    "T([\"BRIDGEPLAY_DISABLE_HIDRAW\"],npL(\"Disable hidraw\",\"停用 hidraw\",\"Disattiva hidraw\"),\"1\",\"\")" \
+    "T([\"AMBAPLAY_DISABLE_HIDRAW\"],npL(\"Disable hidraw\",\"停用 hidraw\",\"Disattiva hidraw\"),\"1\",\"\")" \
     "]},\"ctl\")," \
     "fex&&(0," RT ".jsx)(" BARREL ".XY,{label:\"FEX\"," \
     "children:X(\"FEX_X87REDUCEDPRECISION\"," \
@@ -527,7 +527,7 @@ static int out_expand(np_out_t *o, const char *replace, const np_cap_t *caps) {
 #define NP_LAUNCH_MIGRATION_RULE \
     "o=>{const T=/(?:[^\\s\"'\\\\]|\\\\[^]|\"(?:[^\"\\\\]|\\\\[^])*\"|'[^']*')+/g," \
     "w=o.match(T)||[]," \
-    "k=x=>/^(BRIDGEPLAY_|CX_GRAPHICS|D3DM_|DXMT_|DXVK_|MTL_|NOTPROTON_|ROSETTA_|WINE)\\w*=/.test(x)," \
+    "k=x=>/^(AMBAPLAY_|CX_GRAPHICS|D3DM_|DXMT_|DXVK_|MTL_|NOTPROTON_|ROSETTA_|WINE)\\w*=/.test(x)," \
     "e=w.filter(k);" \
     "if(/%command%/i.test(o)||o.replace(T,\"\").trim()||!e.length)return null;" \
     "return e.map(x=>{const i=x.indexOf(\"=\"),v=x.slice(i+1);" \
@@ -543,25 +543,25 @@ static int out_expand(np_out_t *o, const char *replace, const np_cap_t *caps) {
     "for(let i=0;i<A.length;i+=20)await Promise.all(A.slice(i,i+20).map(async a=>{const id=a.appid;" \
     "const t=await Promise.race([window.appDetailsStore.RequestAppDetails(id)," \
     "new Promise(r=>setTimeout(r,5e3))]);" \
-    "if(!t){console.warn(\"Bridgeplay: no details for app \"+id+\", its launch options were not moved\");return}" \
+    "if(!t){console.warn(\"Ambaplay: no details for app \"+id+\", its launch options were not moved\");return}" \
     "if(!(id<2147483648&&(t.vecPlatforms||[]).indexOf(\"osx\")>=0&&!t.strCompatToolName)){" \
     "const r=M(t.strLaunchOptions||\"\");" \
     "if(r!==null){SteamClient.Apps.SetAppLaunchOptions(id,r);n++;" \
-    "console.log(\"Bridgeplay: moved the launch options of app \"+id)}}}));" \
-    "console.log(\"Bridgeplay: checked the launch options of \"+A.length+\" apps, moved \"+n);" \
+    "console.log(\"Ambaplay: moved the launch options of app \"+id)}}}));" \
+    "console.log(\"Ambaplay: checked the launch options of \"+A.length+\" apps, moved \"+n);" \
     "localStorage.setItem(K,\"1\")" \
-    "}catch(e){console.error(\"Bridgeplay: launch options migration failed\",e)}})()"
+    "}catch(e){console.error(\"Ambaplay: launch options migration failed\",e)}})()"
 
 // The properties tab Steam calls Compatibility. Its route stays /compatibility.
 #define NP_TAB_FIND \
     "(0," NP_C1 ".CI)()&&" NP_C2 ".push({title:(0," NP_C3 ".we)(\"#AppProperties_CompatibilityPage\")"
-#define NP_TAB_REPLACE "true&&" NP_C2 ".push({title:\"Bridgeplay\""
+#define NP_TAB_REPLACE "true&&" NP_C2 ".push({title:\"Ambaplay\""
 
 static const np_gate_t g_gates_forcetool[] = {
     // SteamPlay settings section
     { "function " NP_C1 "(" NP_C2 "){return(0," NP_C3 ".CI)()?",
       "function " NP_C1 "(" NP_C2 "){return true?", 1, 0 },
-    // AppProperties Compatibility tab, shown as Bridgeplay (app and non-Steam-shortcut variants)
+    // AppProperties Compatibility tab, shown as Ambaplay (app and non-Steam-shortcut variants)
     { NP_TAB_FIND, NP_TAB_REPLACE, 2, 0 },
     // Settings page Compatibility entry, keeping the SteamOS exclusion (!rf())
     { "Compatibility:{visible:" NP_C1 "&&(0," NP_C2 ".CI)()&&!(0," NP_C2 ".rf)()",
@@ -601,7 +601,7 @@ static const np_gate_t g_gates_forcetool[] = {
 
 // Support for new compatibility tab UI in the Steam beta
 static const np_gate_t g_gates_selecttool[] = {
-    // AppProperties Compatibility tab, shown as Bridgeplay
+    // AppProperties Compatibility tab, shown as Ambaplay
     { NP_TAB_FIND, NP_TAB_REPLACE, 2, 0 },
     // Settings page Compatibility entry.
     { "Compatibility:{visible:" NP_C1 "&&(0," NP_C2 ".CI)(),title:",
@@ -699,7 +699,7 @@ static const np_gate_t g_fixes[] = {
     // Pr means macOS, td means Windows.
     // Steam Play makes every game count as available, so the Apple filter goes by oslist.
     // Games missing from appinfo.vdf, and other platforms, keep Steam's check.
-    // Bridgeplay forces is_invalid_os_type to false, so 32-bit Mac games are found through the per-client copy.
+    // Ambaplay forces is_invalid_os_type to false, so 32-bit Mac games are found through the per-client copy.
     { "case " NP_C1 "." NP_C2 ":return!!(0," NP_C3 ".td)()||" NP_C4
       ".is_available_on_current_platform&&!" NP_C4 ".is_invalid_os_type;",
       NP_WINDOWS_ONLY_CASE(NP_C3, NP_C4) "case " NP_C1 "." NP_C2 ":return " NP_MAC_CHECK(NP_C3, NP_C4)
@@ -828,21 +828,21 @@ int np_webpatch_should_patch(const char *path) {
 // gamefixes/native-default.conf with variable names as they are; those land in ng and na.
 #define NP_FX_MAX 16384
 
-// The panel's names for the variables Bridgeplay reads. The page also accepts the NOTPROTON_
+// The panel's names for the variables Ambaplay reads. The page also accepts the NOTPROTON_
 // spelling in launch options, but the defaults it is handed always use these.
-static const char *const fx_bridgeplay_keys[] = {
-    "BRIDGEPLAY_RETINA", "BRIDGEPLAY_FRAMEGEN", "BRIDGEPLAY_FRAMEGEN_QUALITY",
-    "BRIDGEPLAY_FRAMEGEN_UI", "BRIDGEPLAY_FRAMEGEN_FALLBACK", "BRIDGEPLAY_FRAMEGEN_ENGINE",
+static const char *const fx_ambaplay_keys[] = {
+    "AMBAPLAY_RETINA", "AMBAPLAY_FRAMEGEN", "AMBAPLAY_FRAMEGEN_QUALITY",
+    "AMBAPLAY_FRAMEGEN_UI", "AMBAPLAY_FRAMEGEN_FALLBACK", "AMBAPLAY_FRAMEGEN_ENGINE",
 };
 
-// The BRIDGEPLAY_ name whose suffix follows prefix in key ("" for the run script's short
+// The AMBAPLAY_ name whose suffix follows prefix in key ("" for the run script's short
 // conf keys), or NULL.
-static const char *fx_bridgeplay_key(const char *key, const char *prefix) {
+static const char *fx_ambaplay_key(const char *key, const char *prefix) {
     size_t n = strlen(prefix);
     if (strncmp(key, prefix, n) != 0) return NULL;
-    for (size_t i = 0; i < sizeof(fx_bridgeplay_keys) / sizeof(fx_bridgeplay_keys[0]); i++)
-        if (strcmp(key + n, fx_bridgeplay_keys[i] + sizeof("BRIDGEPLAY_") - 1) == 0)
-            return fx_bridgeplay_keys[i];
+    for (size_t i = 0; i < sizeof(fx_ambaplay_keys) / sizeof(fx_ambaplay_keys[0]); i++)
+        if (strcmp(key + n, fx_ambaplay_keys[i] + sizeof("AMBAPLAY_") - 1) == 0)
+            return fx_ambaplay_keys[i];
     return NULL;
 }
 
@@ -851,9 +851,9 @@ static const char *fx_panel_key(const char *key) {
         "MTL_HUD_ENABLED", "ROSETTA_ADVERTISE_AVX", "D3DM_ENABLE_METALFX", "DXMT_ENABLE_NVEXT",
     };
     if (strcmp(key, "MSYNC") == 0) return "WINEMSYNC";
-    // RETINA=1, which the run script also takes as BRIDGEPLAY_RETINA=1.
-    const char *bp = fx_bridgeplay_key(key, "");
-    if (!bp) bp = fx_bridgeplay_key(key, "BRIDGEPLAY_");
+    // RETINA=1, which the run script also takes as AMBAPLAY_RETINA=1.
+    const char *bp = fx_ambaplay_key(key, "");
+    if (!bp) bp = fx_ambaplay_key(key, "AMBAPLAY_");
     if (bp) return bp;
     for (size_t i = 0; i < sizeof(same) / sizeof(same[0]); i++)
         if (strcmp(key, same[i]) == 0) return same[i];
@@ -865,10 +865,10 @@ static const char *fx_native_key(const char *key) {
     static const char *const keys[] = { "MTL_HUD_ENABLED", "NP_PAD_MODE" };
     for (size_t i = 0; i < sizeof(keys) / sizeof(keys[0]); i++)
         if (strcmp(key, keys[i]) == 0) return keys[i];
-    if (strncmp(key, "BRIDGEPLAY_FRAMEGEN", 19) != 0 && strncmp(key, "NOTPROTON_FRAMEGEN", 18) != 0)
+    if (strncmp(key, "AMBAPLAY_FRAMEGEN", 19) != 0 && strncmp(key, "NOTPROTON_FRAMEGEN", 18) != 0)
         return NULL;
-    const char *bp = fx_bridgeplay_key(key, "BRIDGEPLAY_");
-    return bp ? bp : fx_bridgeplay_key(key, "NOTPROTON_");
+    const char *bp = fx_ambaplay_key(key, "AMBAPLAY_");
+    return bp ? bp : fx_ambaplay_key(key, "NOTPROTON_");
 }
 
 // Characters that go into a JSON string unescaped, up to max of them.
@@ -882,7 +882,7 @@ static int fx_word(const char *v, size_t max) {
     return 1;
 }
 
-// Values fit fx_pair_t.val. Tool names are longer ("bridgeplay-proton-winecx-11.17") and are
+// Values fit fx_pair_t.val. Tool names are longer ("ambaplay-proton-winecx-11.17") and are
 // bounded by the fallback name they are compared against instead.
 static int fx_safe(const char *v) { return fx_word(v, 16); }
 
@@ -1084,8 +1084,8 @@ static int fx_build(char *buf, size_t cap) {
 
     // The run script reads controllers directly unless the launch options say otherwise, and
     // overlay-shim keeps the UI sharp and falls back on fast motion unless told not to.
-    n = snprintf(buf + len, cap - len, "},\"d\":{\"BRIDGEPLAY_RAW_CONTROLLERS\":\"1\","
-                 "\"BRIDGEPLAY_FRAMEGEN_UI\":\"1\",\"BRIDGEPLAY_FRAMEGEN_FALLBACK\":\"1\"}");
+    n = snprintf(buf + len, cap - len, "},\"d\":{\"AMBAPLAY_RAW_CONTROLLERS\":\"1\","
+                 "\"AMBAPLAY_FRAMEGEN_UI\":\"1\",\"AMBAPLAY_FRAMEGEN_FALLBACK\":\"1\"}");
     if (n < 0 || (size_t)n >= cap - len) return 0;
     len += (size_t)n;
 

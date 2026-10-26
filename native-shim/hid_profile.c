@@ -448,11 +448,11 @@ static void db_load_once(void) {
     } else {
         const char *home = getenv("HOME");
         if (home) {
-            // The notproton folder is read until the app moves it to bridgeplay.
+            // The notproton folder is read until the app moves it to ambaplay.
             char buf[1024];
             struct stat st;
-            snprintf(buf, sizeof buf, "%s/Library/Application Support/bridgeplay", home);
-            const char *dir = stat(buf, &st) == 0 ? "bridgeplay" : "notproton";
+            snprintf(buf, sizeof buf, "%s/Library/Application Support/ambaplay", home);
+            const char *dir = stat(buf, &st) == 0 ? "ambaplay" : "notproton";
             snprintf(buf, sizeof buf, "%s/Library/Application Support/%s/gamecontrollerdb.txt", home, dir);
             db_load_file(buf);
         }

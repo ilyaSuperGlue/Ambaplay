@@ -20,7 +20,7 @@ jobs:
   snapshot:
     runs-on: ubuntu-latest
     steps:
-      - name: Snapshot Bridgeplay stats
+      - name: Snapshot Ambaplay stats
         env:
           GH_TOKEN: ${{ github.token }}
           SRC: ${{ github.repository }}

@@ -17,7 +17,7 @@ down for the user. The constructor in `core/loader.c` only does work in `steam_o
   and is embedded into the dylib at build time (`embed_script.py` →
   `out/generated/compat_run.h`), so run `make` after editing it.
   - It reads settings as `NOTPROTON_<X>`. The loop at its top maps the user-facing
-    `BRIDGEPLAY_<X>` spelling onto them, so document new settings as `BRIDGEPLAY_<X>`.
+    `AMBAPLAY_<X>` spelling onto them, so document new settings as `AMBAPLAY_<X>`.
   - Gamefix `.conf` files are data, never shell code. A new key needs a case in the
     allow-list in `gamefix_reason`, a row in [docs/GAMEFIXES.md](../docs/GAMEFIXES.md), and
     a passing `make gamefixescheck`.

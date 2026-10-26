@@ -7,13 +7,13 @@
 # It also looks for old copies of the bridge next to it, and for bridge files left
 # in Steam Play prefixes.
 #
-# The built files come from 'make bridge', the patched ntdlls from the Bridgeplay app,
+# The built files come from 'make bridge', the patched ntdlls from the Ambaplay app,
 # and the Valve files from fetch-valve.sh.
 set -eu
 
 here="$(cd "$(dirname "$0")" && pwd)"
 repo="$(cd "$here/.." && pwd)"
-BRIDGE_DIR="${BRIDGE_DIR:-$HOME/Library/Application Support/bridgeplay/bridge}"
+BRIDGE_DIR="${BRIDGE_DIR:-$HOME/Library/Application Support/ambaplay/bridge}"
 ATTIC="${ATTIC:-$repo/scratch/bridge-attic}"
 SUPPORT_DIR="${SUPPORT_DIR:-$(dirname "$BRIDGE_DIR")}"
 BRIDGE_NAME="$(basename "$BRIDGE_DIR")"
@@ -22,7 +22,7 @@ prune=0
 [ "${1:-}" = "--prune" ] && prune=1
 
 # The same manifest the app installs from.
-MANIFEST="${MANIFEST:-$repo/app/Sources/BridgeplayApp/Resources/payload.manifest}"
+MANIFEST="${MANIFEST:-$repo/app/Sources/AmbaplayApp/Resources/payload.manifest}"
 if [ ! -f "$MANIFEST" ]; then
     echo "==> no payload manifest at $MANIFEST" >&2
     exit 1

@@ -157,9 +157,9 @@ in_registry 054c/0ce6 057e/2006 057e/2007 057e/2009
 IGNORE='0x054c/0x0ce6' EXCEPT='' RAW='1'
 again "" 0
 { cat "$work/retina-off"; shown 054c/0ce6; shown 057e/2006; shown 057e/2007; shown 057e/2009; } > "$work/expected"
-same_file "NOTPROTON_RAW_CONTROLLERS=1 removes every key Bridgeplay wrote" "$work/expected" "$case_dir/imported"
+same_file "NOTPROTON_RAW_CONTROLLERS=1 removes every key Ambaplay wrote" "$work/expected" "$case_dir/imported"
 is "NOTPROTON_RAW_CONTROLLERS=1 tracks nothing" "" "$(owned)"
-is "NOTPROTON_RAW_CONTROLLERS=1 is logged" "controllers: games read them directly (BRIDGEPLAY_RAW_CONTROLLERS=1)" "$(cat "$case_dir/log")"
+is "NOTPROTON_RAW_CONTROLLERS=1 is logged" "controllers: games read them directly (AMBAPLAY_RAW_CONTROLLERS=1)" "$(cat "$case_dir/log")"
 
 new_case
 in_registry 28de/1304 057e/2009

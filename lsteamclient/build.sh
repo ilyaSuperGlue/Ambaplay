@@ -32,7 +32,7 @@ esac
 WINE_SRC_REL=${WINE_SRC_REL:-../wine}
 # Valve's sources with ours copied over, from fetch.sh.
 TREE=${TREE:-$repo/build/lsteamclient}
-BRIDGE_DIR=${BRIDGE_DIR:-$HOME/Library/Application Support/bridgeplay/bridge}
+BRIDGE_DIR=${BRIDGE_DIR:-$HOME/Library/Application Support/ambaplay/bridge}
 
 install=0
 do_pe=1
@@ -164,7 +164,7 @@ fi
 # The runner clone, never the installed CrossOver. Only resolved for --install, so a
 # plain build works with several runner clones set up.
 if [ -z "${CX_ROOT:-}" ]; then
-	for clone in "$HOME/Library/Application Support/bridgeplay/runners"/crossover-*/CrossOver; do
+	for clone in "$HOME/Library/Application Support/ambaplay/runners"/crossover-*/CrossOver; do
 		[ -d "$clone" ] || continue
 		if [ -n "${CX_ROOT:-}" ]; then
 			echo "==> more than one runner clone is set up, set CX_ROOT to one of them" >&2
@@ -173,7 +173,7 @@ if [ -z "${CX_ROOT:-}" ]; then
 		CX_ROOT=$clone
 	done
 fi
-CX_ROOT=${CX_ROOT:-$HOME/Library/Application Support/bridgeplay/runners/(none set up)}
+CX_ROOT=${CX_ROOT:-$HOME/Library/Application Support/ambaplay/runners/(none set up)}
 
 [ -d "$CX_ROOT/lib/wine" ] || { echo "==> no CrossOver tree at $CX_ROOT"; exit 1; }
 

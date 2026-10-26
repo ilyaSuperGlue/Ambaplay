@@ -25,7 +25,7 @@ clone() {
 }
 clone 26.3.0.39832 202607151200
 clone 27.0.0.40921-fex 202608211200
-printf 'bridgeplay-proton\t27.0.0.40921-fex\tfex\tCrossOver Preview (FEX)\nbridgeplay-proton-26.3\t26.3.0.39832\trosetta\tCrossOver 26.3\n' \
+printf 'ambaplay-proton\t27.0.0.40921-fex\tfex\tCrossOver Preview (FEX)\nambaplay-proton-26.3\t26.3.0.39832\trosetta\tCrossOver 26.3\n' \
 	> "$np_support/tools"
 mtime() { stat -f %m "$np_support/runners/crossover-$1/CrossOver/share/wine/wine.inf"; }
 
@@ -225,7 +225,7 @@ is "a skipped rebuild retakes the lock and launches" "locked
 launched" "$(cat "$data/checks")"
 is "a skipped rebuild never calls the app" no "$([ -f "$data/arguments" ] && echo yes || echo no)"
 is "the skip button is labelled as asked" "Launch Without Rebuilding" "$(tail -2 "$data/prompt-args" | head -1)"
-is "a missing Bridgeplay icon falls back to caution" "" "$(tail -1 "$data/prompt-args")"
+is "a missing Ambaplay icon falls back to caution" "" "$(tail -1 "$data/prompt-args")"
 rebuild_case 'Rebuild Prefix' 0 run 'Launch Without Rebuilding'
 is "install helpers skip an offered rebuild silently" 0 "$status"
 rebuild_case 'Rebuild Prefix' 0 waitforexitandrun
@@ -240,7 +240,7 @@ is "and says another launch has the prefix" "Prefix rebuilt" "$(cat "$data/alert
 printf '%s' "$work/missing" > "$np_support/app-executable"
 rebuild_case 'Rebuild Prefix' 0 waitforexitandrun
 is "a moved or missing app stops the launch" 1 "$status"
-is "a missing app explains how to repair" "Couldn't find the Bridgeplay app" "$(cat "$data/alerts")"
+is "a missing app explains how to repair" "Couldn't find the Ambaplay app" "$(cat "$data/alerts")"
 
 data=$(mktemp -d "$work/stopped.XXXXXX")
 printf 0 > "$data/status"

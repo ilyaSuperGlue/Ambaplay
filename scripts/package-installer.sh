@@ -1,9 +1,9 @@
 #!/bin/sh
-# Assemble the one-click installer zip, out/Bridgeplay-Installer.zip.
+# Assemble the one-click installer zip, out/Ambaplay-Installer.zip.
 #
 #   scripts/package-installer.sh [--fingerprint-only]
 #
-# The installer carries no app: Install.command downloads the latest Bridgeplay.zip from
+# The installer carries no app: Install.command downloads the latest Ambaplay.zip from
 # the GitHub releases, so the zip only changes with the DXMT/DXVK archives, GPTK, the
 # configs or the installer itself, and release-local.sh uploads it only then. --fingerprint-only runs
 # every check and prints that fingerprint without writing the zip.
@@ -17,9 +17,9 @@
 # packages and Steam itself are downloaded from Valve. GPTK is never committed.
 #
 # Overridable: ENGINE_CACHE (default
-# ~/Library/Caches/bridgeplay), GPTK_DIR (default ~/Library/Application Support/bridgeplay/gptk).
+# ~/Library/Caches/ambaplay), GPTK_DIR (default ~/Library/Application Support/ambaplay/gptk).
 # On a Mac the app has not migrated to 3.0.0 yet, the defaults fall back to the old
-# notproton folders when the bridgeplay ones are missing.
+# notproton folders when the ambaplay ones are missing.
 
 set -eu
 
@@ -29,18 +29,18 @@ cd "$repo"
 fingerprint_only=0
 [ "${1:-}" = "--fingerprint-only" ] && fingerprint_only=1
 if [ -z "${ENGINE_CACHE:-}" ]; then
-	ENGINE_CACHE=$HOME/Library/Caches/bridgeplay
+	ENGINE_CACHE=$HOME/Library/Caches/ambaplay
 	[ -d "$ENGINE_CACHE" ] || [ ! -d "$HOME/Library/Caches/notproton" ] || ENGINE_CACHE=$HOME/Library/Caches/notproton
 fi
 if [ -z "${GPTK_DIR:-}" ]; then
-	GPTK_DIR="$HOME/Library/Application Support/bridgeplay/gptk"
+	GPTK_DIR="$HOME/Library/Application Support/ambaplay/gptk"
 	legacy_gptk="$HOME/Library/Application Support/notproton/gptk"
 	[ -d "$GPTK_DIR" ] || [ ! -d "$legacy_gptk" ] || GPTK_DIR=$legacy_gptk
 fi
 stage_root=$repo/out/installer
-stage=$stage_root/Bridgeplay
-zip=$repo/out/Bridgeplay-Installer.zip
-models=app/Sources/BridgeplayApp/Model
+stage=$stage_root/Ambaplay
+zip=$repo/out/Ambaplay-Installer.zip
+models=app/Sources/AmbaplayApp/Model
 
 die() {
 	echo "==> $*" >&2
@@ -130,7 +130,7 @@ cp "$GPTK_DIR/License.rtf" "$stage/GPTK-License.rtf"
 rsync -a --exclude .DS_Store installer/config/ "$stage/config/"
 mkdir -p "$stage/config/gamefixes-default"
 cp gamefixes/*.conf "$stage/config/gamefixes-default/"
-# SOURCE.txt is Bridgeplay's own note of where this Mac's copy came from, not Apple's.
+# SOURCE.txt is Ambaplay's own note of where this Mac's copy came from, not Apple's.
 rsync -a --exclude .DS_Store --exclude SOURCE.txt "$GPTK_DIR/" "$stage/gptk/"
 cp "$ENGINE_CACHE/engines/$dxmt_archive" "$ENGINE_CACHE/engines/$dxvk_archive" "$stage/cache/engines/"
 
@@ -149,7 +149,7 @@ if [ "$fingerprint_only" -eq 1 ]; then
 	echo "$fingerprint"
 	exit 0
 fi
-printf '%s\n' "$fingerprint" >"$repo/out/Bridgeplay-Installer.fingerprint"
+printf '%s\n' "$fingerprint" >"$repo/out/Ambaplay-Installer.fingerprint"
 
 # --- zip --------------------------------------------------------------------------
 
@@ -158,7 +158,7 @@ echo "==> writing $zip"
 ditto -c -k --norsrc --noextattr --keepParent "$stage" "$zip"
 
 echo "==> contents"
-(cd "$stage_root" && find Bridgeplay -maxdepth 3 ! -path 'Bridgeplay/gptk/*/*' | sort | sed 's/^/    /')
+(cd "$stage_root" && find Ambaplay -maxdepth 3 ! -path 'Ambaplay/gptk/*/*' | sort | sed 's/^/    /')
 echo "==> sizes"
 (cd "$stage" && du -sh -- * | sed 's/^/    /')
 echo "==> $zip $(du -h "$zip" | cut -f1) ($(stat -f %z "$zip") bytes)"

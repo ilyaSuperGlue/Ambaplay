@@ -1,7 +1,7 @@
 #!/bin/sh
 # Stamp a beta build's label, build number and channel at build time, committing nothing.
 #
-#   BRIDGEPLAY_BETA=N BRIDGEPLAY_BETA_BUILD=B [BRIDGEPLAY_BETA_PLANNED=X.Y.Z] make app
+#   AMBAPLAY_BETA=N AMBAPLAY_BETA_BUILD=B [AMBAPLAY_BETA_PLANNED=X.Y.Z] make app
 #   scripts/stamp-beta.sh check | print | apply Info.plist
 #
 # dylib/version.h always holds the plain X.Y.Z, on main and on dev. A beta build is named
@@ -11,9 +11,9 @@
 # published, stable or beta, plus one", so it is higher than every build before it; it must be
 # above the committed build. N is a positive integer. Anything else fails the build.
 #
-#   check    validate dylib/version.h and the BRIDGEPLAY_BETA* variables; changes nothing
+#   check    validate dylib/version.h and the AMBAPLAY_BETA* variables; changes nothing
 #   print    the stamped label, build and channel as version=, build= and channel= lines
-#   apply    write them into an Info.plist; a normal build (no BRIDGEPLAY_BETA) changes nothing
+#   apply    write them into an Info.plist; a normal build (no AMBAPLAY_BETA) changes nothing
 #
 # A normal build keeps the committed version, the committed build and the stable channel
 # that app/Info.plist already carries. See docs/RELEASING.md.
@@ -34,36 +34,36 @@ case "$mode" in
 	*) die "usage: stamp-beta.sh check | print | apply Info.plist" ;;
 esac
 
-committed=$(header_string "$header" BRIDGEPLAY_VERSION)
-committed_build=$(header_number "$header" BRIDGEPLAY_BUILD)
-is_semver "$committed" || die "BRIDGEPLAY_VERSION '$committed' in $header is not X.Y.Z; a beta label is stamped at build time, never committed"
-is_posint "$committed_build" || die "no numeric BRIDGEPLAY_BUILD in $header"
+committed=$(header_string "$header" AMBAPLAY_VERSION)
+committed_build=$(header_number "$header" AMBAPLAY_BUILD)
+is_semver "$committed" || die "AMBAPLAY_VERSION '$committed' in $header is not X.Y.Z; a beta label is stamped at build time, never committed"
+is_posint "$committed_build" || die "no numeric AMBAPLAY_BUILD in $header"
 
 version=$committed
 build=$committed_build
 channel=stable
 
-# BRIDGEPLAY_BETA set at all, even empty, asks for a beta, so a malformed number fails
+# AMBAPLAY_BETA set at all, even empty, asks for a beta, so a malformed number fails
 # rather than quietly building a stable app.
-if [ -n "${BRIDGEPLAY_BETA+set}" ]; then
-	is_posint "$BRIDGEPLAY_BETA" || die "BRIDGEPLAY_BETA '$BRIDGEPLAY_BETA' is not a positive integer (the beta number N)"
-	beta_build=${BRIDGEPLAY_BETA_BUILD:-}
-	is_posint "$beta_build" || die "BRIDGEPLAY_BETA_BUILD '$beta_build' is not a positive integer (the highest published build plus one)"
+if [ -n "${AMBAPLAY_BETA+set}" ]; then
+	is_posint "$AMBAPLAY_BETA" || die "AMBAPLAY_BETA '$AMBAPLAY_BETA' is not a positive integer (the beta number N)"
+	beta_build=${AMBAPLAY_BETA_BUILD:-}
+	is_posint "$beta_build" || die "AMBAPLAY_BETA_BUILD '$beta_build' is not a positive integer (the highest published build plus one)"
 	[ "$beta_build" -gt "$committed_build" ] \
-		|| die "BRIDGEPLAY_BETA_BUILD $beta_build is not above the committed build $committed_build, so the beta would not order above the stable it branched from"
-	planned=${BRIDGEPLAY_BETA_PLANNED:-}
+		|| die "AMBAPLAY_BETA_BUILD $beta_build is not above the committed build $committed_build, so the beta would not order above the stable it branched from"
+	planned=${AMBAPLAY_BETA_PLANNED:-}
 	if [ -z "$planned" ]; then
 		planned=$(semver_next patch "$committed")
 	else
-		is_semver "$planned" || die "BRIDGEPLAY_BETA_PLANNED '$planned' is not X.Y.Z"
+		is_semver "$planned" || die "AMBAPLAY_BETA_PLANNED '$planned' is not X.Y.Z"
 		semver_gt "$planned" "$committed" \
-			|| die "BRIDGEPLAY_BETA_PLANNED $planned is not above the committed version $committed"
+			|| die "AMBAPLAY_BETA_PLANNED $planned is not above the committed version $committed"
 	fi
-	version=$planned-beta.$BRIDGEPLAY_BETA
+	version=$planned-beta.$AMBAPLAY_BETA
 	build=$beta_build
 	channel=beta
-elif [ -n "${BRIDGEPLAY_BETA_BUILD+set}" ] || [ -n "${BRIDGEPLAY_BETA_PLANNED+set}" ]; then
-	die "BRIDGEPLAY_BETA_BUILD or BRIDGEPLAY_BETA_PLANNED is set without BRIDGEPLAY_BETA (the beta number N)"
+elif [ -n "${AMBAPLAY_BETA_BUILD+set}" ] || [ -n "${AMBAPLAY_BETA_PLANNED+set}" ]; then
+	die "AMBAPLAY_BETA_BUILD or AMBAPLAY_BETA_PLANNED is set without AMBAPLAY_BETA (the beta number N)"
 fi
 
 case "$mode" in
@@ -80,7 +80,7 @@ case "$mode" in
 		"${PLISTBUDDY:-/usr/libexec/PlistBuddy}" \
 			-c "Set :CFBundleShortVersionString $version" \
 			-c "Set :CFBundleVersion $build" \
-			-c "Set :BridgeplayChannel $channel" \
+			-c "Set :AmbaplayChannel $channel" \
 			"$plist"
 		echo "==> Stamped beta $version (build $build) into $plist"
 		;;

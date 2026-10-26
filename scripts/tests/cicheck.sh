@@ -50,10 +50,10 @@ eq "no input" "" "$(printf '' | sh "$root/scripts/ci-code-paths.sh")"
 eq "last line without a newline" "a.c" "$(printf 'x.md\na.c' | sh "$root/scripts/ci-code-paths.sh")"
 
 printf '# comment\n\n*.txt\n' >"$work/patterns"
-eq "other list: its pattern" "" "$(printf 'a.txt\n' | BRIDGEPLAY_DOCS_ONLY_FILE=$work/patterns sh "$root/scripts/ci-code-paths.sh")"
-eq "other list: the default is gone" "b.md" "$(printf 'b.md\n' | BRIDGEPLAY_DOCS_ONLY_FILE=$work/patterns sh "$root/scripts/ci-code-paths.sh")"
-eq "other list: comments are not patterns" "# comment" "$(printf '# comment\n' | BRIDGEPLAY_DOCS_ONLY_FILE=$work/patterns sh "$root/scripts/ci-code-paths.sh")"
-no "missing list is an error" sh -c "printf 'a.md\n' | BRIDGEPLAY_DOCS_ONLY_FILE=$work/none sh '$root/scripts/ci-code-paths.sh'"
+eq "other list: its pattern" "" "$(printf 'a.txt\n' | AMBAPLAY_DOCS_ONLY_FILE=$work/patterns sh "$root/scripts/ci-code-paths.sh")"
+eq "other list: the default is gone" "b.md" "$(printf 'b.md\n' | AMBAPLAY_DOCS_ONLY_FILE=$work/patterns sh "$root/scripts/ci-code-paths.sh")"
+eq "other list: comments are not patterns" "# comment" "$(printf '# comment\n' | AMBAPLAY_DOCS_ONLY_FILE=$work/patterns sh "$root/scripts/ci-code-paths.sh")"
+no "missing list is an error" sh -c "printf 'a.md\n' | AMBAPLAY_DOCS_ONLY_FILE=$work/none sh '$root/scripts/ci-code-paths.sh'"
 
 # --- ci-scope.sh -------------------------------------------------------------------
 
@@ -121,13 +121,13 @@ new_repo
 base=$(git rev-parse HEAD)
 commit docs README.md
 eq "push, list missing" "docs_only=false" \
-	"$(cd "$work/r" && BRIDGEPLAY_DOCS_ONLY_FILE=$work/none EVENT=push BEFORE=$base sh "$root/scripts/ci-scope.sh" 2>/dev/null)"
+	"$(cd "$work/r" && AMBAPLAY_DOCS_ONLY_FILE=$work/none EVENT=push BEFORE=$base sh "$root/scripts/ci-scope.sh" 2>/dev/null)"
 new_repo
 base=$(git rev-parse HEAD)
 commit c app/a.c
 printf '*.c\n' >"$work/c-list"
 eq "push, other list" "docs_only=true" \
-	"$(cd "$work/r" && BRIDGEPLAY_DOCS_ONLY_FILE=$work/c-list EVENT=push BEFORE=$base sh "$root/scripts/ci-scope.sh" 2>/dev/null)"
+	"$(cd "$work/r" && AMBAPLAY_DOCS_ONLY_FILE=$work/c-list EVENT=push BEFORE=$base sh "$root/scripts/ci-scope.sh" 2>/dev/null)"
 
 # A pull_request run checks out the merge commit: base first, PR head second.
 pr_merge() { # pr_merge <base-ref> <pr-branch>: leave HEAD on a merge of the PR into the base
@@ -351,8 +351,8 @@ scope_job=$(job scope)
 yes "build job name" has "    name: full app build" "$build"
 yes "checks job name" has "    name: source checks" "$checks"
 yes "gate job name" has "    name: app gate" "$gate_job"
-eq "ci-run-passed.sh knows the build job" "full app build" "$(sed -n 's/^build_job=\${BRIDGEPLAY_CI_BUILD_JOB:-\(.*\)}$/\1/p' "$root/scripts/ci-run-passed.sh")"
-eq "ci-run-passed.sh knows the checks job" "source checks" "$(sed -n 's/^checks_job=\${BRIDGEPLAY_CI_CHECKS_JOB:-\(.*\)}$/\1/p' "$root/scripts/ci-run-passed.sh")"
+eq "ci-run-passed.sh knows the build job" "full app build" "$(sed -n 's/^build_job=\${AMBAPLAY_CI_BUILD_JOB:-\(.*\)}$/\1/p' "$root/scripts/ci-run-passed.sh")"
+eq "ci-run-passed.sh knows the checks job" "source checks" "$(sed -n 's/^checks_job=\${AMBAPLAY_CI_CHECKS_JOB:-\(.*\)}$/\1/p' "$root/scripts/ci-run-passed.sh")"
 for j in build checks; do
 	body=$(job "$j")
 	yes "$j: waits for scope" has "    needs: scope" "$body"

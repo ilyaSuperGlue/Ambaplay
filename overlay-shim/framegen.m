@@ -4,7 +4,7 @@
 // Enabled only by NOTPROTON_FRAMEGEN. Off, nothing in here runs: no hook is
 // installed and no object is created, so the per-frame cost is the shim's own.
 //
-// Environment (users set BRIDGEPLAY_FRAMEGEN*; the run script and np-native pass
+// Environment (users set AMBAPLAY_FRAMEGEN*; the run script and np-native pass
 // each on under the NOTPROTON_ name read here)
 //   NOTPROTON_FRAMEGEN          0|off: disabled. 1|2: 2x, one generated frame at
 //                               t=1/2. 3: 3x, two generated frames at t=1/3 and
@@ -1924,7 +1924,7 @@ static void framegen_init(void)
 	else if (atoi(value) >= 3)
 		framegen_multiplier = fg_mult_3x;
 	else {
-		shim_log("overlay_shim framegen: BRIDGEPLAY_FRAMEGEN=%s not understood (0|1|2|3|adaptive), off\n",
+		shim_log("overlay_shim framegen: AMBAPLAY_FRAMEGEN=%s not understood (0|1|2|3|adaptive), off\n",
 		        value);
 		return;
 	}
